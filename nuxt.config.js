@@ -43,7 +43,8 @@ export default {
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
-        // // Simple usage
+        // Simple usage
+        '@nuxtjs/svg'
         // '@nuxtjs/vuetify',
         // // With options
         // [
@@ -54,12 +55,25 @@ export default {
         // ]
     ],
 
+    svg: {
+        vueSvgLoader: {
+            // vue-svg-loader options
+        },
+        svgSpriteLoader: {
+            // svg-sprite-loader options
+        },
+        fileLoader: {
+            // file-loader options
+        }
+    },
+
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: ['@nuxtjs/style-resources'],
 
     styleResources: {
         scss: [
             './assets/scss/_variables.scss',
+            './assets/scss/_breakpoint.scss',
             './assets/scss/_markup-mixins.scss'
         ]
     },

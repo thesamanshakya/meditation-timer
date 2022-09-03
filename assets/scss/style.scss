@@ -1,12 +1,13 @@
-@import 'variables';
-@import 'markup-mixins';
-@import 'breakpoint';
-@import 'base/glyphs';
 @import 'base/base-reset';
 html,
 body,
-.w1 {
+.w1,
+#__layout,
+#__nuxt {
     height: 100%;
+}
+body {
+    transition: background-color 0.25s ease;
 }
 @-webkit-keyframes pulse {
     0% {
@@ -158,13 +159,21 @@ $themeColours: (
     padding-right: 13px;
 }
 .icon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
 }
+// .icon {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     margin: auto;
+// }
 .speaker {
     width: 0;
     height: 0;
@@ -379,6 +388,7 @@ input[type='file'] {
             }
         }
         a {
+            cursor: pointer;
             display: block;
             padding: 10px 20px;
         }
@@ -407,6 +417,7 @@ input[type='file'] {
         }
     }
     a {
+        cursor: pointer;
         display: block;
         border: 3px solid #fff;
         border-radius: 50%;
@@ -438,44 +449,6 @@ input[type='file'] {
     font-size: 12px;
     margin: 0 0 0 9px;
 }
-.battery-wrap {
-    @extend %flexcenter;
-    opacity: 0;
-    > span {
-        font-size: 15px;
-        margin-right: 8px;
-    }
-}
-.battery {
-    position: relative;
-    border: 2px solid #fff;
-    width: 35px;
-    height: 20px;
-    border-radius: 3px;
-    > span,
-    &:after {
-        content: '';
-        display: block;
-        background: #fff;
-        position: absolute;
-    }
-    > span {
-        height: 16px;
-        border: 2px solid #000;
-        width: 0;
-        top: 0;
-        left: 0;
-        transition: width 0.25s ease;
-    }
-    &:after {
-        width: 3px;
-        height: 10px;
-        top: 50%;
-        right: -5px;
-        margin-top: -6px;
-        border-radius: 0 3px 3px 0;
-    }
-}
 .quotes {
     font-size: 18px;
     line-height: 30px;
@@ -496,18 +469,20 @@ input[type='file'] {
     pointer-events: none;
     z-index: 5;
     &.active {
-        .icon-bar:nth-of-type(1) {
+        .i-bar:nth-of-type(1) {
             transform: translate3d(0, 8px, 0) rotate(45deg);
         }
-        .icon-bar:nth-of-type(2) {
+        .i-bar:nth-of-type(2) {
             opacity: 0;
         }
-        .icon-bar:nth-of-type(3) {
+        .i-bar:nth-of-type(3) {
             transform: translate3d(0, -8px, 0) rotate(-45deg);
         }
         .nav-content {
-            transform: none;
+            opacity: 1;
+            z-index: 999;
             outline: none;
+            pointer-events: auto;
         }
     }
 }
@@ -542,14 +517,14 @@ input[type='file'] {
         text-decoration: underline;
     }
 }
-.icon-bar {
+.i-bar {
     display: block;
     width: 100%;
     height: 3px;
     background: #fff;
     transition: 0.3s;
 }
-.icon-bar + .icon-bar {
+.i-bar + .i-bar {
     margin-top: 5px;
 }
 #current-audio {
@@ -603,10 +578,11 @@ input[type='file'] {
     left: 0;
     height: calc(100% - 70px);
     background: #000;
-    pointer-events: auto;
+    pointer-events: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    transform: translateX(-100%);
-    transition: transform 0.3s;
+    transition: opacity 0.25s ease;
+    z-index: -1;
+    opacity: 0;
 }
 .nav {
     @extend %listreset;

@@ -2,9 +2,9 @@
     <div id="wrapper">
         <div id="nav-container" :class="{ active: navActive }">
             <div class="menu-button" @click="navActive = !navActive">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <span class="i-bar"></span>
+                <span class="i-bar"></span>
+                <span class="i-bar"></span>
             </div>
             <div class="nav-content">
                 <ul class="nav">
@@ -55,10 +55,7 @@
                 "{{ quote.quote }}" - <span>{{ quote.author }}</span>
             </span>
             <span class="top-right">
-                <span class="battery-wrap" id="batt"
-                    ><span id="b-level"></span
-                    ><i class="battery"><span></span></i
-                ></span>
+                <Battery />
                 <Settings />
             </span>
             <audio id="custom-audio-elem">
@@ -81,18 +78,31 @@ export default {
         return {
             colorTheme: ['purple', 'red', 'blue', 'pink', 'green'],
             navActive: false,
-            quote: quotes[Math.floor(Math.random() * quotes.length)]
+            quotes: quotes,
+            quote: ''
         };
     },
-    mounted() {
-        setInterval(() => {
-            document.body.removeAttribute('class');
-            document.body.classList.add(
+    methods: {
+        setBodyBgColor() {
+            const bodyElem = document.body;
+            bodyElem.removeAttribute('class');
+            bodyElem.classList.add(
                 this.colorTheme[
                     Math.floor(Math.random() * this.colorTheme.length)
                 ]
             );
-        }, 5000);
+        },
+        getQuote() {
+            return this.quotes[Math.floor(Math.random() * this.quotes.length)];
+        }
+    },
+    mounted() {
+        this.setBodyBgColor();
+        this.quote = this.getQuote();
+        setInterval(() => {
+            this.setBodyBgColor();
+            this.quote = this.getQuote();
+        }, 7000);
     },
     destroyed() {
         document.body.removeAttribute('class');

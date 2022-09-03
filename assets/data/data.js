@@ -22,8 +22,8 @@ export const quotes = [
     {
         quote: 'The best meditation is effortless. The best meditation is a gentle awareness.',
         author: 'Maxime Lagacé'
-    },
-    
+    }
+
     // '"Inward calm cannot be maintained unless physical strength is constantly and intelligently replenished."<span> - The Buddha</span>',
     // '"Learn to be calm and you will always be happy."<span> - Paramahansa Yogananda</span>',
     // '"You will always be getting praise and blame, but do not let either affect the poise of the mind."<span> - The Buddha</span>',

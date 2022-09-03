@@ -1,6 +1,10 @@
 <template>
     <span class="settings" :class="{ active: settingsActive }">
-        <i class="icon-settings" @click="settingsActive = !settingsActive"></i>
+        <i @click="settingsActive = !settingsActive">
+            <svg class="icon icon-settings">
+                <use xlink:href="#icon-settings"></use>
+            </svg>
+        </i>
         <Transition>
             <span class="s-dropdown" v-if="settingsActive">
                 <span class="s-dd">
