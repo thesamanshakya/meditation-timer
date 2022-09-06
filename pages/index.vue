@@ -22,18 +22,6 @@
                     </a>
                     <i class="add-btn">Add +{{ preset.addTime }} mins</i>
                 </li>
-                <!-- <li>
-                    <a href="javascript:void(0)" data-time="30"
-                        >30<span>mins</span></a
-                    >
-                    <i class="add-btn" data-extra="15">Add +15 mins</i>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" data-time="60"
-                        >1<span>hour</span></a
-                    >
-                    <i class="add-btn" data-extra="30">Add +30 mins</i>
-                </li> -->
             </ul>
         </div>
         <div class="interval">
@@ -85,12 +73,11 @@ export default {
     },
     created() {},
     methods: {
-        startTimer() {
-            // this.$store.commit('updatePresets');
-            // console.log(this.$store.state.presets.bell);
-        },
+        startTimer() {},
         updateP(index) {
             this.$store.commit('updatePresets', index);
+            this.presetsList = this.$store.state.presetsList;
+            this.$forceUpdate();
         },
         timeParser(durationInMins) {
             const durationInSeconds = durationInMins * 60;
@@ -108,29 +95,6 @@ export default {
         //         displayArea.innerText = minutes + ':' + seconds;
         //     }
         // }
-    },
-    computed: {
-        formatTimer() {
-            // let durationInMins = this.$store.state.presets.duration;
-            // let durationInSeconds = durationInMins * 60;
-            // console.log(durationInSeconds);
-            // return this.timeParser(durationInSeconds);
-            // console.log(this.timeParser(durationInMins * 60));
-            // let h = parseInt(durationInMins / 60 / 60);
-            // let m = parseInt(durationInMins / 60);
-            // let s = parseInt(durationInMins % 60);
-            // h = this.clock.hours > 0 ? this.clock.hours + ':' : '';
-            // m =
-            //     this.clock.minutes >= 60
-            //         ? parseInt(this.clock.minutes % 60)
-            //         : this.clock.minutes;
-            // m = m < 10 ? '0' + m : m;
-            // s =
-            //     this.clock.seconds < 10
-            //         ? '0' + this.clock.seconds
-            //         : this.clock.seconds;
-            // return h + m + ':' + s;
-        }
     },
     components: {
         SvgIcons,

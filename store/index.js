@@ -48,6 +48,9 @@ export const state = () => ({
 
 export const mutations = {
     updatePresets(state, index) {
-        // console.log(state.presetsList.time[index]);
+        state.presetsList.time.forEach((elm, index) => {
+            if (elm.statusActive) delete elm.statusActive;
+        });
+        state.presetsList.time[index].statusActive = true;
     }
 };
