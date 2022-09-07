@@ -15,48 +15,44 @@
                                 <input
                                     type="checkbox"
                                     v-model="guidedMeditationCheck"
+                                    @change="
+                                        $store.commit(
+                                            'TOGGLE_INSTRUCTION_AUDIO'
+                                        )
+                                    "
                                 />
                                 <span class="checkmark"></span>
                             </label>
                             <ul v-if="guidedMeditationCheck">
-                                <li>
-                                    <label class="c-checkbox radio"
-                                        >English Audio
+                                <li
+                                    v-for="(instruction, index) in $store.state
+                                        .presetsList.guidedInstruction"
+                                    :key="index"
+                                >
+                                    <label class="c-checkbox radio">
+                                        {{
+                                            capitalizeFirstLetter(
+                                                instruction.language
+                                            )
+                                        }}
+                                        Audio
                                         <input
                                             type="radio"
                                             name="instruction-type"
-                                            class="instruction-type"
-                                            value="0"
-                                            checked
+                                            :checked="index == 0"
+                                            @change="
+                                                $store.commit(
+                                                    'SELECT_INSTRUCTION_AUDIO',
+                                                    index
+                                                )
+                                            "
                                         />
                                         <span class="checkmark"></span>
                                     </label>
-                                </li>
-                                <li>
-                                    <label class="c-checkbox radio"
-                                        >Hindi Audio
-                                        <input
-                                            type="radio"
-                                            name="instruction-type"
-                                            value="1"
-                                            class="instruction-type"
-                                        />
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label class="c-checkbox radio"
-                                        >Custom Audio
-                                        <input
-                                            type="radio"
-                                            name="instruction-type"
-                                            value="100"
-                                            class="instruction-type"
-                                            id="instruction-custom"
-                                        />
-                                        <span class="checkmark"></span>
-                                    </label>
-                                    <div class="c-audio">
+                                    <div
+                                        class="c-audio"
+                                        v-if="customAudioCheck"
+                                    >
                                         <label
                                             for="custom-audio"
                                             class="btn-custom"
@@ -82,6 +78,14 @@ export default {
             settingsActive: false,
             guidedMeditationCheck: false
         };
+    },
+    methods: {
+        capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        // toggleCustomAudioOption() {
+        //     this.customAudioCheck = !this.customAudioCheck;
+        // },
     }
 };
 </script>

@@ -73,8 +73,7 @@ $themeColours: (
             .add-btn,
             .nav-content,
             .s-dd,
-            .interval label:after,
-            .interval input:checked + label {
+            .interval input:checked + label:after {
                 background: $i;
             }
             .battery > span {
@@ -251,8 +250,10 @@ input[type='file'] {
         width: 0;
         &:checked {
             ~ .checkmark {
+                background: #fff;
                 &:after {
                     display: block;
+                    border-color: #000;
                 }
             }
         }
@@ -269,16 +270,19 @@ input[type='file'] {
         }
     }
     &.radio {
+        .checkmark {
+            border-radius: 50%;
+        }
     }
 }
 .checkmark {
     position: absolute;
     top: 0;
     left: 0;
-    height: 23px;
-    width: 23px;
-    border-radius: 3px;
-    border: 1px solid #fff;
+    height: 24px;
+    width: 24px;
+    border-radius: 5px;
+    border: 2px solid #fff;
     &:after {
         content: '';
         position: absolute;
@@ -309,30 +313,29 @@ input[type='file'] {
         text-indent: -9999px;
         width: 55px;
         height: 27px;
-        background: white;
+        background: none;
         display: block;
         border-radius: 100px;
         position: relative;
-        border: 2px solid transparent;
+        border: 2px solid #fff;
         &:after {
             content: '';
             position: absolute;
-            top: 1px;
+            top: 2px;
             left: 2px;
             width: 21px;
             height: 21px;
             background: #fff;
             border-radius: 90px;
-            background: #000;
             transition: 0.3s;
         }
     }
     input:checked {
         + label {
-            background: #000;
-            border-color: #fff;
+            background: #fff;
+            border-color: transparent;
             &:after {
-                left: calc(100% - 3px);
+                left: calc(100% - 2px);
                 transform: translateX(-100%);
                 background: #fff;
             }
@@ -540,20 +543,20 @@ input[type='file'] {
     padding: 14px 2px 0 35px;
     position: relative;
     &:before {
-        width: 24px;
-        height: 24px;
+        width: 23px;
+        height: 25px;
         border-top: 1px solid #fff;
         border-right: 1px solid #fff;
         border-radius: 0 5px 0 0;
         content: '';
         position: absolute;
-        right: 15px;
-        top: -11px;
+        right: 14px;
+        top: -9px;
     }
 }
 .btn-custom {
-    border: 1px solid #fff;
-    border-radius: 3px;
+    border: 2px solid #fff;
+    border-radius: 30px;
     font-size: 14px;
     line-height: 1;
     color: #fff;
@@ -563,6 +566,7 @@ input[type='file'] {
     padding: 12px 17px;
     cursor: pointer;
     text-align: center;
+    margin-bottom: -7px;
     &:hover {
         background: #fff;
         color: #000;
@@ -766,9 +770,9 @@ input[type='file'] {
             width: 42px;
             height: 22px;
             &:after {
-                width: 16px;
-                height: 16px;
-                left: 1px;
+                width: 14px;
+                height: 14px;
+                left: 2px;
             }
         }
     }

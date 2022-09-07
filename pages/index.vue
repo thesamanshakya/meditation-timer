@@ -4,36 +4,57 @@
         <div class="sound-wrapper">
             <strong class="title">Start/End Bell</strong>
             <ul class="bell-sound">
-                <li v-for="(bell, index) in presetsList.bellSound" :key="index">
-                    <a>{{ bell.name }}</a>
+                <li
+                    v-for="(bell, index) in $store.state.presetsList.bellSound"
+                    :key="index"
+                    :class="{
+                        active: $store.state.presetsList.bellSound[index]
+                            .statusActive
+                    }"
+                >
+                    <a @click="selectBellList(index)">{{ bell.name }}</a>
                 </li>
             </ul>
         </div>
         <div class="controls">
             <ul class="presets">
                 <li
-                    v-for="(preset, index) in presetsList.time"
+                    v-for="(preset, index) in $store.state.presetsList.time"
                     :key="index"
-                    :class="{ active: presetsList.time[index].statusActive }"
+                    :class="{
+                        active: $store.state.presetsList.time[index]
+                            .statusActive
+                    }"
                 >
-                    <a @click="updateP(index)">
+                    <a @click="selectTimeList(index)">
                         {{ preset.time >= 60 ? preset.time / 60 : preset.time }}
                         <span>{{ preset.time >= 60 ? 'hour' : 'mins' }}</span>
                     </a>
-                    <i class="add-btn">Add +{{ preset.addTime }} mins</i>
+                    <i
+                        class="add-btn"
+                        @click="
+                            $store.commit('ADD_EXTRA_DURATION', preset.addTime)
+                        "
+                        >Add +{{ preset.addTime }} mins</i
+                    >
                 </li>
             </ul>
         </div>
         <div class="interval">
-            <input type="checkbox" id="switch" /><label
-                for="switch"
-                id="interval-label"
-            ></label>
-            <span class="interval-text"
-                >Interval Bell <span id="int-bell">is currently OFF</span></span
-            >
+            <input
+                type="checkbox"
+                id="switch"
+                @change="$store.commit('TOGGLE_INTERVAL_BELL')"
+            />
+            <label for="switch"></label>
+            <span class="interval-text">
+                Interval Bell
+                <span>is currently OFF</span>
+            </span>
         </div>
-        <span class="timer">{{ timeParser(totalDurationInMins) }}</span>
+        <span class="timer">
+            {{ timeParser($store.state.presets.durationInMins) }}
+        </span>
         <div class="custom-playing" id="c-playing">
             <div class="cplay-holder">
                 <div class="spk">
@@ -66,17 +87,25 @@ import NoSleep from 'nosleep.js';
 export default {
     data() {
         return {
-            noSleep: new NoSleep(),
-            totalDurationInMins: this.$store.state.presets.durationInMins,
-            presetsList: this.$store.state.presetsList
+            noSleep: new NoSleep()
         };
     },
     created() {},
     methods: {
         startTimer() {},
-        updateP(index) {
-            this.$store.commit('updatePresets', index);
-            this.presetsList = this.$store.state.presetsList;
+        testMet() {
+            console.log('hey');
+        },
+        selectTimeList(index) {
+            this.$store.commit('SELECT_TIME_LIST', index);
+            this.$forceUpdate();
+            this.$store.commit(
+                'SELECT_TOTAL_DURATION',
+                this.$store.state.presetsList.time[index].time
+            );
+        },
+        selectBellList(index) {
+            this.$store.commit('SELECT_BELL_LIST', index);
             this.$forceUpdate();
         },
         timeParser(durationInMins) {
@@ -85,6 +114,7 @@ export default {
             durationInSeconds / 60 < 60
                 ? (parsedTime = parsedTime.substr(14, 5))
                 : (parsedTime = parsedTime.substr(11, 8));
+            this.$forceUpdate();
             return parsedTime;
         }
         // setDisplayArea(hours, minutes, seconds) {
