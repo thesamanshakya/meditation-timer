@@ -72,9 +72,12 @@
             </div>
         </div>
 
-        <button class="btn-action" type="button" @click="startTimer">
-            <svg class="icon icon-play-button">
+        <button class="btn-action" type="button" @click="toggleTimer">
+            <svg class="icon icon-play-button" v-if="!isRunning">
                 <use xlink:href="#icon-play-button"></use>
+            </svg>
+            <svg class="icon icon-stop-button" v-else>
+                <use xlink:href="#icon-stop-button"></use>
             </svg>
         </button>
     </div>
@@ -87,14 +90,14 @@ import NoSleep from 'nosleep.js';
 export default {
     data() {
         return {
-            noSleep: new NoSleep()
+            noSleep: new NoSleep(),
+            isRunning: false
         };
     },
     created() {},
     methods: {
-        startTimer() {},
-        testMet() {
-            console.log('hey');
+        toggleTimer() {
+            this.isRunning = !this.isRunning;
         },
         selectTimeList(index) {
             this.$store.commit('SELECT_TIME_LIST', index);
