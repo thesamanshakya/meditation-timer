@@ -26,7 +26,7 @@
                             <ul v-if="guidedMeditationCheck">
                                 <li
                                     v-for="(instruction, index) in $store.state
-                                        .presetsList.guidedInstruction"
+                                        .presetsList.guidedInstruction.language"
                                     :key="index"
                                 >
                                     <label class="c-checkbox radio">
@@ -51,7 +51,12 @@
                                     </label>
                                     <div
                                         class="c-audio"
-                                        v-if="customAudioCheck"
+                                        v-if="
+                                            $store.state.presetsList
+                                                .guidedInstruction.language
+                                                .length ==
+                                            index + 1
+                                        "
                                     >
                                         <label
                                             for="custom-audio"

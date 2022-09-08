@@ -53,7 +53,7 @@
             </span>
         </div>
         <span class="timer">
-            {{ timeParser($store.state.presets.durationInMins) }}
+            {{ timeParser($store.state.presetsList.totalDurationInMins) }}
         </span>
         <div class="custom-playing" id="c-playing">
             <div class="cplay-holder">
@@ -108,8 +108,8 @@ export default {
             this.$store.commit('SELECT_BELL_LIST', index);
             this.$forceUpdate();
         },
-        timeParser(durationInMins) {
-            const durationInSeconds = durationInMins * 60;
+        timeParser(totalDurationInMins) {
+            const durationInSeconds = totalDurationInMins * 60;
             let parsedTime = new Date(durationInSeconds * 1000).toISOString();
             durationInSeconds / 60 < 60
                 ? (parsedTime = parsedTime.substr(14, 5))
