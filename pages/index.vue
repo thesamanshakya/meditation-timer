@@ -64,7 +64,7 @@
                 </span>
             </div>
             <span class="timer">
-                {{ timeParser($store.state.presetsList.totalDurationInMins) }}
+                {{ timeParser(totalDurationInMins) }}
             </span>
             <div class="custom-playing" id="c-playing">
                 <div class="cplay-holder">
@@ -118,18 +118,25 @@ export default {
             quote: '',
             noSleep: new NoSleep(),
             isRunning: false,
-            bgQuoteChangeInterval: null
+            totalDurationInMins:
+                this.$store.state.presetsList.totalDurationInMins,
+            bgQuoteChangeInterval: null,
+            timerInterval: null
         };
     },
     created() {},
     methods: {
         toggleTimer() {
             if (!this.isRunning) {
+                //start timer
                 this.stopBgQuoteChange();
-                this.isRunning = !this.isRunning;
                 this.noSleep.enable();
             } else {
+                //stop timer
+                this.setBgQuoteChange();
+                this.noSleep.disable();
             }
+            this.isRunning = !this.isRunning;
         },
         selectTimeList(index) {
             this.$store.commit('SELECT_TIME_LIST', index);
@@ -143,8 +150,8 @@ export default {
             this.$store.commit('SELECT_BELL_LIST', index);
             this.$forceUpdate();
         },
-        timeParser(totalDurationInMins) {
-            const durationInSeconds = totalDurationInMins * 60;
+        timeParser(time) {
+            const durationInSeconds = time * 60;
             let parsedTime = new Date(durationInSeconds * 1000).toISOString();
             durationInSeconds / 60 < 60
                 ? (parsedTime = parsedTime.substr(14, 5))
@@ -178,6 +185,9 @@ export default {
         stopBgQuoteChange() {
             clearInterval(this.bgQuoteChangeInterval);
             document.body.removeAttribute('class');
+        },
+        startTimer() {
+            timerInterval = setTimeout(() => {}, 1000);
         }
     },
     components: {
