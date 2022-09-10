@@ -6,12 +6,10 @@
                 <strong class="title">Start/End Bell</strong>
                 <ul class="bell-sound">
                     <li
-                        v-for="(bell, index) in $store.state.presetsList
-                            .bellSound"
+                        v-for="(bell, index) in presetsList.bellSound"
                         :key="index"
                         :class="{
-                            active: $store.state.presetsList.bellSound[index]
-                                .statusActive
+                            active: presetsList.bellSound[index].statusActive
                         }"
                     >
                         <a @click="selectBellList(index)">{{ bell.name }}</a>
@@ -21,11 +19,10 @@
             <div class="controls">
                 <ul class="presets">
                     <li
-                        v-for="(preset, index) in $store.state.presetsList.time"
+                        v-for="(preset, index) in presetsList.time"
                         :key="index"
                         :class="{
-                            active: $store.state.presetsList.time[index]
-                                .statusActive
+                            active: presetsList.time[index].statusActive
                         }"
                     >
                         <a @click="selectTimeList(index)">
@@ -40,12 +37,7 @@
                         </a>
                         <i
                             class="add-btn"
-                            @click="
-                                $store.commit(
-                                    'ADD_EXTRA_DURATION',
-                                    preset.addTime
-                                )
-                            "
+                            @click="addExtraDuration(preset.addTime)"
                             >Add +{{ preset.addTime }} mins</i
                         >
                     </li>
@@ -55,7 +47,7 @@
                 <input
                     type="checkbox"
                     id="switch"
-                    @change="$store.commit('TOGGLE_INTERVAL_BELL')"
+                    @change="toggleIntervalBell"
                 />
                 <label for="switch"></label>
                 <span class="interval-text">
@@ -64,7 +56,7 @@
                 </span>
             </div>
             <span class="timer">
-                {{ timeParser(totalDurationInMins) }}
+                {{ timeParser(presetsList.totalDurationInMins) }}
             </span>
             <div class="custom-playing" id="c-playing">
                 <div class="cplay-holder">
@@ -97,7 +89,7 @@
         </span>
         <span class="top-right">
             <Battery />
-            <Settings />
+            <Settings :presetsList="presetsList" />
         </span>
         <audio id="custom-audio-elem">
             Your browser does not support the audio format.
@@ -117,11 +109,72 @@ export default {
             quotes: quotes,
             quote: '',
             noSleep: new NoSleep(),
+            intervalFuncs: {
+                bgQuoteChange: null,
+                timer: null
+            },
             isRunning: false,
-            totalDurationInMins:
-                this.$store.state.presetsList.totalDurationInMins,
-            bgQuoteChangeInterval: null,
-            timerInterval: null
+
+            presetsList: {
+                totalDurationInMins: 10,
+                intervalBell: false,
+                guidedInstruction: {
+                    statusActive: false,
+                    language: [
+                        {
+                            language: 'english',
+                            url: '~/assets/media/instructions/anapana/english.mp3',
+                            statusActive: true
+                        },
+                        {
+                            language: 'hindi',
+                            url: '~/assets/media/instructions/anapana/hindi.mp3'
+                        },
+                        {
+                            language: 'nepali',
+                            url: '~/assets/media/instructions/anapana/nepali.mp3'
+                        },
+                        {
+                            language: 'custom',
+                            url: '~/assets/media/instructions/anapana/custom.mp3'
+                        }
+                    ]
+                },
+                time: [
+                    {
+                        time: 10,
+                        addTime: 5,
+                        statusActive: true
+                    },
+                    {
+                        time: 30,
+                        addTime: 15
+                    },
+                    {
+                        time: 60,
+                        addTime: 30
+                    }
+                ],
+                bellSound: [
+                    {
+                        name: 'Gong 1',
+                        url: '~/assets/media/bell/gong-1.mp3',
+                        statusActive: true
+                    },
+                    {
+                        name: 'Gong 2',
+                        url: '~/assets/media/bell/gong-2.mp3'
+                    },
+                    {
+                        name: 'Gong 3',
+                        url: '~/assets/media/bell/gong-3.mp3'
+                    },
+                    {
+                        name: 'S.N Goenka',
+                        url: '~/assets/media/bell/sn-goenka.mp3'
+                    }
+                ]
+            }
         };
     },
     created() {},
@@ -137,18 +190,6 @@ export default {
                 this.noSleep.disable();
             }
             this.isRunning = !this.isRunning;
-        },
-        selectTimeList(index) {
-            this.$store.commit('SELECT_TIME_LIST', index);
-            this.$forceUpdate();
-            this.$store.commit(
-                'SELECT_TOTAL_DURATION',
-                this.$store.state.presetsList.time[index].time
-            );
-        },
-        selectBellList(index) {
-            this.$store.commit('SELECT_BELL_LIST', index);
-            this.$forceUpdate();
         },
         timeParser(time) {
             const durationInSeconds = time * 60;
@@ -177,17 +218,41 @@ export default {
             this.startBgQuoteChange();
         },
         startBgQuoteChange() {
-            this.bgQuoteChangeInterval = setInterval(() => {
+            this.intervalFuncs.bgQuoteChange = setInterval(() => {
                 this.setBodyBgColor();
                 this.quote = this.getQuote();
             }, 7000);
         },
         stopBgQuoteChange() {
-            clearInterval(this.bgQuoteChangeInterval);
+            clearInterval(this.intervalFuncs.bgQuoteChange);
             document.body.removeAttribute('class');
         },
         startTimer() {
-            timerInterval = setTimeout(() => {}, 1000);
+            this.intervalFuncs.timer = setTimeout(() => {}, 1000);
+        },
+
+        //app timer presets actions
+        selectTimeList(index) {
+            this.presetsList.time.forEach((elm, index) => {
+                if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
+            });
+            this.presetsList.time[index].statusActive = true;
+            this.presetsList.totalDurationInMins =
+                this.presetsList.time[index].time;
+            this.$forceUpdate();
+        },
+        selectBellList(index) {
+            this.presetsList.bellSound.forEach((elm, index) => {
+                if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
+            });
+            this.presetsList.bellSound[index].statusActive = true;
+            this.$forceUpdate();
+        },
+        toggleIntervalBell() {
+            this.presetsList.intervalBell = !this.presetsList.intervalBell;
+        },
+        addExtraDuration(extraTime) {
+            this.presetsList.totalDurationInMins += extraTime;
         }
     },
     components: {

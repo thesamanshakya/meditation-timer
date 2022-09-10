@@ -15,18 +15,14 @@
                                 <input
                                     type="checkbox"
                                     v-model="guidedMeditationCheck"
-                                    @change="
-                                        $store.commit(
-                                            'TOGGLE_INSTRUCTION_AUDIO'
-                                        )
-                                    "
+                                    @change="toggleInstructionAudio"
                                 />
                                 <span class="checkmark"></span>
                             </label>
                             <ul v-if="guidedMeditationCheck">
                                 <li
-                                    v-for="(instruction, index) in $store.state
-                                        .presetsList.guidedInstruction.language"
+                                    v-for="(instruction, index) in presetsList
+                                        .guidedInstruction.language"
                                     :key="index"
                                 >
                                     <label class="c-checkbox radio">
@@ -41,10 +37,7 @@
                                             name="instruction-type"
                                             :checked="index == 0"
                                             @change="
-                                                $store.commit(
-                                                    'SELECT_INSTRUCTION_AUDIO',
-                                                    index
-                                                )
+                                                selectInstructionAudio(index)
                                             "
                                         />
                                         <span class="checkmark"></span>
@@ -52,9 +45,8 @@
                                     <div
                                         class="c-audio"
                                         v-if="
-                                            $store.state.presetsList
-                                                .guidedInstruction.language
-                                                .length ==
+                                            presetsList.guidedInstruction
+                                                .language.length ==
                                             index + 1
                                         "
                                     >
@@ -78,6 +70,7 @@
 
 <script>
 export default {
+    props: ['presetsList'],
     data() {
         return {
             settingsActive: false,
@@ -87,10 +80,22 @@ export default {
     methods: {
         capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        toggleInstructionAudio() {
+            this.presetsList.guidedInstruction.statusActive =
+                !this.presetsList.guidedInstruction.statusActive;
+        },
+        selectInstructionAudio(index) {
+            this.presetsList.guidedInstruction.language.forEach(
+                (elm, index) => {
+                    if (elm.hasOwnProperty('statusActive'))
+                        delete elm.statusActive;
+                }
+            );
+            this.presetsList.guidedInstruction.language[
+                index
+            ].statusActive = true;
         }
-        // toggleCustomAudioOption() {
-        //     this.customAudioCheck = !this.customAudioCheck;
-        // },
     }
 };
 </script>
