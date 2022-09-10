@@ -1,5 +1,6 @@
 export const state = () => ({
     presetsList: {
+        isRunning: false,
         totalDurationInMins: 10,
         intervalBell: false,
         guidedInstruction: {

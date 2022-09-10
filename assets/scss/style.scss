@@ -197,14 +197,12 @@ $themeColours: (
     width: 100%;
     height: 100%;
     transition: all 750ms ease;
-    &.running {
-        background: #000;
-    }
 }
 .running {
     .controls,
-    .menu-button,
-    .settings {
+    .settings,
+    .quotes,
+    .interval > label {
         display: none;
     }
     .bell-sound {
@@ -327,7 +325,7 @@ input[type='file'] {
             height: 21px;
             background: #fff;
             border-radius: 90px;
-            transition: 0.3s;
+            transition: 0.1s;
         }
     }
     input:checked {

@@ -49,19 +49,7 @@
                 >
             </div>
         </div>
-        <div class="w1">
-            <Nuxt />
-            <span class="quotes">
-                "{{ quote.quote }}" - <span>{{ quote.author }}</span>
-            </span>
-            <span class="top-right">
-                <Battery />
-                <Settings />
-            </span>
-            <audio id="custom-audio-elem">
-                Your browser does not support the audio format.
-            </audio>
-        </div>
+        <Nuxt />
         <span class="install"
             >Get this free app. It won't take up space on your device.
             <a href="javscript:void(0)" class="btn-install" id="install-add"
@@ -72,40 +60,11 @@
 </template>
 
 <script>
-import { quotes } from '~/assets/data/data.js';
 export default {
     data() {
         return {
-            colorTheme: ['purple', 'red', 'blue', 'pink', 'green'],
-            navActive: false,
-            quotes: quotes,
-            quote: ''
+            navActive: false
         };
-    },
-    methods: {
-        setBodyBgColor() {
-            const bodyElem = document.body;
-            bodyElem.removeAttribute('class');
-            bodyElem.classList.add(
-                this.colorTheme[
-                    Math.floor(Math.random() * this.colorTheme.length)
-                ]
-            );
-        },
-        getQuote() {
-            return this.quotes[Math.floor(Math.random() * this.quotes.length)];
-        }
-    },
-    mounted() {
-        this.setBodyBgColor();
-        this.quote = this.getQuote();
-        setInterval(() => {
-            this.setBodyBgColor();
-            this.quote = this.getQuote();
-        }, 7000);
-    },
-    destroyed() {
-        document.body.removeAttribute('class');
     }
 };
 </script>
