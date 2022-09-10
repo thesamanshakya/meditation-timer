@@ -6,10 +6,11 @@
                 <strong class="title">Start/End Bell</strong>
                 <ul class="bell-sound">
                     <li
-                        v-for="(bell, index) in presetsList.bellSound"
+                        v-for="(bell, index) in presetsList.bellSound.list"
                         :key="index"
                         :class="{
-                            active: presetsList.bellSound[index].statusActive
+                            active: presetsList.bellSound.list[index]
+                                .statusActive
                         }"
                     >
                         <a @click="selectBellList(index)">{{ bell.name }}</a>
@@ -142,20 +143,20 @@ export default {
                     language: [
                         {
                             language: 'english',
-                            url: '~/assets/media/instructions/anapana/english.mp3',
+                            url: '/media/instructions/anapana/english.mp3',
                             statusActive: true
                         },
                         {
                             language: 'hindi',
-                            url: '~/assets/media/instructions/anapana/hindi.mp3'
+                            url: '/media/instructions/anapana/hindi.mp3'
                         },
                         {
                             language: 'nepali',
-                            url: '~/assets/media/instructions/anapana/nepali.mp3'
+                            url: '/media/instructions/anapana/nepali.mp3'
                         },
                         {
                             language: 'custom',
-                            url: '~/assets/media/instructions/anapana/custom.mp3'
+                            url: '/media/instructions/anapana/custom.mp3'
                         }
                     ]
                 },
@@ -174,25 +175,29 @@ export default {
                         addTime: 30
                     }
                 ],
-                bellSound: [
-                    {
-                        name: 'Gong 1',
-                        url: '~/assets/media/bell/gong-1.mp3',
-                        statusActive: true
-                    },
-                    {
-                        name: 'Gong 2',
-                        url: '~/assets/media/bell/gong-2.mp3'
-                    },
-                    {
-                        name: 'Gong 3',
-                        url: '~/assets/media/bell/gong-3.mp3'
-                    },
-                    {
-                        name: 'S.N Goenka',
-                        url: '~/assets/media/bell/sn-goenka.mp3'
-                    }
-                ]
+                bellSound: {
+                    activePath: '/media/bell/gong-1.mp3',
+                    bellSoundAudio: null,
+                    list: [
+                        {
+                            name: 'Gong 1',
+                            url: '/media/bell/gong-1.mp3',
+                            statusActive: true
+                        },
+                        {
+                            name: 'Gong 2',
+                            url: '/media/bell/gong-2.mp3'
+                        },
+                        {
+                            name: 'Gong 3',
+                            url: '/media/bell/gong-3.mp3'
+                        },
+                        {
+                            name: 'S.N Goenka',
+                            url: '/media/bell/sn-goenka.mp3'
+                        }
+                    ]
+                }
             }
         };
     },
@@ -201,8 +206,10 @@ export default {
         toggleTimer() {
             if (!this.isRunning) {
                 this.startTimer();
+                this.playBellSound();
             } else {
                 this.stopTimer(true); //manually stopped timer by clicking = true
+                this.stopBellSound();
             }
         },
         timeParser(time) {
@@ -246,14 +253,24 @@ export default {
             this.stopBgQuoteChange();
             this.noSleep.enable();
             let tickerInSeconds = this.presetsList.totalDurationInMins * 60;
+            this.tickerInMins = tickerInSeconds / 60;
+            const tempTicker = tickerInSeconds;
             this.intervalFuncs.timer = setInterval(() => {
+                // interval bell
+                if (
+                    this.presetsList.intervalBell &&
+                    tickerInSeconds === tempTicker / 2
+                ) {
+                    this.stopBellSound();
+                    this.playBellSound();
+                }
                 if (tickerInSeconds >= 0) {
                     tickerInSeconds--;
                     this.tickerInMins = tickerInSeconds / 60;
                 } else {
                     this.stopTimer();
                 }
-            }, 10);
+            }, 100);
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;
@@ -267,6 +284,7 @@ export default {
                 }, 5000);
             }
             clearInterval(this.intervalFuncs.timer);
+            this.tickerInMins = this.presetsList.totalDurationInMins;
         },
 
         //app timer presets actions
@@ -280,10 +298,12 @@ export default {
             this.$forceUpdate();
         },
         selectBellList(index) {
-            this.presetsList.bellSound.forEach((elm, index) => {
+            this.presetsList.bellSound.list.forEach((elm, index) => {
                 if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
             });
-            this.presetsList.bellSound[index].statusActive = true;
+            this.presetsList.bellSound.list[index].statusActive = true;
+            this.presetsList.bellSound.activePath =
+                this.presetsList.bellSound.list[index].url;
             this.$forceUpdate();
         },
         toggleIntervalBell() {
@@ -291,6 +311,24 @@ export default {
         },
         addExtraDuration(extraTime) {
             this.presetsList.totalDurationInMins += extraTime;
+        },
+
+        // audio related
+        // playSound(sound) {
+        //     if (sound) {
+        //         var audio = new Audio(sound);
+        //         audio.play();
+        //     }
+        // },
+        playBellSound() {
+            this.presetsList.bellSound.bellSoundAudio = new Audio(
+                this.presetsList.bellSound.activePath
+            );
+            this.presetsList.bellSound.bellSoundAudio.play();
+        },
+        stopBellSound() {
+            this.presetsList.bellSound.bellSoundAudio.pause();
+            this.presetsList.bellSound.bellSoundAudio.currentTime = 0;
         }
     },
     components: {
