@@ -52,12 +52,24 @@
                 <label for="switch"></label>
                 <span class="interval-text">
                     Interval Bell
-                    <span>is currently OFF</span>
+                    <span
+                        >is currently
+                        {{ presetsList.intervalBell ? 'ON' : 'OFF' }}
+                    </span>
                 </span>
             </div>
-            <span class="timer">
-                {{ timeParser(presetsList.totalDurationInMins) }}
+
+            <span class="timer animate__pulse complete" v-if="completeAction"
+                >MEDITATION COMPLETED!</span
+            >
+            <span class="timer" v-else>
+                {{
+                    isRunning
+                        ? timeParser(tickerInMins)
+                        : timeParser(presetsList.totalDurationInMins)
+                }}
             </span>
+
             <div class="custom-playing" id="c-playing">
                 <div class="cplay-holder">
                     <div class="spk">
@@ -75,7 +87,12 @@
                 </div>
             </div>
 
-            <button class="btn-action" type="button" @click="toggleTimer">
+            <button
+                class="btn-action"
+                type="button"
+                @click="toggleTimer"
+                v-if="!completeAction"
+            >
                 <svg class="icon icon-play-button" v-if="!isRunning">
                     <use xlink:href="#icon-play-button"></use>
                 </svg>
@@ -113,7 +130,9 @@ export default {
                 bgQuoteChange: null,
                 timer: null
             },
+            tickerInMins: null,
             isRunning: false,
+            completeAction: false,
 
             presetsList: {
                 totalDurationInMins: 10,
@@ -181,15 +200,10 @@ export default {
     methods: {
         toggleTimer() {
             if (!this.isRunning) {
-                //start timer
-                this.stopBgQuoteChange();
-                this.noSleep.enable();
+                this.startTimer();
             } else {
-                //stop timer
-                this.setBgQuoteChange();
-                this.noSleep.disable();
+                this.stopTimer(true); //manually stopped timer by clicking = true
             }
-            this.isRunning = !this.isRunning;
         },
         timeParser(time) {
             const durationInSeconds = time * 60;
@@ -228,7 +242,31 @@ export default {
             document.body.removeAttribute('class');
         },
         startTimer() {
-            this.intervalFuncs.timer = setTimeout(() => {}, 1000);
+            this.isRunning = true;
+            this.stopBgQuoteChange();
+            this.noSleep.enable();
+            let tickerInSeconds = this.presetsList.totalDurationInMins * 60;
+            this.intervalFuncs.timer = setInterval(() => {
+                if (tickerInSeconds >= 0) {
+                    tickerInSeconds--;
+                    this.tickerInMins = tickerInSeconds / 60;
+                } else {
+                    this.stopTimer();
+                }
+            }, 10);
+        },
+        stopTimer(manualStop = false) {
+            this.isRunning = false;
+            this.setBgQuoteChange();
+            this.noSleep.disable();
+            if (!manualStop) {
+                //if user manually stops the timer by clicking, do not show the "Meditation commpleted" text
+                this.completeAction = true;
+                setTimeout(() => {
+                    this.completeAction = false;
+                }, 5000);
+            }
+            clearInterval(this.intervalFuncs.timer);
         },
 
         //app timer presets actions
