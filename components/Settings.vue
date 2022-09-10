@@ -45,9 +45,10 @@
                                     <div
                                         class="c-audio"
                                         v-if="
+                                            false &&
                                             presetsList.guidedInstruction
                                                 .language.length ==
-                                            index + 1
+                                                index + 1
                                         "
                                     >
                                         <label
@@ -95,6 +96,9 @@ export default {
             this.presetsList.guidedInstruction.language[
                 index
             ].statusActive = true;
+            this.presetsList.guidedInstruction.activePath =
+                this.presetsList.guidedInstruction.language[index].url;
+            this.$forceUpdate();
         }
     }
 };

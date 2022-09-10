@@ -140,6 +140,8 @@ export default {
                 intervalBell: false,
                 guidedInstruction: {
                     statusActive: false,
+                    activePath: '/media/instructions/anapana/english.mp3',
+                    audio: null,
                     language: [
                         {
                             language: 'english',
@@ -150,14 +152,14 @@ export default {
                             language: 'hindi',
                             url: '/media/instructions/anapana/hindi.mp3'
                         },
-                        {
-                            language: 'nepali',
-                            url: '/media/instructions/anapana/nepali.mp3'
-                        },
-                        {
-                            language: 'custom',
-                            url: '/media/instructions/anapana/custom.mp3'
-                        }
+                        // {
+                        //     language: 'nepali',
+                        //     url: '/media/instructions/anapana/nepali.mp3'
+                        // },
+                        // {
+                        //     language: 'custom',
+                        //     url: '/media/instructions/anapana/custom.mp3'
+                        // }
                     ]
                 },
                 time: [
@@ -177,7 +179,7 @@ export default {
                 ],
                 bellSound: {
                     activePath: '/media/bell/gong-1.mp3',
-                    bellSoundAudio: null,
+                    audio: null,
                     list: [
                         {
                             name: 'Gong 1',
@@ -191,11 +193,11 @@ export default {
                         {
                             name: 'Gong 3',
                             url: '/media/bell/gong-3.mp3'
-                        },
-                        {
-                            name: 'S.N Goenka',
-                            url: '/media/bell/sn-goenka.mp3'
                         }
+                        // {
+                        //     name: 'S.N Goenka',
+                        //     url: '/media/bell/sn-goenka.mp3'
+                        // }
                     ]
                 }
             }
@@ -206,10 +208,10 @@ export default {
         toggleTimer() {
             if (!this.isRunning) {
                 this.startTimer();
-                this.playBellSound();
+                this.playAudio();
             } else {
                 this.stopTimer(true); //manually stopped timer by clicking = true
-                this.stopBellSound();
+                this.stopAudio();
             }
         },
         timeParser(time) {
@@ -270,18 +272,21 @@ export default {
                 } else {
                     this.stopTimer();
                 }
-            }, 100);
+            }, 10);
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;
             this.setBgQuoteChange();
             this.noSleep.disable();
             if (!manualStop) {
-                //if user manually stops the timer by clicking, do not show the "Meditation commpleted" text
-                this.completeAction = true;
+                //if the timer completes on its own without manual stop
+
+                this.completeAction = true; //if user manually stops the timer by clicking, do not show the "Meditation commpleted" text
                 setTimeout(() => {
                     this.completeAction = false;
                 }, 5000);
+                this.stopAudio();
+                this.playBellSound(); //always play ending sound bell after timer completes
             }
             clearInterval(this.intervalFuncs.timer);
             this.tickerInMins = this.presetsList.totalDurationInMins;
@@ -314,21 +319,43 @@ export default {
         },
 
         // audio related
-        // playSound(sound) {
-        //     if (sound) {
-        //         var audio = new Audio(sound);
-        //         audio.play();
-        //     }
-        // },
+        playAudio() {
+            if (this.presetsList.guidedInstruction.statusActive) {
+                this.stopGuidedAudio();
+                this.playGuidedAudio();
+            } else {
+                this.stopBellSound();
+                this.playBellSound();
+            }
+        },
+        stopAudio() {
+            if (this.presetsList.guidedInstruction.statusActive)
+                this.stopGuidedAudio();
+            this.stopBellSound();
+        },
         playBellSound() {
-            this.presetsList.bellSound.bellSoundAudio = new Audio(
+            this.presetsList.bellSound.audio = new Audio(
                 this.presetsList.bellSound.activePath
             );
-            this.presetsList.bellSound.bellSoundAudio.play();
+            this.presetsList.bellSound.audio.play();
         },
         stopBellSound() {
-            this.presetsList.bellSound.bellSoundAudio.pause();
-            this.presetsList.bellSound.bellSoundAudio.currentTime = 0;
+            if (!!this.presetsList.bellSound.audio) {
+                this.presetsList.bellSound.audio.pause();
+                this.presetsList.bellSound.audio.currentTime = 0;
+            }
+        },
+        playGuidedAudio() {
+            this.presetsList.guidedInstruction.audio = new Audio(
+                this.presetsList.guidedInstruction.activePath
+            );
+            this.presetsList.guidedInstruction.audio.play();
+        },
+        stopGuidedAudio() {
+            if (!!this.presetsList.guidedInstruction.audio) {
+                this.presetsList.guidedInstruction.audio.pause();
+                this.presetsList.guidedInstruction.audio.currentTime = 0;
+            }
         }
     },
     components: {
