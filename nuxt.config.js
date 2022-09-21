@@ -3,7 +3,7 @@ export default {
     ssr: false,
 
     // Target: https://go.nuxtjs.dev/config-target
-    target: 'static',
+    // target: 'static',
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -68,7 +68,37 @@ export default {
     },
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxtjs/style-resources'],
+    modules: ['@nuxtjs/style-resources', '@nuxtjs/pwa'],
+
+    pwa: {
+        manifest: {
+            short_name: 'Hamro Meditation Timer',
+            name: 'Hamro Meditation Timer',
+            description: 'Made by Saman with ❤',
+            lang: 'en',
+            useWebmanifestExtension: false,
+            start_url: '/?source=pwa',
+            background_color: '#000',
+            display: 'fullscreen',
+            orientation: 'portrait',
+            scope: '/',
+            theme_color: '#000'
+            // shortcuts: [
+            //     {
+            //         name: 'Hamro Meditation Timer',
+            //         short_name: 'Hamro Meditation Timer',
+            //         description: 'Made by Saman with ❤',
+            //         url: '/app?source=pwa',
+            //         icons: [
+            //             {
+            //                 src: '/favicon/192x192.png',
+            //                 sizes: '192x192'
+            //             }
+            //         ]
+            //     }
+            // ]
+        }
+    },
 
     styleResources: {
         scss: [

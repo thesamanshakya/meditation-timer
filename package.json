@@ -38,5 +38,8 @@
         "Android 2.3",
         "Android >= 4",
         "Opera >= 12"
-    ]
+    ],
+    "devDependencies": {
+        "@nuxtjs/pwa": "^3.3.5"
+    }
 }

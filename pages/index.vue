@@ -151,7 +151,7 @@ export default {
                         {
                             language: 'hindi',
                             url: '/media/instructions/anapana/hindi.mp3'
-                        },
+                        }
                         // {
                         //     language: 'nepali',
                         //     url: '/media/instructions/anapana/nepali.mp3'
@@ -272,7 +272,7 @@ export default {
                 } else {
                     this.stopTimer();
                 }
-            }, 10);
+            }, 1000);
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;
