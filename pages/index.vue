@@ -436,7 +436,6 @@ export default {
 body {
     margin: 0;
     color: $base-text-color;
-    background: #000;
     font: #{$base-font-size}/#{$base-line-height} $base-font-family;
     min-width: $base-min-width;
     overflow-y: scroll;
@@ -551,11 +550,6 @@ $themeColours: (
     'green': #00863c
 );
 @each $themeColour, $i in $themeColours {
-    body {
-        &.#{$themeColour} {
-            background-color: $i;
-        }
-    }
     body {
         &.#{$themeColour} {
             #wrapper,
@@ -686,6 +680,7 @@ $themeColours: (
     width: 100%;
     height: 100%;
     transition: all 750ms ease;
+    background: #000;
 }
 .running {
     .controls,
