@@ -32,8 +32,12 @@ export default {
     css: [
         '~/assets/scss/_variables.scss',
         '~/assets/scss/_markup-mixins.scss',
-        '~/assets/scss/style.scss'
+        '@/assets/css/tailwind.css'
     ],
+
+    router: {
+        middleware: ['auth']
+    },
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [],
@@ -44,6 +48,8 @@ export default {
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
         // Simple usage
+        '@nuxtjs/tailwindcss',
+        '@nuxt/postcss8',
         '@nuxtjs/svg'
         // '@nuxtjs/vuetify',
         // // With options
@@ -68,7 +74,12 @@ export default {
     },
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxtjs/style-resources', '@nuxtjs/pwa'],
+    modules: [
+        '@nuxtjs/style-resources',
+        '@nuxtjs/pwa',
+        '@nuxtjs/auth-next',
+        '@nuxtjs/google-fonts'
+    ],
 
     pwa: {
         manifest: {
@@ -100,6 +111,12 @@ export default {
         }
     },
 
+    googleFonts: {
+        families: {
+            Roboto: true
+        }
+    },
+
     styleResources: {
         scss: [
             './assets/scss/_variables.scss',
@@ -116,6 +133,12 @@ export default {
             },
             scss: {
                 implementation: require('sass')
+            }
+        },
+        postcss: {
+            plugins: {
+                tailwindcss: {},
+                autoprefixer: {}
             }
         }
     }
