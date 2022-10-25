@@ -20,9 +20,13 @@
                 >
                     <h1 class="text-black text-xl font-normal block mb-6">
                         Please {{ text.toLowerCase() }} to use
-                        <span class="text-2xl lg:text-3xl font-medium pt-1 flex items-center justify-center lg:justify-start">
+                        <span
+                            class="text-2xl lg:text-3xl font-medium pt-1 flex items-center justify-center lg:justify-start"
+                        >
                             Hamro Meditation Timer
-                            <span class="text-red-500 text-4xl ml-2">&hearts;</span>
+                            <span class="text-red-500 text-4xl ml-2"
+                                >&hearts;</span
+                            >
                         </span>
                     </h1>
                     <form
@@ -30,7 +34,10 @@
                             isLoginForm ? submitLoginForm() : submitSignupForm()
                         "
                     >
-                        <SocialLogin :isLoginForm="isLoginForm" />
+                        <SocialLogin
+                            @social-login="socialLogin"
+                            :isLoginForm="isLoginForm"
+                        />
                         <div
                             class="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5"
                         >
@@ -102,7 +109,7 @@
                         </div>
                         <!-- Signup Form -->
                         <div v-else>
-                            <div class="mb-6">
+                            <!-- <div class="mb-6">
                                 <input
                                     type="text"
                                     v-model="signup.fullName"
@@ -122,7 +129,7 @@
                                         >Please enter your full name.</span
                                     >
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="mb-6">
                                 <input
@@ -225,7 +232,7 @@
                                 v-else
                                 disabled
                                 type="button"
-                                class="px-5 py-3 bg-primary text-white font-medium text-lg leading-snug uppercase rounded shadow-md hover:bg-primaryDark hover:shadow-lg focus:bg-primaryDark focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full lg:w-auto inline-flex items-center"
+                                class="px-5 py-3 bg-primary text-white font-medium text-lg leading-snug uppercase rounded shadow-md hover:bg-primaryDark hover:shadow-lg focus:bg-primaryDark focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full lg:w-auto inline-flex justify-center items-center"
                             >
                                 <svg
                                     role="status"
@@ -243,7 +250,7 @@
                                         fill="currentColor"
                                     />
                                 </svg>
-                                Loading...
+                                Please wait...
                             </button>
                             <p class="text-black font-medium mt-4 mb-0 text-xl">
                                 Don't have an account?
@@ -279,7 +286,7 @@ export default {
                 formSubmitted: false
             },
             signup: {
-                fullName: '',
+                // fullName: '',
                 email: '',
                 password: '',
                 confirmPassword: '',
@@ -303,9 +310,9 @@ export default {
             }
         },
         signup: {
-            fullName: {
-                required
-            },
+            // fullName: {
+            //     required
+            // },
             email: {
                 required,
                 email
@@ -331,6 +338,7 @@ export default {
                 this.loading = false;
                 return;
             }
+            this.fireBaseLogin();
         },
         async submitSignupForm() {
             this.loading = true;
@@ -342,7 +350,104 @@ export default {
                 this.loading = false;
                 return;
             }
+            this.fireBaseSignup();
+        },
+        fireBaseLogin() {
+            let that = this;
+            this.$fire.auth
+                .signInWithEmailAndPassword(
+                    this.login.email,
+                    this.login.password
+                )
+                .catch(function (error) {
+                    that.$toast.open({
+                        position: 'top',
+                        message: error.message,
+                        type: 'error'
+                    });
+                    that.loading = false;
+                })
+                .then((user) => {
+                    //we are signed in
+                    that.$router.push('/');
+                });
+        },
+        fireBaseSignup() {
+            let that = this;
+            this.$fire.auth
+                .createUserWithEmailAndPassword(
+                    this.signup.email,
+                    this.signup.password
+                )
+                .catch(function (error) {
+                    that.$toast.open({
+                        position: 'top',
+                        message: error.message,
+                        type: 'error'
+                    });
+                    that.loading = false;
+                })
+                .then((user) => {
+                    //we are signed in
+                    that.$router.push('/login');
+                    that.$toast.open({
+                        position: 'top',
+                        message: "Account created! Please login.",
+                        type: 'success'
+                    });
+                });
+        },
+        socialLogin(value) {
+            let provider = null;
+            let that = this;
+
+            if (value == 'google') {
+                provider =
+                    new this.$fire.auth.app.firebase.auth.GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
+            } else if (value == 'facebook') {
+                provider =
+                    new this.$fire.auth.app.firebase.auth.FacebookAuthProvider();
+                provider.addScope('user_birthday');
+            }
+
+            this.$fire.auth
+                .signInWithPopup(provider)
+                .then((result) => this.$router.push('/'))
+                .catch((e) => {
+                    that.$toast.open({
+                        position: 'top',
+                        message: e.message,
+                        type: 'error'
+                    });
+                });
+        },
+        googleSignIn() {},
+        facebookSignIn() {
+            let provider =
+                new this.$fire.auth.app.firebase.auth.FacebookAuthProvider();
+            provider.addScope('user_birthday');
+            this.$fire.auth.signInWithPopup(provider).then(function (result) {
+                // This gives you a Facebook Access Token.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+            });
         }
+        // forgotPassword() {
+        //     let that = this;
+        //     this.$fire.auth
+        //         .sendPasswordResetEmail(this.auth.email)
+        //         .then(function () {
+        //             that.snackbarText = 'reset link sent to ' + that.auth.email;
+        //             that.snackbar = true;
+        //         })
+        //         .catch(function (error) {
+        //             that.snackbarText = error.message;
+        //             that.snackbar = true;
+        //         });
+        // }
     },
     components: { SocialLogin }
 };

@@ -182,8 +182,10 @@ import SvgIcons from '~/assets/fonts/symbol-defs.svg?inline';
 import NoSleep from 'nosleep.js';
 
 export default {
+    middleware: ['fireAuth'],
     data() {
         return {
+            pageLoading: true,
             navActive: false,
             colorTheme: ['purple', 'red', 'blue', 'pink', 'green'],
             quotes: quotes,

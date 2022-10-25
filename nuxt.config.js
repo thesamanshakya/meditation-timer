@@ -35,31 +35,17 @@ export default {
         '@/assets/css/tailwind.css'
     ],
 
-    router: {
-        middleware: ['auth']
-    },
-
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['~plugins/vuelidate.js'],
+    plugins: [
+        '~plugins/vuelidate.js',
+        { src: '~/plugins/vue-toast-notification.js', mode: 'client' }
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-    buildModules: [
-        // Simple usage
-        '@nuxtjs/tailwindcss',
-        '@nuxt/postcss8',
-        '@nuxtjs/svg'
-        // '@nuxtjs/vuetify',
-        // // With options
-        // [
-        //     '@nuxtjs/vuetify',
-        //     {
-        //         /* module options */
-        //     }
-        // ]
-    ],
+    buildModules: ['@nuxtjs/tailwindcss', '@nuxt/postcss8', '@nuxtjs/svg'],
 
     svg: {
         vueSvgLoader: {
@@ -78,7 +64,32 @@ export default {
         '@nuxtjs/style-resources',
         '@nuxtjs/pwa',
         '@nuxtjs/auth-next',
-        '@nuxtjs/google-fonts'
+        '@nuxtjs/google-fonts',
+        [
+            '@nuxtjs/firebase',
+            {
+                config: {
+                    apiKey: 'AIzaSyA9ltzcTBAzNDxYFTK_pjuxyGMwzHaZflA',
+                    authDomain: 'meditation-timer-82fdf.firebaseapp.com',
+                    projectId: 'meditation-timer-82fdf',
+                    storageBucket: 'meditation-timer-82fdf.appspot.com',
+                    messagingSenderId: '126206087439',
+                    appId: '1:126206087439:web:e23b5a9d6b1568b4d1ee7a',
+                    measurementId: 'G-2G68W6SHKX'
+                },
+                services: {
+                    auth: {
+                        initialize: {
+                            // onAuthStateChangedMutation:
+                            //     'ON_AUTH_STATE_CHANGED_MUTATION',
+                            onAuthStateChangedAction:
+                                'onAuthStateChangedAction',
+                            subscribeManually: false
+                        }
+                    }
+                }
+            }
+        ]
     ],
 
     pwa: {

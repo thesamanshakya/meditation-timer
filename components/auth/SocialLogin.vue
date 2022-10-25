@@ -8,6 +8,7 @@
             data-mdb-ripple="true"
             data-mdb-ripple-color="light"
             class="inline-block p-3 bg-primary text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-primaryDark hover:shadow-lg focus:bg-primaryDark focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out mx-1"
+            @click="$emit('social-login', 'facebook')"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -21,11 +22,13 @@
             </svg>
         </button>
 
+        <!-- Google Login -->
         <button
             type="button"
             data-mdb-ripple="true"
             data-mdb-ripple-color="light"
             class="inline-block p-3 bg-red-500 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-600 hover:shadow-lg focus:bg-red-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-600 active:shadow-lg transition duration-150 ease-in-out mx-1"
+            @click="$emit('social-login', 'google')"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
