@@ -99,7 +99,18 @@ export default {
             this.presetsList.guidedInstruction.activePath =
                 this.presetsList.guidedInstruction.language[index].url;
             this.$forceUpdate();
+        },
+        clickOutsideClose(e) {
+            if (!this.$el.contains(e.target)) {
+                this.settingsActive = false;
+            }
         }
+    },
+    mounted() {
+        document.addEventListener('click', this.clickOutsideClose);
+    },
+    destroyed() {
+        document.removeEventListener('click', this.clickOutsideClose);
     }
 };
 </script>
@@ -141,7 +152,6 @@ export default {
         margin-bottom: -14px;
         li {
             margin-bottom: 17px;
-            // @extend %flexcenter;
         }
         ul {
             padding-left: 35px;

@@ -359,17 +359,17 @@ export default {
                     this.login.email,
                     this.login.password
                 )
-                .catch(function (error) {
+                .then((user) => {
+                    //we are signed in
+                    that.$router.push('/');
+                })
+                .catch((error) => {
                     that.$toast.open({
                         position: 'top',
                         message: error.message,
                         type: 'error'
                     });
                     that.loading = false;
-                })
-                .then((user) => {
-                    //we are signed in
-                    that.$router.push('/');
                 });
         },
         fireBaseSignup() {
@@ -379,22 +379,22 @@ export default {
                     this.signup.email,
                     this.signup.password
                 )
-                .catch(function (error) {
+                .then((user) => {
+                    //we are signed in
+                    that.$router.push('/login');
+                    that.$toast.open({
+                        position: 'top',
+                        message: 'Account created! Please login.',
+                        type: 'success'
+                    });
+                })
+                .catch((error) => {
                     that.$toast.open({
                         position: 'top',
                         message: error.message,
                         type: 'error'
                     });
                     that.loading = false;
-                })
-                .then((user) => {
-                    //we are signed in
-                    that.$router.push('/login');
-                    that.$toast.open({
-                        position: 'top',
-                        message: "Account created! Please login.",
-                        type: 'success'
-                    });
                 });
         },
         socialLogin(value) {

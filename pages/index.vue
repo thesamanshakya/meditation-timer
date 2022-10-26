@@ -421,15 +421,15 @@ export default {
             }
         }
     },
-    components: {
-        SvgIcons,
-        NoSleep
-    },
     mounted() {
         this.setBgQuoteChange();
     },
     destroyed() {
         this.stopBgQuoteChange();
+    },
+    components: {
+        SvgIcons,
+        NoSleep
     }
 };
 </script>
