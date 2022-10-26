@@ -23,7 +23,7 @@ export default {
                 content:
                     'Hamro Meditation Timer - a simple and lightweight tool for meditation created by Saman with &hearts;'
             },
-            { name: 'format-detection', content: 'telephone=no' }
+            { name: 'format-detection', content: 'telephone=no' },
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
     },

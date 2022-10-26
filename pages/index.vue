@@ -115,7 +115,7 @@
                 <span
                     class="timer animate__pulse complete"
                     v-if="completeAction"
-                    >MEDITATION COMPLETED!</span
+                    >COMPLETED!</span
                 >
                 <span class="timer" v-else>
                     {{
@@ -163,9 +163,6 @@
                 <Battery />
                 <Settings :presetsList="presetsList" />
             </span>
-            <audio id="custom-audio-elem">
-                Your browser does not support the audio format.
-            </audio>
         </div>
         <span class="install"
             >Get this free app. It won't take up space on your device.
@@ -215,15 +212,15 @@ export default {
                         {
                             language: 'hindi',
                             url: '/media/instructions/anapana/hindi.mp3'
-                        }
+                        },
                         // {
                         //     language: 'nepali',
                         //     url: '/media/instructions/anapana/nepali.mp3'
                         // },
-                        // {
-                        //     language: 'custom',
-                        //     url: '/media/instructions/anapana/custom.mp3'
-                        // }
+                        {
+                            language: 'custom',
+                            url: null
+                        }
                     ]
                 },
                 time: [
@@ -265,6 +262,34 @@ export default {
                     ]
                 }
             }
+        };
+    },
+    head() {
+        let fullUrl = 'https://timer.saman.conm.np' + this.$route.path;
+        return {
+            meta: [
+                {
+                    hid: 'og:title',
+                    property: 'og:title',
+                    content: 'Hamro Meditation Timer'
+                },
+                {
+                    hid: 'og:url',
+                    property: 'og:url',
+                    content: fullUrl
+                },
+                {
+                    hid: 'og:description',
+                    property: 'og:description',
+                    content:
+                        'Hamro Meditation Timer - a simple and lightweight tool for meditation created by Saman with &hearts;'
+                },
+                {
+                    hid: 'og:image',
+                    property: 'og:image',
+                    content: '/images/og-image.jpg'
+                }
+            ]
         };
     },
     methods: {
@@ -335,7 +360,7 @@ export default {
                 } else {
                     this.stopTimer();
                 }
-            }, 1000);
+            }, 10);
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;
@@ -392,8 +417,9 @@ export default {
             }
         },
         stopAudio() {
-            if (this.presetsList.guidedInstruction.statusActive)
+            if (this.presetsList.guidedInstruction.statusActive) {
                 this.stopGuidedAudio();
+            }
             this.stopBellSound();
         },
         playBellSound() {
@@ -807,8 +833,8 @@ input[type='file'] {
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 21px;
-            height: 21px;
+            width: 19px;
+            height: 19px;
             background: #fff;
             border-radius: 90px;
             transition: 0.1s;
@@ -1014,14 +1040,14 @@ input[type='file'] {
 .i-bar + .i-bar {
     margin-top: 5px;
 }
-#current-audio {
+.current-audio {
     white-space: nowrap;
     overflow: hidden;
     max-width: 130px;
     display: block;
     text-overflow: ellipsis;
     font-size: 13px;
-    padding: 7px 0 0;
+    padding: 12px 0 0;
 }
 .c-audio {
     padding: 14px 2px 0 35px;

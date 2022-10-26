@@ -45,7 +45,7 @@
                                     <div
                                         class="c-audio"
                                         v-if="
-                                            false &&
+                                            customAudioActive &&
                                             presetsList.guidedInstruction
                                                 .language.length ==
                                                 index + 1
@@ -56,8 +56,15 @@
                                             class="btn-custom"
                                             >Select Audio</label
                                         >
-                                        <input type="file" accept="audio/*" />
-                                        <span id="current-audio"></span>
+                                        <input
+                                            id="custom-audio"
+                                            type="file"
+                                            accept="audio/*"
+                                            @change="setCustomAudio"
+                                        />
+                                        <span class="current-audio" v-if="!!customAudioFileName">{{
+                                            customAudioFileName
+                                        }}</span>
                                     </div>
                                 </li>
                             </ul>
@@ -75,6 +82,8 @@ export default {
     data() {
         return {
             settingsActive: false,
+            customAudioActive: false,
+            customAudioFileName: null,
             guidedMeditationCheck: false
         };
     },
@@ -87,6 +96,10 @@ export default {
                 !this.presetsList.guidedInstruction.statusActive;
         },
         selectInstructionAudio(index) {
+            this.customAudioActive =
+                index == this.presetsList.guidedInstruction.language.length - 1
+                    ? true
+                    : false;
             this.presetsList.guidedInstruction.language.forEach(
                 (elm, index) => {
                     if (elm.hasOwnProperty('statusActive'))
@@ -103,6 +116,24 @@ export default {
         clickOutsideClose(e) {
             if (!this.$el.contains(e.target)) {
                 this.settingsActive = false;
+            }
+        },
+        setCustomAudio(e) {
+            let files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            let file = files[0],
+                type = file.type,
+                audio = document.createElement('audio');
+            if (audio.canPlayType(type)) {
+                this.presetsList.guidedInstruction.activePath =
+                    URL.createObjectURL(file);
+                this.customAudioFileName = file.name;
+            } else {
+                this.$toast.open({
+                    position: 'top',
+                    message: 'Sorry, this file cannot be played!',
+                    type: 'error'
+                });
             }
         }
     },
