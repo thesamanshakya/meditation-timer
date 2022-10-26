@@ -109,7 +109,7 @@
                         </div>
                         <!-- Signup Form -->
                         <div v-else>
-                            <!-- <div class="mb-6">
+                            <div class="mb-6">
                                 <input
                                     type="text"
                                     v-model="signup.fullName"
@@ -129,7 +129,7 @@
                                         >Please enter your full name.</span
                                     >
                                 </div>
-                            </div> -->
+                            </div>
 
                             <div class="mb-6">
                                 <input
@@ -286,7 +286,7 @@ export default {
                 formSubmitted: false
             },
             signup: {
-                // fullName: '',
+                fullName: '',
                 email: '',
                 password: '',
                 confirmPassword: '',
@@ -310,9 +310,9 @@ export default {
             }
         },
         signup: {
-            // fullName: {
-            //     required
-            // },
+            fullName: {
+                required
+            },
             email: {
                 required,
                 email
@@ -362,6 +362,7 @@ export default {
                 .then((user) => {
                     //we are signed in
                     that.$router.push('/');
+                    this.welcomeByFirstName();
                 })
                 .catch((error) => {
                     that.$toast.open({
@@ -381,6 +382,7 @@ export default {
                 )
                 .then((user) => {
                     //we are signed in
+                    this.updateUserProfile();
                     that.$router.push('/login');
                     that.$toast.open({
                         position: 'top',
@@ -396,6 +398,18 @@ export default {
                     });
                     that.loading = false;
                 });
+        },
+        updateUserProfile() {
+            const userID = this.$fire.auth.currentUser.uid;
+            if (!!userID) {
+                this.$fire.database.ref('users/' + userID).set({
+                    full_name: this.signup.fullName,
+                    // display_name: null,
+                    email: this.signup.email,
+                    // profile_picture: null,
+                    last_login: Date.now()
+                });
+            }
         },
         socialLogin(value) {
             let provider = null;
@@ -414,7 +428,10 @@ export default {
 
             this.$fire.auth
                 .signInWithPopup(provider)
-                .then((result) => this.$router.push('/'))
+                .then(() => {
+                    this.$router.push('/');
+                    this.welcomeByFirstName();
+                })
                 .catch((e) => {
                     that.$toast.open({
                         position: 'top',
@@ -423,31 +440,42 @@ export default {
                     });
                 });
         },
-        googleSignIn() {},
-        facebookSignIn() {
-            let provider =
-                new this.$fire.auth.app.firebase.auth.FacebookAuthProvider();
-            provider.addScope('user_birthday');
-            this.$fire.auth.signInWithPopup(provider).then(function (result) {
-                // This gives you a Facebook Access Token.
-                var token = result.credential.accessToken;
-                // The signed-in user info.
-                var user = result.user;
-            });
+        async welcomeByFirstName() {
+            const fullName = await this.getUserFullName();
+            // console.log(fullName);
+            if (!!fullName) {
+                this.$toast.open({
+                    position: 'top',
+                    message: 'Welcome ' + fullName.split(' ')[0] + '!',
+                    type: 'success',
+                    duration: '7000'
+                });
+            }
+        },
+        async getUserFullName() {
+            const user = this.$fire.auth.currentUser;
+            if (!!user) {
+                if (!!user.displayName) {
+                    return user.displayName;
+                } else {
+                    const userID = user.uid;
+                    const dbRef = this.$fire.database.ref();
+                    return await dbRef
+                        .child('users')
+                        .child(userID)
+                        .child('full_name')
+                        .get()
+                        .then((snapshot) => {
+                            if (snapshot.exists()) {
+                                return snapshot.val();
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                }
+            }
         }
-        // forgotPassword() {
-        //     let that = this;
-        //     this.$fire.auth
-        //         .sendPasswordResetEmail(this.auth.email)
-        //         .then(function () {
-        //             that.snackbarText = 'reset link sent to ' + that.auth.email;
-        //             that.snackbar = true;
-        //         })
-        //         .catch(function (error) {
-        //             that.snackbarText = error.message;
-        //             that.snackbar = true;
-        //         });
-        // }
     },
     components: { SocialLogin }
 };

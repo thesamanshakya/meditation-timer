@@ -86,7 +86,8 @@ export default {
                                 'onAuthStateChangedAction',
                             subscribeManually: false
                         }
-                    }
+                    },
+                    database: true
                 }
             }
         ]
