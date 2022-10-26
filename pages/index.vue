@@ -213,10 +213,10 @@ export default {
                             language: 'hindi',
                             url: '/media/instructions/anapana/hindi.mp3'
                         },
-                        // {
-                        //     language: 'nepali',
-                        //     url: '/media/instructions/anapana/nepali.mp3'
-                        // },
+                        {
+                            language: 'nepali',
+                            url: '/media/instructions/anapana/nepali.mp3'
+                        },
                         {
                             language: 'custom',
                             url: null
