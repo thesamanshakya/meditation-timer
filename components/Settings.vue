@@ -1,11 +1,11 @@
 <template>
     <span
-        class="text-2xl leading-none ml-6 cursor-pointer"
+        class="settings text-2xl leading-none ml-6 cursor-pointer"
         :class="{ active: settingsActive }"
     >
         <i
             @click="settingsActive = !settingsActive"
-            class="inline-block align-top"
+            class="inline-block align-top transition-all"
         >
             <svg class="icon icon-settings">
                 <use xlink:href="#icon-settings"></use>
@@ -13,11 +13,11 @@
         </i>
         <Transition>
             <span
-                class="s-dropdown absolute z-10 pt-4 cursor-default -right-3 top-full"
+                class="s-dropdown absolute z-10 pt-4 cursor-default -right-3 top-full after:content-[''] after:absolute after:-mb-4 after:bottom-full after:right-[14px] after:w-0 after:h-0 after:border-8 after:border-transparent after:border-b-white"
                 v-if="settingsActive"
             >
                 <span
-                    class="s-dd block rounded-md p-4 text-sm bg-black border-1 border-black min-w-[240px]"
+                    class="s-dd block rounded-md p-4 text-sm bg-black border border-white min-w-[240px]"
                 >
                     <ul class="m-0 p-0 list-none -mb-3">
                         <li class="mb-4">
@@ -35,6 +35,7 @@
                                     v-for="(instruction, index) in presetsList
                                         .guidedInstruction.language"
                                     :key="index"
+                                    class="mb-4"
                                 >
                                     <label class="c-checkbox radio">
                                         {{
@@ -54,7 +55,7 @@
                                         <span class="checkmark"></span>
                                     </label>
                                     <div
-                                        class="c-audio relative pt-4 pr-1 pb-9"
+                                        class="c-audio relative pt-4 pr-1 pb-9 before:w-6 before:h-6 before:absolute before:border-t before:border-r before:rounded-tr-md before:right-4 before:-top-2 before:content-['']"
                                         v-if="
                                             customAudioActive &&
                                             presetsList.guidedInstruction
@@ -64,13 +65,14 @@
                                     >
                                         <label
                                             for="custom-audio"
-                                            class="btn-custom"
+                                            class="border-2 border-white rounded-[30px] text-sm leading-none text-white bg-transparent outline-none block px-3 py-4 cursor-pointer text-center -mb-[7px] hover:bg-white hover:text-black"
                                             >Select Audio</label
                                         >
                                         <input
                                             id="custom-audio"
                                             type="file"
                                             accept="audio/*"
+                                            class="hidden"
                                             @change="setCustomAudio"
                                         />
                                         <span
@@ -158,41 +160,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.5s ease;
-}
-.v-enter-active {
-    opacity: 1;
-}
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
-}
-.s-dropdown {
-    &:after {
-        content: '';
-        position: absolute;
-        margin: 0 0 -16px;
-        bottom: 100%;
-        right: 14px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 0 8px 7px 8px;
-        border-color: transparent transparent #fff transparent;
-    }
-}
-.settings {
-    i {
-        transition: transform 0.25s ease;
-    }
-    &.active {
-        i {
-            transform: rotate(20deg);
-        }
-    }
-}
-</style>

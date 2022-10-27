@@ -1,6 +1,179 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-.c-audio:before {
-    @apply w-6 h-6 absolute border-t border-r rounded-tr-md right-4 -top-2 content-[''];
+
+body {
+    @apply m-0 text-base text-white min-w-[320px] overflow-y-scroll;
+    font-family: 'Roboto', Arial, Verdana, Helvetica, sans-serif;
+}
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.v-enter-active,
+.v-leave-active {
+    @apply transition-opacity;
+}
+.v-enter-active {
+    @apply opacity-100;
+}
+.v-enter-from,
+.v-leave-to {
+    @apply opacity-0;
+}
+.second {
+    animation: fadeInOut 1s infinite 0.2s;
+}
+.third {
+    animation: fadeInOut 1s infinite 0.4s;
+}
+@-webkit-keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.icon {
+    @apply inline-block w-[1em] h-[1em];
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}
+.settings.active i {
+    @apply rotate-45;
+}
+html,
+body,
+.w1,
+#__layout,
+#__nuxt {
+    height: 100%;
+}
+body {
+    transition: background-color 0.25s ease;
+}
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+    }
+
+    50% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05);
+    }
+
+    to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+    }
+
+    50% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05);
+    }
+
+    to {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+    }
+}
+
+.animate__pulse {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+}
+
+.running .bell-sound li {
+    @apply hidden;
+}
+.running .bell-sound li.active {
+    @apply block;
+}
+.running .bell-sound li a {
+    @apply pointer-events-none cursor-default;
+}
+.c-checkbox {
+    @apply block relative p-0 pt-[2px] pl-9 cursor-pointer;
+}
+.c-checkbox input {
+    @apply absolute opacity-0 cursor-pointer h-0 w-0;
+}
+.c-checkbox input:checked ~ .checkmark {
+    @apply bg-white;
+}
+.c-checkbox input:checked ~ .checkmark:after {
+    display: block;
+    @apply block border-black;
+}
+.c-checkbox .checkmark:after {
+    @apply left-2 top-1 w-1 h-3 border-r-2 border-b-2 border-white rotate-45;
+}
+.c-checkbox.radio .checkmark {
+    @apply rounded-full;
+}
+.checkmark {
+    @apply absolute top-0 left-0 h-6 w-6 rounded-md border-2 border-white;
+}
+.checkmark:after {
+    @apply content-[''] absolute hidden;
+}
+.interval input:checked + label {
+    @apply bg-white border-transparent;
+}
+.interval input:checked + label:after {
+    @apply left-[calc(100%-2px)] -translate-x-full bg-white;
+}
+.bell-sound li.active a {
+    @apply bg-white text-black;
+}
+.presets li.active a {
+    @apply bg-white text-black scale-110;
+}
+.presets li.active .add-btn {
+    @apply block;
+}
+#nav-container.active .i-bar:nth-of-type(1) {
+    transform: translate3d(0, 8px, 0) rotate(45deg);
+}
+#nav-container.active .i-bar:nth-of-type(2) {
+    @apply opacity-0;
+}
+#nav-container.active .i-bar:nth-of-type(3) {
+    transform: translate3d(0, -8px, 0) rotate(-45deg);
+}
+#nav-container.active .nav-content {
+    @apply opacity-100 z-[999] outline-none pointer-events-none;
+}
+@media only screen and (max-width: 767px) {
+    .bell-sound li.active a {
+        @apply rounded-full pointer-events-none cursor-default;
+    }
 }

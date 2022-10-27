@@ -1,55 +1,38 @@
 <template>
-    <div id="wrapper" class="overflow-hidden relative w-full h-full bg-black">
+    <div
+        id="wrapper"
+        class="overflow-hidden relative w-full h-full bg-black transition-all"
+    >
         <div
             id="nav-container"
             class="fixed h-screen w-full pointer-events-none z-10"
             :class="{ active: navActive }"
         >
             <div
-                class="menu-button relative flex items-center flex-col z-10 appearance-none border-0 bg-transparent rounded-none w-8 cursor-pointer pointer-events-auto mt-6 ml-6"
+                class="menu-button relative flex items-center flex-col z-10 appearance-none border-0 bg-transparent rounded-none w-8 cursor-pointer pointer-events-auto mt-5 ml-6"
                 @click="navActive = !navActive"
             >
                 <span
                     v-for="index in 3"
                     :key="index"
-                    class="i-bar block w-full h-1 bg-white"
+                    class="i-bar block w-full h-1 bg-white transition-all mt-[5px]"
                 ></span>
             </div>
             <div
-                class="nav-content mt-16 absolute top-0 left-0 pointer-events-none opacity-0 px-6 py-3 bg-black -z-10 w-full text-center md:text-left md:w-[90%] md:max-w-[250px]"
+                class="nav-content mt-16 absolute top-0 left-0 pointer-events-none opacity-0 px-6 py-3 bg-black -z-10 w-full text-center md:text-left md:w-[90%] md:max-w-[250px] transition-opacity h-[calc(100%-70px)]"
             >
                 <ul class="nav m-0 p-0 list-none">
-                    <li class="mb-4">
+                    <li
+                        class="mb-4"
+                        v-for="(list, index) in menuList"
+                        :key="index"
+                    >
                         <a
-                            href="http://m.me/100666278588914"
+                            :href="list.url"
                             target="_blank"
                             rel="nofollow noopener"
-                            class="text-xl block pb-3 hover:text-white hover:pl-1"
-                            >Contact Developer</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            href="http://m.me/100666278588914"
-                            target="_blank"
-                            rel="nofollow noopener"
-                            >Report a bug</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            href="http://m.me/anapansati"
-                            target="_blank"
-                            rel="nofollow noopener"
-                            >Join meditation!</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            href="https://buymeacoffee.com/samanshakya"
-                            target="_blank"
-                            rel="nofollow noopener"
-                            >Buy me a Coffee!</a
+                            class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all"
+                            >{{ list.linkText }}</a
                         >
                     </li>
                 </ul>
@@ -88,27 +71,27 @@
                         >
                             <a
                                 @click="selectBellList(index)"
-                                class="px-1 py-4 cursor-pointer block md:px-3 md:py-5"
+                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-5"
                                 >{{ bell.name }}</a
                             >
                         </li>
                     </ul>
                 </div>
-                <div class="controls">
+                <div class="controls" v-if="!isRunning">
                     <ul
-                        class="presets m-0 p-0 list-none flex justify-center flex-wrap leading-none pb-8"
+                        class="presets m-0 p-0 list-none flex justify-center flex-wrap leading-none pb-8 text-[5.5vw] md:text-[4vh]"
                     >
                         <li
                             v-for="(preset, index) in presetsList.time"
                             :key="index"
-                            class="mb-3 relative mx-2 md:mb-4"
+                            class="mb-3 relative mx-2.5 md:mb-4"
                             :class="{
                                 active: presetsList.time[index].statusActive
                             }"
                         >
                             <a
                                 @click="selectTimeList(index)"
-                                class="px-5 py-5 cursor-pointer block text-center border-2 border-white rounded-full md:px-8 md:pt-7 hover:text-gray-300"
+                                class="px-5 py-5 cursor-pointer block text-center border-2 border-white rounded-full md:px-8 md:pt-7 hover:text-gray-300 transition-all"
                             >
                                 {{
                                     preset.time >= 60
@@ -138,7 +121,8 @@
                     />
                     <label
                         for="switch"
-                        class="cursor-pointer w-10 h-5 block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white md:w-12 md:h-6"
+                        class="cursor-pointer w-10 h-5 block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white md:w-12 md:h-6 after:absolute md:after:w-4 md:after:h-4 after:w-3 after:h-3 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all"
+                        v-if="!isRunning"
                     ></label>
                     <span class="interval-text text-sm ml-4 md:text-lg md:ml-5">
                         Interval Bell
@@ -148,13 +132,15 @@
                         </span>
                     </span>
                 </div>
-
                 <span
-                    class="timer animate__pulse complete"
+                    class="timer animate__pulse complete text-[9vw] leading-[12vw] md:text-[10vh]"
                     v-if="completeAction"
                     >COMPLETED!</span
                 >
-                <span class="timer block leading-none mb-8" v-else>
+                <span
+                    class="timer block leading-none mb-8 text-[21vw] md:text-[25vh]"
+                    v-else
+                >
                     {{
                         isRunning
                             ? timeParser(tickerInMins)
@@ -162,10 +148,12 @@
                     }}
                 </span>
 
-                <div class="custom-playing text-center p-9 pt-0" id="c-playing">
+                <!-- <div class="custom-playing text-center p-9 pt-0" id="c-playing">
                     <div class="inline-block align-top relative pl-8">
                         <div class="absolute left-0 top-0 pr-3">
-                            <div class="icon speaker">
+                            <div
+                                class="icon speaker w-0 h-0 bg-transparent border-y-[15px] border-r-[20px] border-r-white border-y-transparent relative before:content-[''] before:absolute before:-top-[5px] before:left-0 before:w-5 before:h-[10px] before:bg-white"
+                            >
                                 <div class="left-8 top-6"></div>
                             </div>
                             <div
@@ -185,10 +173,10 @@
                             >Goenka Satipattana Sutta Chanting Day 5.mp3</i
                         >
                     </div>
-                </div>
+                </div> -->
 
                 <button
-                    class="btn-action bg-transparent text-white border-0"
+                    class="btn-action bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all focus:outline-none focus:border-none hover:scale-105"
                     type="button"
                     @click="toggleTimer"
                     v-if="!completeAction"
@@ -203,13 +191,14 @@
             </div>
             <span
                 class="text-base text-center absolute pointer-events-none cursor-default max-w-4xl inset-3 top-auto mx-auto md:text-lg"
+                v-if="!isRunning"
             >
                 "{{ quote.quote }}" -
                 <span class="block md:inline">{{ quote.author }}</span>
             </span>
             <span class="absolute flex items-center right-6 top-6">
                 <Battery />
-                <Settings :presetsList="presetsList" />
+                <Settings :presetsList="presetsList" v-if="!isRunning" />
             </span>
         </div>
         <span
@@ -247,7 +236,24 @@ export default {
             tickerInMins: null,
             isRunning: false,
             completeAction: false,
-
+            menuList: [
+                {
+                    linkText: 'Contact Developer',
+                    url: 'http://m.me/100666278588914'
+                },
+                {
+                    linkText: 'Report a bug',
+                    url: 'http://m.me/100666278588914'
+                },
+                {
+                    linkText: 'Join meditation!',
+                    url: 'http://m.me/anapansati'
+                },
+                {
+                    linkText: 'Buy me a Coffee!',
+                    url: 'https://buymeacoffee.com/samanshakya'
+                }
+            ],
             presetsList: {
                 totalDurationInMins: 10,
                 intervalBell: false,
@@ -513,115 +519,6 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-    margin: 0;
-    color: $base-text-color;
-    font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-    min-width: $base-min-width;
-    overflow-y: scroll;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: none;
-}
-img {
-    border: 0;
-    border-style: none;
-    vertical-align: top;
-}
-a {
-    text-decoration: none;
-    color: $base-link-color;
-    &:focus {
-        outline: none;
-        box-shadow: none;
-    }
-}
-button::-moz-focus-inner,
-input::-moz-focus-inner {
-    border: 0;
-    padding: 0;
-}
-* {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-button,
-html input[type='button'],
-input[type='reset'],
-input[type='submit'] {
-    -webkit-appearance: button;
-    cursor: pointer;
-    *overflow: visible;
-}
-
-input[type='submit']:hover,
-button:hover {
-    cursor: pointer;
-}
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-}
-html,
-body,
-.w1,
-#__layout,
-#__nuxt {
-    height: 100%;
-}
-body {
-    transition: background-color 0.25s ease;
-}
-@-webkit-keyframes pulse {
-    0% {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-
-    50% {
-        -webkit-transform: scale3d(1.05, 1.05, 1.05);
-        transform: scale3d(1.05, 1.05, 1.05);
-    }
-
-    to {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-
-    50% {
-        -webkit-transform: scale3d(1.05, 1.05, 1.05);
-        transform: scale3d(1.05, 1.05, 1.05);
-    }
-
-    to {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-}
-
-.animate__pulse {
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    -webkit-animation-name: pulse;
-    animation-name: pulse;
-    -webkit-animation-timing-function: ease-in-out;
-    animation-timing-function: ease-in-out;
-}
-
 $themeColours: (
     'purple': #af049a,
     'red': #af1616,
@@ -641,308 +538,6 @@ $themeColours: (
             }
             .battery > span {
                 border-color: $i;
-            }
-        }
-    }
-}
-.second {
-    animation: fadeInOut 1s infinite 0.2s;
-}
-.third {
-    animation: fadeInOut 1s infinite 0.4s;
-}
-@-webkit-keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-.icon {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    stroke-width: 0;
-    stroke: currentColor;
-    fill: currentColor;
-}
-.speaker {
-    width: 0;
-    height: 0;
-    background: none;
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent;
-    border-right: 20px solid #fff;
-    position: relative;
-    &:before {
-        content: '';
-        position: absolute;
-        top: -5px;
-        left: 0;
-        width: 20px;
-        height: 10px;
-        background: #fff;
-    }
-}
-#wrapper {
-    transition: all 750ms ease;
-}
-.running {
-    .controls,
-    .settings,
-    .quotes,
-    .interval > label {
-        display: none;
-    }
-    .bell-sound {
-        li {
-            display: none;
-            &.active {
-                display: block;
-            }
-            a {
-                pointer-events: none;
-                cursor: default;
-            }
-        }
-    }
-}
-.custom-playing,
-input[type='file'] {
-    display: none;
-}
-.c-checkbox {
-    display: block;
-    position: relative;
-    padding: 2px 0 0 35px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-        &:checked {
-            ~ .checkmark {
-                background: #fff;
-                &:after {
-                    display: block;
-                    border-color: #000;
-                }
-            }
-        }
-    }
-    .checkmark {
-        &:after {
-            left: 8px;
-            top: 4px;
-            width: 5px;
-            height: 11px;
-            border: solid #fff;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-    }
-    &.radio {
-        .checkmark {
-            border-radius: 50%;
-        }
-    }
-}
-.checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 24px;
-    width: 24px;
-    border-radius: 5px;
-    border: 2px solid #fff;
-    &:after {
-        content: '';
-        position: absolute;
-        display: none;
-    }
-}
-.timer {
-    font-size: 25vh;
-    &.complete {
-        font-size: 10vh;
-    }
-}
-.interval {
-    label {
-        &:after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border-radius: 90px;
-            transition: 0.1s;
-        }
-    }
-    input:checked {
-        + label {
-            background: #fff;
-            border-color: transparent;
-            &:after {
-                left: calc(100% - 2px);
-                transform: translateX(-100%);
-                background: #fff;
-            }
-        }
-    }
-
-    label:active:after {
-        width: 30px;
-    }
-}
-.btn-action {
-    font-size: 18vh;
-    transition: all 0.25s ease;
-    &:focus,
-    &:active {
-        border: none;
-        outline: none;
-    }
-    &:hover {
-        transform: scale(1.07);
-    }
-}
-
-.bell-sound {
-    li {
-        &.active {
-            a {
-                background: #fff;
-                color: #000;
-            }
-        }
-    }
-}
-.presets {
-    font-size: 4vh;
-    li {
-        &.active {
-            a {
-                background: #fff;
-                color: #000;
-                transform: scale(1.1);
-            }
-            .add-btn {
-                display: block;
-            }
-        }
-    }
-}
-#nav-container {
-    &.active {
-        .i-bar:nth-of-type(1) {
-            transform: translate3d(0, 8px, 0) rotate(45deg);
-        }
-        .i-bar:nth-of-type(2) {
-            opacity: 0;
-        }
-        .i-bar:nth-of-type(3) {
-            transform: translate3d(0, -8px, 0) rotate(-45deg);
-        }
-        .nav-content {
-            opacity: 1;
-            z-index: 999;
-            outline: none;
-            pointer-events: auto;
-        }
-    }
-}
-.menu-button {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    &:focus {
-        outline: none;
-    }
-}
-.i-bar {
-    transition: 0.3s;
-}
-.i-bar + .i-bar {
-    margin-top: 5px;
-}
-.btn-custom {
-    border: 2px solid #fff;
-    border-radius: 30px;
-    font-size: 14px;
-    line-height: 1;
-    color: #fff;
-    background: none;
-    outline: none;
-    display: block;
-    padding: 12px 17px;
-    cursor: pointer;
-    text-align: center;
-    margin-bottom: -7px;
-    &:hover {
-        background: #fff;
-        color: #000;
-    }
-}
-.nav-content {
-    height: calc(100% - 70px);
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    transition: opacity 0.25s ease;
-}
-.nav {
-    li {
-        a {
-            transition: all 0.25s ease;
-        }
-    }
-}
-@media only screen and (max-width: 767px) {
-    .bell-sound {
-        li {
-            &.active {
-                a {
-                    border-radius: 50px;
-                    pointer-events: none;
-                    cursor: default;
-                }
-            }
-        }
-    }
-    .timer {
-        font-size: 21vw;
-        &.complete {
-            font-size: 9vw;
-            line-height: 12vw;
-        }
-    }
-    .btn-action {
-        font-size: 24vw;
-    }
-    .presets {
-        font-size: 5.5vw;
-    }
-    .interval {
-        label {
-            &:after {
-                width: 12px;
-                height: 12px;
-                left: 2px;
             }
         }
     }
