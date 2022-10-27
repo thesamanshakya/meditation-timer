@@ -39,12 +39,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped>
-.battery {
-    > span {
-        background: #fff;
-        position: absolute;
-    }
-}
-</style>
