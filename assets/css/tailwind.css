@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.c-audio:before {
+    @apply w-6 h-6 absolute border-t border-r rounded-tr-md right-4 -top-2 content-[''];
+}

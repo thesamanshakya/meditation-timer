@@ -1,15 +1,26 @@
 <template>
-    <span class="settings" :class="{ active: settingsActive }">
-        <i @click="settingsActive = !settingsActive">
+    <span
+        class="text-2xl leading-none ml-6 cursor-pointer"
+        :class="{ active: settingsActive }"
+    >
+        <i
+            @click="settingsActive = !settingsActive"
+            class="inline-block align-top"
+        >
             <svg class="icon icon-settings">
                 <use xlink:href="#icon-settings"></use>
             </svg>
         </i>
         <Transition>
-            <span class="s-dropdown" v-if="settingsActive">
-                <span class="s-dd">
-                    <ul>
-                        <li>
+            <span
+                class="s-dropdown absolute z-10 pt-4 cursor-default -right-3 top-full"
+                v-if="settingsActive"
+            >
+                <span
+                    class="s-dd block rounded-md p-4 text-sm bg-black border-1 border-black min-w-[240px]"
+                >
+                    <ul class="m-0 p-0 list-none -mb-3">
+                        <li class="mb-4">
                             <label class="c-checkbox"
                                 >Guided Meditation
                                 <input
@@ -19,7 +30,7 @@
                                 />
                                 <span class="checkmark"></span>
                             </label>
-                            <ul v-if="guidedMeditationCheck">
+                            <ul v-if="guidedMeditationCheck" class="pl-9 pt-4">
                                 <li
                                     v-for="(instruction, index) in presetsList
                                         .guidedInstruction.language"
@@ -43,7 +54,7 @@
                                         <span class="checkmark"></span>
                                     </label>
                                     <div
-                                        class="c-audio"
+                                        class="c-audio relative pt-4 pr-1 pb-9"
                                         v-if="
                                             customAudioActive &&
                                             presetsList.guidedInstruction
@@ -62,9 +73,11 @@
                                             accept="audio/*"
                                             @change="setCustomAudio"
                                         />
-                                        <span class="current-audio" v-if="!!customAudioFileName">{{
-                                            customAudioFileName
-                                        }}</span>
+                                        <span
+                                            class="whitespace-no-wrap overflow-hidden block text-xs pt-3 text-ellipsis max-w-[130px]"
+                                            v-if="!!customAudioFileName"
+                                            >{{ customAudioFileName }}</span
+                                        >
                                     </div>
                                 </li>
                             </ul>
@@ -159,13 +172,6 @@ export default {
     opacity: 0;
 }
 .s-dropdown {
-    position: absolute;
-    right: -10px;
-    top: 100%;
-    z-index: 10;
-    padding-top: 15px;
-    // display: none;
-    cursor: default;
     &:after {
         content: '';
         position: absolute;
@@ -178,37 +184,9 @@ export default {
         border-width: 0 8px 7px 8px;
         border-color: transparent transparent #fff transparent;
     }
-    ul {
-        @extend %listreset;
-        margin-bottom: -14px;
-        li {
-            margin-bottom: 17px;
-        }
-        ul {
-            padding-left: 35px;
-            padding-top: 15px;
-        }
-    }
-}
-.s-dd {
-    display: block;
-    background: #000;
-    border: 1px solid #fff;
-    border-radius: 7px;
-    padding: 17px;
-    font-size: 14px;
-    line-height: 20px;
-    // min-width: 225px;
-    min-width: 240px;
 }
 .settings {
-    font-size: 23px;
-    line-height: 1;
-    margin-left: 25px;
-    cursor: pointer;
     i {
-        display: inline-block;
-        vertical-align: top;
         transition: transform 0.25s ease;
     }
     &.active {

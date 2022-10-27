@@ -1,18 +1,30 @@
 <template>
-    <div id="wrapper">
-        <div id="nav-container" :class="{ active: navActive }">
-            <div class="menu-button" @click="navActive = !navActive">
-                <span class="i-bar"></span>
-                <span class="i-bar"></span>
-                <span class="i-bar"></span>
+    <div id="wrapper" class="overflow-hidden relative w-full h-full bg-black">
+        <div
+            id="nav-container"
+            class="fixed h-screen w-full pointer-events-none z-10"
+            :class="{ active: navActive }"
+        >
+            <div
+                class="menu-button relative flex items-center flex-col z-10 appearance-none border-0 bg-transparent rounded-none w-8 cursor-pointer pointer-events-auto mt-6 ml-6"
+                @click="navActive = !navActive"
+            >
+                <span
+                    v-for="index in 3"
+                    :key="index"
+                    class="i-bar block w-full h-1 bg-white"
+                ></span>
             </div>
-            <div class="nav-content">
-                <ul class="nav">
-                    <li>
+            <div
+                class="nav-content mt-16 absolute top-0 left-0 pointer-events-none opacity-0 px-6 py-3 bg-black -z-10 w-full text-center md:text-left md:w-[90%] md:max-w-[250px]"
+            >
+                <ul class="nav m-0 p-0 list-none">
+                    <li class="mb-4">
                         <a
                             href="http://m.me/100666278588914"
                             target="_blank"
                             rel="nofollow noopener"
+                            class="text-xl block pb-3 hover:text-white hover:pl-1"
                             >Contact Developer</a
                         >
                     </li>
@@ -41,20 +53,31 @@
                         >
                     </li>
                 </ul>
-                <span class="by"
-                    >App created by<i
-                        ><a href="https://saman.com.np">Saman Shakya</a> with
-                        &hearts;</i
+                <span class="text-sm block"
+                    >App created by<i class="block font-normal"
+                        ><a class="underline" href="https://saman.com.np"
+                            >Saman Shakya</a
+                        >
+                        with &hearts;</i
                     ><i>May all beings be happy! &#128522;</i></span
                 >
             </div>
         </div>
-        <div class="w1" :class="{ running: isRunning }">
-            <div class="app">
+        <div
+            class="w1 flex items-center justify-center pb-2"
+            :class="{ running: isRunning }"
+        >
+            <div class="text-center flex-1">
                 <SvgIcons />
-                <div class="sound-wrapper">
-                    <strong class="title">Start/End Bell</strong>
-                    <ul class="bell-sound">
+                <div
+                    class="text-sm static top-1/2 right-8 mb-8 z-10 md:-mt-32 md:absolute md:text-lg"
+                >
+                    <strong class="font-normal mb-3 hidden md:block"
+                        >Start/End Bell</strong
+                    >
+                    <ul
+                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:border-2 md:border-white md:block"
+                    >
                         <li
                             v-for="(bell, index) in presetsList.bellSound.list"
                             :key="index"
@@ -63,47 +86,61 @@
                                     .statusActive
                             }"
                         >
-                            <a @click="selectBellList(index)">{{
-                                bell.name
-                            }}</a>
+                            <a
+                                @click="selectBellList(index)"
+                                class="px-1 py-4 cursor-pointer block md:px-3 md:py-5"
+                                >{{ bell.name }}</a
+                            >
                         </li>
                     </ul>
                 </div>
                 <div class="controls">
-                    <ul class="presets">
+                    <ul
+                        class="presets m-0 p-0 list-none flex justify-center flex-wrap leading-none pb-8"
+                    >
                         <li
                             v-for="(preset, index) in presetsList.time"
                             :key="index"
+                            class="mb-3 relative mx-2 md:mb-4"
                             :class="{
                                 active: presetsList.time[index].statusActive
                             }"
                         >
-                            <a @click="selectTimeList(index)">
+                            <a
+                                @click="selectTimeList(index)"
+                                class="px-5 py-5 cursor-pointer block text-center border-2 border-white rounded-full md:px-8 md:pt-7 hover:text-gray-300"
+                            >
                                 {{
                                     preset.time >= 60
                                         ? preset.time / 60
                                         : preset.time
                                 }}
-                                <span>{{
+                                <span class="block pt-[10%]">{{
                                     preset.time >= 60 ? 'hour' : 'mins'
                                 }}</span>
                             </a>
                             <i
-                                class="add-btn"
+                                class="add-btn text-xs -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute z-10 cursor-pointer select-none md:text-base md:p-3 md:left-0 md:right-0 md:-bottom-5 hover:text-gray-300"
                                 @click="addExtraDuration(preset.addTime)"
                                 >Add +{{ preset.addTime }} mins</i
                             >
                         </li>
                     </ul>
                 </div>
-                <div class="interval">
+                <div
+                    class="interval mt-3 flex items-center justify-center mb-6 md:mt-4"
+                >
                     <input
                         type="checkbox"
                         id="switch"
                         @change="toggleIntervalBell"
+                        class="h-0 w-0 invisible"
                     />
-                    <label for="switch"></label>
-                    <span class="interval-text">
+                    <label
+                        for="switch"
+                        class="cursor-pointer w-10 h-5 block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white md:w-12 md:h-6"
+                    ></label>
+                    <span class="interval-text text-sm ml-4 md:text-lg md:ml-5">
                         Interval Bell
                         <span
                             >is currently
@@ -117,7 +154,7 @@
                     v-if="completeAction"
                     >COMPLETED!</span
                 >
-                <span class="timer" v-else>
+                <span class="timer block leading-none mb-8" v-else>
                     {{
                         isRunning
                             ? timeParser(tickerInMins)
@@ -125,25 +162,33 @@
                     }}
                 </span>
 
-                <div class="custom-playing" id="c-playing">
-                    <div class="cplay-holder">
-                        <div class="spk">
+                <div class="custom-playing text-center p-9 pt-0" id="c-playing">
+                    <div class="inline-block align-top relative pl-8">
+                        <div class="absolute left-0 top-0 pr-3">
                             <div class="icon speaker">
-                                <div class="box"></div>
+                                <div class="left-8 top-6"></div>
                             </div>
-                            <div class="wifi-symbol">
-                                <div class="wifi-circle second"></div>
-                                <div class="wifi-circle third"></div>
+                            <div
+                                class="w-12 h-12 overflow-hidden absolute left-full rotate-180 scale-75"
+                            >
+                                <div
+                                    class="second absolute border-4 border-white rounded-full w-6 h-6 top-9 left-6"
+                                ></div>
+                                <div
+                                    class="third absolute border-4 border-white rounded-full w-10 h-10 top-6 left-6"
+                                ></div>
                             </div>
                         </div>
-                        <i id="custom-audio-text"
+                        <i
+                            id="custom-audio-text"
+                            class="text-left inline-block align-middle text-lg leading-7 not-italic ml-5 md:ml-8"
                             >Goenka Satipattana Sutta Chanting Day 5.mp3</i
                         >
                     </div>
                 </div>
 
                 <button
-                    class="btn-action"
+                    class="btn-action bg-transparent text-white border-0"
                     type="button"
                     @click="toggleTimer"
                     v-if="!completeAction"
@@ -156,17 +201,24 @@
                     </svg>
                 </button>
             </div>
-            <span class="quotes">
-                "{{ quote.quote }}" - <span>{{ quote.author }}</span>
+            <span
+                class="text-base text-center absolute pointer-events-none cursor-default max-w-4xl inset-3 top-auto mx-auto md:text-lg"
+            >
+                "{{ quote.quote }}" -
+                <span class="block md:inline">{{ quote.author }}</span>
             </span>
-            <span class="top-right">
+            <span class="absolute flex items-center right-6 top-6">
                 <Battery />
                 <Settings :presetsList="presetsList" />
             </span>
         </div>
-        <span class="install"
+        <span
+            class="install hidden fixed bg-indigo-600 rounded-none text-sm leading-6 p-5 pr-[165px] text-white md:text-base md:rounded top-0 right-0 left-0 r-0 z-[9999px] md:w-[430px] md:pr-[140px] md:pl-6"
             >Get this free app. It won't take up space on your device.
-            <a href="javscript:void(0)" class="btn-install" id="install-add"
+            <a
+                href="javscript:void(0)"
+                class="btn-install text-sm font-normal px-4 py-5 leading-none absolute right-6 top-5 border-2 border-white rounded text-white md:font-bold md:top-5 md:right-5 md:px-3 md:text-base hover:bg-transparent hover:text-white"
+                id="install-add"
                 >Install App</a
             ></span
         >
@@ -593,59 +645,12 @@ $themeColours: (
         }
     }
 }
-.box {
-    left: 32px;
-    top: -25px;
-}
-.cplay-holder {
-    @extend %inline-block;
-    position: relative;
-    padding-left: 35px;
-    > i {
-        text-align: left;
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: 30px;
-        font-size: 18px;
-        line-height: 28px;
-        font-style: normal;
-    }
-}
-.custom-playing {
-    padding: 0 35px 35px;
-    text-align: center;
-}
-.wifi-symbol {
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
-    transform: rotate(135deg);
-    position: absolute;
-    left: 100%;
-    top: -10px;
-}
-.wifi-circle {
-    border: 5px solid #fff;
-    border-radius: 50%;
-    position: absolute;
-}
-
 .second {
-    width: 25px;
-    height: 25px;
-    top: 35px;
-    left: 35px;
     animation: fadeInOut 1s infinite 0.2s;
 }
-
 .third {
-    width: 40px;
-    height: 40px;
-    top: 25px;
-    left: 25px;
     animation: fadeInOut 1s infinite 0.4s;
 }
-
 @-webkit-keyframes fadeInOut {
     0% {
         opacity: 0;
@@ -662,12 +667,6 @@ $themeColours: (
         opacity: 1;
     }
 }
-.spk {
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding-right: 13px;
-}
 .icon {
     display: inline-block;
     width: 1em;
@@ -676,14 +675,6 @@ $themeColours: (
     stroke: currentColor;
     fill: currentColor;
 }
-// .icon {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     bottom: 0;
-//     margin: auto;
-// }
 .speaker {
     width: 0;
     height: 0;
@@ -703,12 +694,7 @@ $themeColours: (
     }
 }
 #wrapper {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    height: 100%;
     transition: all 750ms ease;
-    background: #000;
 }
 .running {
     .controls,
@@ -733,15 +719,6 @@ $themeColours: (
 .custom-playing,
 input[type='file'] {
     display: none;
-}
-.app {
-    text-align: center;
-    flex: 1;
-}
-.w1 {
-    @extend %flexcenter;
-    justify-content: center;
-    padding-bottom: 10px;
 }
 .c-checkbox {
     display: block;
@@ -800,41 +777,20 @@ input[type='file'] {
     }
 }
 .timer {
-    display: block;
     font-size: 25vh;
-    line-height: 1;
-    margin: 0 0 30px;
     &.complete {
         font-size: 10vh;
     }
 }
 .interval {
-    @extend %flexcenter;
-    justify-content: center;
-    margin: 15px 0 25px;
-    input[type='checkbox'] {
-        height: 0;
-        width: 0;
-        visibility: hidden;
-    }
-
     label {
-        cursor: pointer;
-        text-indent: -9999px;
-        width: 55px;
-        height: 27px;
-        background: none;
-        display: block;
-        border-radius: 100px;
-        position: relative;
-        border: 2px solid #fff;
         &:after {
             content: '';
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 19px;
-            height: 19px;
+            width: 16px;
+            height: 16px;
             background: #fff;
             border-radius: 90px;
             transition: 0.1s;
@@ -856,14 +812,7 @@ input[type='file'] {
         width: 30px;
     }
 }
-.interval-text {
-    font-size: 18px;
-    margin-left: 20px;
-}
 .btn-action {
-    background: none;
-    border: none;
-    color: #fff;
     font-size: 18vh;
     transition: all 0.25s ease;
     &:focus,
@@ -875,24 +824,8 @@ input[type='file'] {
         transform: scale(1.07);
     }
 }
-.sound-wrapper {
-    position: absolute;
-    right: 32px;
-    top: 50%;
-    margin: -120px 0 0;
-    z-index: 1;
-    font-size: 18px;
-    line-height: 23px;
-    .title {
-        display: block;
-        margin: 0 0 12px;
-        font-weight: normal;
-    }
-}
+
 .bell-sound {
-    @extend %listreset;
-    border: 2px solid #fff;
-    border-radius: 7px;
     li {
         &.active {
             a {
@@ -900,24 +833,11 @@ input[type='file'] {
                 color: #000;
             }
         }
-        a {
-            cursor: pointer;
-            display: block;
-            padding: 10px 20px;
-        }
     }
 }
 .presets {
-    @extend %listreset;
-    @extend %flexonly;
-    justify-content: center;
-    flex-wrap: wrap;
     font-size: 4vh;
-    line-height: 1;
-    padding-bottom: 30px;
     li {
-        margin: 0 15px;
-        position: relative;
         &.active {
             a {
                 background: #fff;
@@ -929,58 +849,8 @@ input[type='file'] {
             }
         }
     }
-    a {
-        cursor: pointer;
-        display: block;
-        border: 3px solid #fff;
-        border-radius: 50%;
-        text-align: center;
-        padding: 28px 32px 32px;
-        transition: all 0.25s ease;
-        &:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-    }
-    span {
-        display: block;
-        padding-top: 10%;
-    }
-}
-.top-right {
-    position: absolute;
-    right: 25px;
-    top: 23px;
-    @extend %flexcenter;
-}
-
-.help {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 1px solid #fff;
-    text-align: center;
-    font-size: 12px;
-    margin: 0 0 0 9px;
-}
-.quotes {
-    font-size: 18px;
-    line-height: 30px;
-    text-align: center;
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 15px;
-    max-width: 900px;
-    margin: 0 auto;
-    pointer-events: none;
-    cursor: default;
 }
 #nav-container {
-    position: fixed;
-    height: 100vh;
-    width: 100%;
-    pointer-events: none;
-    z-index: 5;
     &.active {
         .i-bar:nth-of-type(1) {
             transform: translate3d(0, 8px, 0) rotate(45deg);
@@ -1000,69 +870,17 @@ input[type='file'] {
     }
 }
 .menu-button {
-    position: relative;
-    @extend %flexcenter;
-    flex-direction: column;
-    z-index: 1;
-    -webkit-appearance: none;
-    border: 0;
-    background: transparent;
-    border-radius: 0;
-    width: 30px;
-    cursor: pointer;
-    pointer-events: auto;
-    margin: 25px 0 0 25px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     &:focus {
         outline: none;
     }
 }
-.by {
-    font-size: 15px;
-    line-height: 25px;
-    display: block;
-    > i {
-        font-style: normal;
-        display: block;
-    }
-    a {
-        text-decoration: underline;
-    }
-}
 .i-bar {
-    display: block;
-    width: 100%;
-    height: 3px;
-    background: #fff;
     transition: 0.3s;
 }
 .i-bar + .i-bar {
     margin-top: 5px;
-}
-.current-audio {
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 130px;
-    display: block;
-    text-overflow: ellipsis;
-    font-size: 13px;
-    padding: 12px 0 0;
-}
-.c-audio {
-    padding: 14px 2px 0 35px;
-    position: relative;
-    &:before {
-        width: 23px;
-        height: 25px;
-        border-top: 1px solid #fff;
-        border-right: 1px solid #fff;
-        border-radius: 0 5px 0 0;
-        content: '';
-        position: absolute;
-        right: 14px;
-        top: -9px;
-    }
 }
 .btn-custom {
     border: 2px solid #fff;
@@ -1083,141 +901,19 @@ input[type='file'] {
     }
 }
 .nav-content {
-    margin-top: 70px;
-    padding: 10px 25px;
-    width: 90%;
-    max-width: 250px;
-    position: absolute;
-    top: 0;
-    left: 0;
     height: calc(100% - 70px);
-    background: #000;
-    pointer-events: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     transition: opacity 0.25s ease;
-    z-index: -1;
-    opacity: 0;
 }
 .nav {
-    @extend %listreset;
     li {
-        margin-bottom: 15px;
         a {
-            font-size: 20px;
-            padding: 0 0 10px;
-            display: block;
-            transition: color 0.1s;
             transition: all 0.25s ease;
-            &:hover {
-                color: #fff;
-                padding-left: 5px;
-            }
         }
-    }
-}
-.add-btn {
-    border: 2px solid #fff;
-    padding: 10px;
-    border-radius: 50px;
-    font-size: 16px;
-    white-space: nowrap;
-    display: block;
-    font-style: normal;
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    bottom: -20px;
-    right: 0;
-    background: #000;
-    cursor: pointer;
-    display: none;
-    user-select: none; /* supported by Chrome and Opera */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none;
-    &:hover {
-        color: #f2f2f2;
-    }
-}
-.install {
-    display: none;
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    background: #3740ff;
-    padding: 20px 165px 20px 25px;
-    color: #fff;
-    z-index: 9999;
-    width: 430px;
-    font-size: 17px;
-    border-radius: 5px;
-}
-.btn-install {
-    padding: 13px 20px;
-    font-size: 16px;
-    line-height: 1;
-    position: absolute;
-    right: 22px;
-    top: 21px;
-    border-radius: 5px;
-    color: #000;
-    font-weight: 700;
-    border: 2px solid #fff;
-    // background: #fff;
-    // color: #3740ff;
-    color: #fff;
-    &:hover {
-        // background: darken(#3740ff, 5%);
-        background: none;
-        color: #fff;
-        border-color: #fff;
     }
 }
 @media only screen and (max-width: 767px) {
-    .spk {
-        transform: scale(0.7);
-        top: 1px;
-    }
-    .cplay-holder {
-        > i {
-            margin-left: 20px;
-        }
-    }
-    .install {
-        width: auto;
-        top: 0;
-        right: 0;
-        left: 0;
-        border-radius: 0;
-        font-size: 14px;
-        line-height: 23px;
-        padding: 20px 140px 20px 20px;
-    }
-    .btn-install {
-        padding: 15px 20px;
-        right: 19px;
-        top: 19px;
-        font-size: 14px;
-        font-weight: normal;
-    }
-}
-@media (orientation: portrait) {
-    .sound-wrapper {
-        font-size: 15px;
-        line-height: 23px;
-        position: relative;
-        margin: 0 0 30px;
-        position: static;
-        .title {
-            display: none;
-        }
-    }
     .bell-sound {
-        display: flex;
-        white-space: nowrap;
-        justify-content: center;
-        border: none;
         li {
             &.active {
                 a {
@@ -1225,9 +921,6 @@ input[type='file'] {
                     pointer-events: none;
                     cursor: default;
                 }
-            }
-            a {
-                padding: 4px 14px;
             }
         }
     }
@@ -1238,50 +931,17 @@ input[type='file'] {
             line-height: 12vw;
         }
     }
-    .nav-content {
-        text-align: center;
-    }
-    .add-btn {
-        left: -7px;
-        right: -7px;
-        padding: 9px 5px;
-        font-size: 13px;
-    }
     .btn-action {
         font-size: 24vw;
     }
-    .nav-content {
-        max-width: none;
-        width: 100%;
-    }
     .presets {
         font-size: 5.5vw;
-        > li {
-            margin: 0 10px;
-        }
-        a {
-            padding: 20px 22px 22px;
-        }
-    }
-    .quotes {
-        font-size: 15px;
-        line-height: 24px;
-        > span {
-            display: block;
-        }
-    }
-    .interval-text {
-        font-size: 15px;
-        margin-left: 15px;
     }
     .interval {
-        margin-top: 10px;
         label {
-            width: 42px;
-            height: 22px;
             &:after {
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
                 left: 2px;
             }
         }
