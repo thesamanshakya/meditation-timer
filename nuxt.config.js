@@ -23,7 +23,7 @@ export default {
                 content:
                     'Hamro Meditation Timer - a simple and lightweight tool for meditation created by Saman with &hearts;'
             },
-            { name: 'format-detection', content: 'telephone=no' },
+            { name: 'format-detection', content: 'telephone=no' }
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
     },
@@ -63,6 +63,7 @@ export default {
     modules: [
         '@nuxtjs/style-resources',
         '@nuxtjs/pwa',
+        '@nuxtjs/onesignal',
         '@nuxtjs/auth-next',
         '@nuxtjs/google-fonts',
         [
@@ -80,8 +81,6 @@ export default {
                 services: {
                     auth: {
                         initialize: {
-                            // onAuthStateChangedMutation:
-                            //     'ON_AUTH_STATE_CHANGED_MUTATION',
                             onAuthStateChangedAction:
                                 'onAuthStateChangedAction',
                             subscribeManually: false
@@ -102,10 +101,10 @@ export default {
             useWebmanifestExtension: false,
             start_url: '/?source=pwa',
             background_color: '#000',
-            display: 'fullscreen',
+            display: 'standalone',
             orientation: 'portrait',
             scope: '/',
-            theme_color: '#000'
+            theme_color: '#1E75FF'
             // shortcuts: [
             //     {
             //         name: 'Hamro Meditation Timer',
@@ -135,6 +134,16 @@ export default {
             './assets/scss/_breakpoint.scss',
             './assets/scss/_markup-mixins.scss'
         ]
+    },
+
+    oneSignal: {
+        init: {
+            appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
+            allowLocalhostAsSecureOrigin: true,
+            welcomeNotification: {
+                disable: true
+            }
+        }
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build

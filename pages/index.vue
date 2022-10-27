@@ -360,7 +360,7 @@ export default {
                 } else {
                     this.stopTimer();
                 }
-            }, 10);
+            }, 1000);
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;

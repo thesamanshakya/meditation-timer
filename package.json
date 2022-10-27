@@ -13,6 +13,7 @@
         "@nuxtjs/axios": "^5.13.6",
         "@nuxtjs/firebase": "^8.2.2",
         "@nuxtjs/google-fonts": "^3.0.0-0",
+        "@nuxtjs/onesignal": "^3.0.0-beta.16",
         "@nuxtjs/pwa": "^3.3.5",
         "@nuxtjs/style-resources": "^1.2.1",
         "@nuxtjs/svg": "^0.4.0",
