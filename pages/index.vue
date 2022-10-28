@@ -5,46 +5,41 @@
     >
         <div
             id="nav-container"
-            class="fixed h-screen w-full pointer-events-none z-10"
+            class="fixed z-[9999] menu-button flex items-center flex-col appearance-none border-0 bg-transparent rounded-none w-[30px] cursor-pointer pointer-events-auto mt-5 ml-6"
             :class="{ active: navActive }"
+            @click="navActive = !navActive"
         >
-            <div
-                class="menu-button relative flex items-center flex-col z-10 appearance-none border-0 bg-transparent rounded-none w-8 cursor-pointer pointer-events-auto mt-5 ml-6"
-                @click="navActive = !navActive"
-            >
-                <span
-                    v-for="index in 3"
-                    :key="index"
-                    class="i-bar block w-full h-1 bg-white transition-all mt-[5px]"
-                ></span>
-            </div>
-            <div
-                class="nav-content mt-16 absolute top-0 left-0 pointer-events-none opacity-0 px-6 py-3 bg-black -z-10 w-full text-center md:text-left md:w-[90%] md:max-w-[250px] transition-opacity h-[calc(100%-70px)]"
-            >
-                <ul class="nav m-0 p-0 list-none">
-                    <li
-                        class="mb-4"
-                        v-for="(list, index) in menuList"
-                        :key="index"
+            <span
+                v-for="index in 3"
+                :key="index"
+                class="i-bar block w-full h-[3px] bg-white transition-all mt-[5px]"
+            ></span>
+        </div>
+        <div
+            v-if="navActive"
+            class="fixed h-screen z-10 nav-content mt-16 top-0 left-0 px-6 py-3 bg-black w-full text-center md:text-left md:w-[90%] md:max-w-[250px]"
+        >
+            <ul class="nav m-0 p-0 list-none">
+                <li class="mb-4" v-for="(list, index) in menuList" :key="index">
+                    <a
+                        :href="list.url"
+                        target="_blank"
+                        rel="nofollow noopener"
+                        class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all"
+                        >{{ list.linkText }}</a
                     >
-                        <a
-                            :href="list.url"
-                            target="_blank"
-                            rel="nofollow noopener"
-                            class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all"
-                            >{{ list.linkText }}</a
-                        >
-                    </li>
-                </ul>
-                <span class="text-sm block"
-                    >App created by<i class="block font-normal"
-                        ><a class="underline" href="https://saman.com.np"
-                            >Saman Shakya</a
-                        >
-                        with &hearts;</i
-                    ><i>May all beings be happy! &#128522;</i></span
-                >
-            </div>
+                </li>
+            </ul>
+            <span class="text-base block"
+                >App created by<i class="block font-normal not-italic"
+                    ><a class="underline" href="https://saman.com.np"
+                        >Saman Shakya</a
+                    >
+                    with &hearts;</i
+                ><i class="not-italic"
+                    >May all beings be happy! &#128522;</i
+                ></span
+            >
         </div>
         <div
             class="w1 flex items-center justify-center pb-2"
@@ -53,13 +48,13 @@
             <div class="text-center flex-1">
                 <SvgIcons />
                 <div
-                    class="text-sm static top-1/2 right-8 mb-8 z-10 md:-mt-32 md:absolute md:text-lg"
+                    class="text-sm top-1/2 right-8 mb-8 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
                 >
                     <strong class="font-normal mb-3 hidden md:block"
                         >Start/End Bell</strong
                     >
                     <ul
-                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:border-2 md:border-white md:block"
+                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:border md:border-white md:block overflow-hidden"
                     >
                         <li
                             v-for="(bell, index) in presetsList.bellSound.list"
@@ -71,7 +66,7 @@
                         >
                             <a
                                 @click="selectBellList(index)"
-                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-5"
+                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-2"
                                 >{{ bell.name }}</a
                             >
                         </li>
@@ -84,14 +79,14 @@
                         <li
                             v-for="(preset, index) in presetsList.time"
                             :key="index"
-                            class="mb-3 relative mx-2.5 md:mb-4"
+                            class="mb-3 relative mx-2.5 md:mb-4 md:mx-4"
                             :class="{
                                 active: presetsList.time[index].statusActive
                             }"
                         >
                             <a
                                 @click="selectTimeList(index)"
-                                class="px-5 py-5 cursor-pointer block text-center border-2 border-white rounded-full md:px-8 md:pt-7 hover:text-gray-300 transition-all"
+                                class="px-6 py-6 pt-5 cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all"
                             >
                                 {{
                                     preset.time >= 60
@@ -103,7 +98,7 @@
                                 }}</span>
                             </a>
                             <i
-                                class="add-btn text-xs -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute z-10 cursor-pointer select-none md:text-base md:p-3 md:left-0 md:right-0 md:-bottom-5 hover:text-gray-300"
+                                class="add-btn text-xs -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA"
                                 @click="addExtraDuration(preset.addTime)"
                                 >Add +{{ preset.addTime }} mins</i
                             >

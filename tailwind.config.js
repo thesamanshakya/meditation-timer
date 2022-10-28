@@ -22,7 +22,8 @@ module.exports = {
             colors: {
                 primary: '#1E75FF',
                 primaryDark: '#0465ff',
-                green: '#0E8738'
+                green: '#0E8738',
+                grayRGBA: 'rgba(255,255,255,0.25)'
             }
         }
     }
