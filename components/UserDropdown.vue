@@ -11,10 +11,12 @@
             >
                 <span class="sr-only">Open user menu</span>
                 <img
+                    v-if="profilePic"
                     class="h-8 w-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
+                    :src="profilePic"
+                    alt="User Profile"
                 />
+                <span v-else class="w-8 h-8 rounded-full bg-white text-black text-center font-medium flex items-center justify-center text-base">{{ userFirstNameLetter }}</span>
             </button>
         </div>
         <Transition name="fade">
@@ -41,15 +43,19 @@
 </template>
 
 <script>
+import { globalMixins } from '../mixins/global';
 export default {
+    mixins: [globalMixins],
     data() {
         return {
             dropActive: false,
+            profilePic: this.$fire.auth.currentUser.photoURL,
+            userFirstNameLetter: null,
             menuList: [
-                {
-                    linkText: 'My Profile',
-                    url: '/profile'
-                },
+                // {
+                //     linkText: 'My Profile',
+                //     url: '/profile'
+                // },
                 {
                     linkText: 'Logout',
                     url: '/logout'
@@ -62,9 +68,13 @@ export default {
             if (!this.$el.contains(e.target)) {
                 this.dropActive = false;
             }
+        },
+        async getFirstLetterFromName() {
+            this.userFirstNameLetter = (await this.getUserFullName()).charAt(0);
         }
     },
     mounted() {
+        this.getFirstLetterFromName();
         document.addEventListener('click', this.clickOutsideClose);
     },
     destroyed() {

@@ -177,7 +177,7 @@
                 </div> -->
 
                 <button
-                    class="btn-action bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all focus:outline-none focus:border-none hover:scale-105"
+                    class="btn-action bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all focus:outline-none focus:border-none hover:scale-105 outline-none"
                     type="button"
                     @click="toggleTimer"
                     v-if="!completeAction"

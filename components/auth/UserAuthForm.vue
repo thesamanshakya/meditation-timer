@@ -270,10 +270,12 @@
 </template>
 
 <script>
+import { globalMixins } from '../../mixins/global';
 import { required, email, minLength, sameAs } from 'vuelidate/lib/validators';
 import SocialLogin from './SocialLogin.vue';
 
 export default {
+    mixins: [globalMixins],
     props: ['isLoginForm'],
     data() {
         return {
@@ -423,7 +425,7 @@ export default {
             } else if (value == 'facebook') {
                 provider =
                     new this.$fire.auth.app.firebase.auth.FacebookAuthProvider();
-                // provider.addScope('user_birthday');
+                provider.addScope('user_birthday');
             }
 
             this.$fire.auth
@@ -442,7 +444,6 @@ export default {
         },
         async welcomeByFirstName() {
             const fullName = await this.getUserFullName();
-            // console.log(fullName);
             if (!!fullName) {
                 this.$toast.open({
                     position: 'top',
@@ -450,30 +451,6 @@ export default {
                     type: 'success',
                     duration: '7000'
                 });
-            }
-        },
-        async getUserFullName() {
-            const user = this.$fire.auth.currentUser;
-            if (!!user) {
-                if (!!user.displayName) {
-                    return user.displayName;
-                } else {
-                    const userID = user.uid;
-                    const dbRef = this.$fire.database.ref();
-                    return await dbRef
-                        .child('users')
-                        .child(userID)
-                        .child('full_name')
-                        .get()
-                        .then((snapshot) => {
-                            if (snapshot.exists()) {
-                                return snapshot.val();
-                            }
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                        });
-                }
             }
         }
     },

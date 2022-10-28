@@ -1,5 +1,5 @@
 <template>
-    <span class="settings text-2xl leading-none ml-6 cursor-pointer">
+    <span class="settings text-2xl leading-none ml-6 cursor-pointer relative">
         <i
             @click="settingsActive = !settingsActive"
             class="inline-block align-top transition-all"
@@ -52,7 +52,7 @@
                                         <span class="checkmark"></span>
                                     </label>
                                     <div
-                                        class="c-audio relative pt-4 pr-1 pb-9 before:w-6 before:h-6 before:absolute before:border-t before:border-r before:rounded-tr-md before:right-4 before:-top-2 before:content-['']"
+                                        class="relative pt-4 pr-1 pb-1 before:w-6 before:h-6 before:absolute before:border-t before:border-r before:rounded-tr-md before:right-4 before:-top-2 before:content-['']"
                                         v-if="
                                             customAudioActive &&
                                             presetsList.guidedInstruction
@@ -73,7 +73,7 @@
                                             @change="setCustomAudio"
                                         />
                                         <span
-                                            class="whitespace-no-wrap overflow-hidden block text-xs pt-3 text-ellipsis max-w-[130px]"
+                                            class="whitespace-no-wrap text-center overflow-hidden block text-xs pt-3 text-ellipsis max-w-[165px]"
                                             v-if="!!customAudioFileName"
                                             >{{ customAudioFileName }}</span
                                         >
