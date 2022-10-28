@@ -15,32 +15,38 @@
                 class="i-bar block w-full h-[3px] bg-white transition-all mt-[5px]"
             ></span>
         </div>
-        <div
-            v-if="navActive"
-            class="fixed h-screen z-10 nav-content mt-16 top-0 left-0 px-6 py-3 bg-black w-full text-center md:text-left md:w-[90%] md:max-w-[250px]"
-        >
-            <ul class="nav m-0 p-0 list-none">
-                <li class="mb-4" v-for="(list, index) in menuList" :key="index">
-                    <a
-                        :href="list.url"
-                        target="_blank"
-                        rel="nofollow noopener"
-                        class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all"
-                        >{{ list.linkText }}</a
-                    >
-                </li>
-            </ul>
-            <span class="text-base block"
-                >App created by<i class="block font-normal not-italic"
-                    ><a class="underline" href="https://saman.com.np"
-                        >Saman Shakya</a
-                    >
-                    with &hearts;</i
-                ><i class="not-italic"
-                    >May all beings be happy! &#128522;</i
-                ></span
+        <Transition name="fade">
+            <div
+                v-if="navActive"
+                class="fixed h-screen z-10 nav-content mt-16 top-0 left-0 px-6 py-3 bg-black w-full text-center md:text-left md:w-[90%] md:max-w-[250px]"
             >
-        </div>
+                <ul class="nav m-0 p-0 list-none">
+                    <li
+                        class="mb-4"
+                        v-for="(list, index) in menuList"
+                        :key="index"
+                    >
+                        <a
+                            :href="list.url"
+                            target="_blank"
+                            rel="nofollow noopener"
+                            class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all"
+                            >{{ list.linkText }}</a
+                        >
+                    </li>
+                </ul>
+                <span class="text-base block"
+                    >App created by<i class="block font-normal not-italic"
+                        ><a class="underline" href="https://saman.com.np"
+                            >Saman Shakya</a
+                        >
+                        with &hearts;</i
+                    ><i class="not-italic"
+                        >May all beings be happy! &#128522;</i
+                    ></span
+                >
+            </div>
+        </Transition>
         <div
             class="w1 flex items-center justify-center pb-2"
             :class="{ running: isRunning }"
@@ -194,6 +200,7 @@
             <span class="absolute flex items-center right-6 top-6">
                 <Battery />
                 <Settings :presetsList="presetsList" v-if="!isRunning" />
+                <UserDropdown class="ml-6" />
             </span>
         </div>
         <span

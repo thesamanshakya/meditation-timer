@@ -25,27 +25,22 @@ body {
 .v-leave-to {
     @apply opacity-0;
 }
-.second {
-    animation: fadeInOut 1s infinite 0.2s;
+/*
+  Enter and leave animations can use different
+  durations and timing functions.
+*/
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
 }
-.third {
-    animation: fadeInOut 1s infinite 0.4s;
+
+.slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
-@-webkit-keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
 }
 .icon {
     @apply inline-block w-[1em] h-[1em];
@@ -66,51 +61,6 @@ body,
 body {
     transition: background-color 0.25s ease;
 }
-@-webkit-keyframes pulse {
-    0% {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-
-    50% {
-        -webkit-transform: scale3d(1.05, 1.05, 1.05);
-        transform: scale3d(1.05, 1.05, 1.05);
-    }
-
-    to {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-
-    50% {
-        -webkit-transform: scale3d(1.05, 1.05, 1.05);
-        transform: scale3d(1.05, 1.05, 1.05);
-    }
-
-    to {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-    }
-}
-
-.animate__pulse {
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    -webkit-animation-name: pulse;
-    animation-name: pulse;
-    -webkit-animation-timing-function: ease-in-out;
-    animation-timing-function: ease-in-out;
-}
-
 .running .bell-sound li {
     @apply hidden;
 }

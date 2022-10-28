@@ -29,11 +29,7 @@ export default {
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
-    css: [
-        '~/assets/scss/_variables.scss',
-        '~/assets/scss/_markup-mixins.scss',
-        '@/assets/css/tailwind.css'
-    ],
+    css: ['@/assets/css/tailwind.css'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
@@ -126,14 +122,6 @@ export default {
         families: {
             Roboto: true
         }
-    },
-
-    styleResources: {
-        scss: [
-            './assets/scss/_variables.scss',
-            './assets/scss/_breakpoint.scss',
-            './assets/scss/_markup-mixins.scss'
-        ]
     },
 
     oneSignal: {

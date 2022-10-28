@@ -1,13 +1,8 @@
-<template>
-    <div></div>
-</template>
-
 <script>
 export default {
     asyncData() {
         $nuxt.$fire.auth.signOut();
+        $nuxt.$router.push('/login')
     }
 };
 </script>
-
-<style lang="scss" scoped></style>

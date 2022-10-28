@@ -1,8 +1,5 @@
 <template>
-    <span
-        class="settings text-2xl leading-none ml-6 cursor-pointer"
-        :class="{ active: settingsActive }"
-    >
+    <span class="settings text-2xl leading-none ml-6 cursor-pointer">
         <i
             @click="settingsActive = !settingsActive"
             class="inline-block align-top transition-all"

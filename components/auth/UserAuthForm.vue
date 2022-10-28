@@ -480,5 +480,3 @@ export default {
     components: { SocialLogin }
 };
 </script>
-
-<style lang="scss" scoped></style>
