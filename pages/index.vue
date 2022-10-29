@@ -4,6 +4,7 @@
         class="overflow-hidden relative w-full h-full bg-black transition-all"
     >
         <div
+            v-if="!isRunning"
             id="nav-container"
             class="fixed z-[9999] menu-button flex items-center flex-col appearance-none border-0 bg-transparent rounded-none w-[30px] cursor-pointer pointer-events-auto mt-5 ml-6"
             :class="{ active: navActive }"
@@ -54,7 +55,7 @@
             <div class="text-center flex-1">
                 <SvgIcons />
                 <div
-                    class="text-base top-1/2 right-8 mb-8 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
+                    class="text-base top-1/2 right-8 mb-6 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
                 >
                     <strong class="font-medium mb-5 hidden md:block"
                         >Start/End Bell</strong
@@ -81,7 +82,7 @@
                 </div>
                 <div class="controls" v-if="!isRunning">
                     <ul
-                        class="presets m-0 p-0 list-none flex justify-center leading-none pb-8 text-[5.5vw] md:text-[4vh]"
+                        class="presets m-0 p-0 list-none flex justify-center leading-none pb-7 text-[5.5vw] md:text-[4vh]"
                     >
                         <li
                             v-for="(preset, index) in presetsList.time"
@@ -117,12 +118,13 @@
                 >
                     <input
                         type="checkbox"
-                        id="switch"
+                        id="interval-switch"
+                        :checked="presetsList.intervalBell"
                         @change="toggleIntervalBell"
                         class="h-0 w-0 invisible"
                     />
                     <label
-                        for="switch"
+                        for="interval-switch"
                         class="cursor-pointer block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white w-12 h-6 after:absolute after:w-4 after:h-4 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all"
                         v-if="!isRunning"
                     ></label>
@@ -436,7 +438,11 @@ export default {
                 } else {
                     this.stopTimer();
                 }
-            }, 20);
+            }, 1000);
+            localStorage.setItem(
+                'presetsList',
+                JSON.stringify(this.presetsList)
+            );
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;
@@ -476,7 +482,10 @@ export default {
             this.$forceUpdate();
         },
         toggleIntervalBell() {
+            console.log('fired');
+            console.log(this.presetsList.intervalBell, 'one');
             this.presetsList.intervalBell = !this.presetsList.intervalBell;
+            console.log(this.presetsList.intervalBell, 'two');
         },
         addExtraDuration(extraTime) {
             this.presetsList.totalDurationInMins += extraTime;
@@ -508,6 +517,7 @@ export default {
             if (!!this.presetsList.bellSound.audio) {
                 this.presetsList.bellSound.audio.pause();
                 this.presetsList.bellSound.audio.currentTime = 0;
+                this.presetsList.bellSound.audio = null;
             }
         },
         playGuidedAudio() {
@@ -520,7 +530,14 @@ export default {
             if (!!this.presetsList.guidedInstruction.audio) {
                 this.presetsList.guidedInstruction.audio.pause();
                 this.presetsList.guidedInstruction.audio.currentTime = 0;
+                this.presetsList.guidedInstruction.audio = null;
             }
+        }
+    },
+    created() {
+        let localData = localStorage.getItem('presetsList');
+        if (localData !== null) {
+            this.presetsList = JSON.parse(localData);
         }
     },
     mounted() {

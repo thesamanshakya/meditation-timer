@@ -34,7 +34,7 @@
                                     :key="index"
                                     class="mb-4"
                                 >
-                                    <label class="c-checkbox">
+                                    <label class="c-checkbox radio">
                                         {{
                                             capitalizeFirstLetter(
                                                 instruction.language
