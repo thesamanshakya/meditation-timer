@@ -84,7 +84,7 @@ body {
     @apply block border-black;
 }
 .c-checkbox .checkmark:after {
-    @apply left-2 top-1 w-1 h-3 border-r-2 border-b-2 border-white rotate-45;
+    @apply left-[7px] top-[1px] w-1.5 h-3.5 border-r-2 border-b-2 border-white rotate-45;
 }
 .c-checkbox.radio .checkmark {
     @apply rounded-full;

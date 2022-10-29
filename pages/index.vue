@@ -54,17 +54,18 @@
             <div class="text-center flex-1">
                 <SvgIcons />
                 <div
-                    class="text-sm top-1/2 right-8 mb-8 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
+                    class="text-base top-1/2 right-8 mb-8 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
                 >
-                    <strong class="font-normal mb-3 hidden md:block"
+                    <strong class="font-medium mb-5 hidden md:block"
                         >Start/End Bell</strong
                     >
                     <ul
-                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:border md:border-white md:block overflow-hidden"
+                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:block overflow-hidden"
                     >
                         <li
                             v-for="(bell, index) in presetsList.bellSound.list"
                             :key="index"
+                            class="mb-2"
                             :class="{
                                 active: presetsList.bellSound.list[index]
                                     .statusActive
@@ -72,7 +73,7 @@
                         >
                             <a
                                 @click="selectBellList(index)"
-                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-2"
+                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full"
                                 >{{ bell.name }}</a
                             >
                         </li>
@@ -80,7 +81,7 @@
                 </div>
                 <div class="controls" v-if="!isRunning">
                     <ul
-                        class="presets m-0 p-0 list-none flex justify-center flex-wrap leading-none pb-8 text-[5.5vw] md:text-[4vh]"
+                        class="presets m-0 p-0 list-none flex justify-center leading-none pb-8 text-[5.5vw] md:text-[4vh]"
                     >
                         <li
                             v-for="(preset, index) in presetsList.time"
@@ -122,7 +123,7 @@
                     />
                     <label
                         for="switch"
-                        class="cursor-pointer w-10 h-5 block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white md:w-12 md:h-6 after:absolute md:after:w-4 md:after:h-4 after:w-3 after:h-3 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all"
+                        class="cursor-pointer block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white w-12 h-6 after:absolute after:w-4 after:h-4 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all"
                         v-if="!isRunning"
                     ></label>
                     <span
@@ -141,12 +142,12 @@
                     </span>
                 </div>
                 <span
-                    class="timer animate__pulse complete text-[9vw] leading-[12vw] md:text-[10vh]"
+                    class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse"
                     v-if="completeAction"
                     >COMPLETED!</span
                 >
                 <span
-                    class="timer block leading-none mb-8 text-[21vw] md:text-[25vh]"
+                    class="timer block leading-none mb-5 text-[21vw] md:text-[25vh]"
                     v-else
                 >
                     {{
@@ -156,32 +157,36 @@
                     }}
                 </span>
 
-                <!-- <div class="custom-playing text-center p-9 pt-0" id="c-playing">
+                <div
+                    class="custom-playing text-center p-9 pt-0"
+                    v-if="presetsList.guidedInstruction.statusActive"
+                >
                     <div class="inline-block align-top relative pl-8">
-                        <div class="absolute left-0 top-0 pr-3">
+                        <div
+                            class="absolute left-0 -top-[3px] pr-3 scale-50 md:scale-75"
+                        >
                             <div
                                 class="icon speaker w-0 h-0 bg-transparent border-y-[15px] border-r-[20px] border-r-white border-y-transparent relative before:content-[''] before:absolute before:-top-[5px] before:left-0 before:w-5 before:h-[10px] before:bg-white"
-                            >
-                                <div class="left-8 top-6"></div>
-                            </div>
+                            ></div>
                             <div
-                                class="w-12 h-12 overflow-hidden absolute left-full rotate-180 scale-75"
+                                class="w-[50px] h-[50px] overflow-hidden rotate-[135deg] absolute left-full -top-[10px]"
+                                :class="{ 'animate-pulse': isRunning }"
                             >
                                 <div
-                                    class="second absolute border-4 border-white rounded-full w-6 h-6 top-9 left-6"
+                                    class="border-[5px] border-white rounded-[50%] w-[25px] h-[25px] top-[35px] left-[35px] absolute"
                                 ></div>
                                 <div
-                                    class="third absolute border-4 border-white rounded-full w-10 h-10 top-6 left-6"
+                                    class="border-[5px] border-white rounded-[50%] w-[40px] h-[40px] top-[25px] left-[25px] absolute"
                                 ></div>
                             </div>
                         </div>
                         <i
                             id="custom-audio-text"
-                            class="text-left inline-block align-middle text-lg leading-7 not-italic ml-5 md:ml-8"
-                            >Goenka Satipattana Sutta Chanting Day 5.mp3</i
+                            class="text-left inline-block align-middle text-base not-italic ml-3 max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap md:ml-5 md:max-w-none"
+                            >Guided Meditation</i
                         >
                     </div>
-                </div> -->
+                </div>
 
                 <button
                     class="btn-action bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all focus:outline-none focus:border-none hover:scale-105 outline-none"
@@ -198,18 +203,18 @@
                 </button>
             </div>
             <span
-                class="text-base text-center absolute pointer-events-none cursor-default max-w-4xl inset-3 top-auto mx-auto md:text-lg"
+                class="text-base text-center absolute pointer-events-none cursor-default inset-3 top-auto mx-auto md:text-lg"
                 v-if="!isRunning"
             >
-                "{{ quote.quote }}" -
-                <span class="block md:inline">{{ quote.author }}</span>
+                "{{ quote.quote }}"
+                <span class="block md:inline">- {{ quote.author }}</span>
             </span>
             <span
                 class="absolute flex items-center right-6 top-6"
                 v-if="!navActive"
             >
                 <Battery />
-                <Settings :presetsList="presetsList" v-if="!isRunning" />
+                <Settings :presetsList="presetsList" v-show="!isRunning" />
                 <UserDropdown
                     class="ml-6"
                     v-if="!isRunning && !$nuxt.isOffline"
@@ -431,7 +436,7 @@ export default {
                 } else {
                     this.stopTimer();
                 }
-            }, 1000);
+            }, 20);
         },
         stopTimer(manualStop = false) {
             this.isRunning = false;

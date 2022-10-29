@@ -11,7 +11,7 @@
         <Transition>
             <span
                 class="s-dropdown absolute z-10 pt-4 cursor-default -right-3 top-full after:content-[''] after:absolute after:-mb-4 after:bottom-full after:right-[14px] after:w-0 after:h-0 after:border-8 after:border-transparent after:border-b-white"
-                v-if="settingsActive"
+                v-show="settingsActive"
             >
                 <span
                     class="s-dd block rounded-md p-4 text-sm bg-black border border-white min-w-[240px]"
@@ -34,7 +34,7 @@
                                     :key="index"
                                     class="mb-4"
                                 >
-                                    <label class="c-checkbox radio">
+                                    <label class="c-checkbox">
                                         {{
                                             capitalizeFirstLetter(
                                                 instruction.language
