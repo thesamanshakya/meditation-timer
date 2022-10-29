@@ -125,12 +125,19 @@
                         class="cursor-pointer w-10 h-5 block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white md:w-12 md:h-6 after:absolute md:after:w-4 md:after:h-4 after:w-3 after:h-3 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all"
                         v-if="!isRunning"
                     ></label>
-                    <span class="interval-text text-sm ml-4 md:text-lg md:ml-5">
+                    <span
+                        class="interval-text text-base ml-4 md:text-lg md:ml-5"
+                    >
                         Interval Bell
-                        <span
-                            >is currently
-                            {{ presetsList.intervalBell ? 'ON' : 'OFF' }}
-                        </span>
+                        {{
+                            presetsList.intervalBell
+                                ? 'at ' +
+                                  Math.floor(
+                                      presetsList.totalDurationInMins / 2
+                                  ) +
+                                  ' mins'
+                                : 'is currently OFF'
+                        }}
                     </span>
                 </div>
                 <span
@@ -197,10 +204,16 @@
                 "{{ quote.quote }}" -
                 <span class="block md:inline">{{ quote.author }}</span>
             </span>
-            <span class="absolute flex items-center right-6 top-6">
+            <span
+                class="absolute flex items-center right-6 top-6"
+                v-if="!navActive"
+            >
                 <Battery />
                 <Settings :presetsList="presetsList" v-if="!isRunning" />
-                <UserDropdown class="ml-6" />
+                <UserDropdown
+                    class="ml-6"
+                    v-if="!isRunning && !$nuxt.isOffline"
+                />
             </span>
         </div>
         <span
@@ -314,11 +327,11 @@ export default {
                         {
                             name: 'Gong 3',
                             url: '/media/bell/gong-3.mp3'
+                        },
+                        {
+                            name: 'Gong 4',
+                            url: '/media/bell/gong-4.mp3'
                         }
-                        // {
-                        //     name: 'S.N Goenka',
-                        //     url: '/media/bell/sn-goenka.mp3'
-                        // }
                     ]
                 }
             }
@@ -368,7 +381,6 @@ export default {
             durationInSeconds / 60 < 60
                 ? (parsedTime = parsedTime.substr(14, 5))
                 : (parsedTime = parsedTime.substr(11, 8));
-            // this.$forceUpdate();
             return parsedTime;
         },
         getQuote() {
@@ -406,7 +418,6 @@ export default {
             this.tickerInMins = tickerInSeconds / 60;
             const tempTicker = tickerInSeconds;
             this.intervalFuncs.timer = setInterval(() => {
-                // interval bell
                 if (
                     this.presetsList.intervalBell &&
                     tickerInSeconds === tempTicker / 2

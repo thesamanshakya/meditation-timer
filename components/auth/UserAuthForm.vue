@@ -363,8 +363,7 @@ export default {
                 )
                 .then((user) => {
                     //we are signed in
-                    that.$router.push('/');
-                    this.welcomeByFirstName();
+                    this.setIDExpiryToLocal();
                 })
                 .catch((error) => {
                     that.$toast.open({
@@ -382,7 +381,7 @@ export default {
                     this.signup.email,
                     this.signup.password
                 )
-                .then((user) => {
+                .then(() => {
                     //we are signed in
                     this.updateUserProfile();
                     that.$router.push('/login');
@@ -452,6 +451,18 @@ export default {
                     duration: '7000'
                 });
             }
+        },
+        async setIDExpiryToLocal() {
+            await this.$fire.auth.currentUser
+                .getIdToken(/* forceRefresh */ true)
+                .then((idToken) => {
+                    const d = new Date();
+                    const daysToExpire = d.setDate(d.getDate() + 30); //expires in 30 days unix time
+                    localStorage.setItem('x-auth-expire', daysToExpire);
+                    this.$router.push('/');
+                    this.welcomeByFirstName();
+                })
+                .catch(() => {});
         }
     },
     components: { SocialLogin }

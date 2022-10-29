@@ -9,5 +9,3 @@ export default {
     components: { UserAuthForm, SocialLogin }
 };
 </script>
-
-<style lang="scss" scoped></style>

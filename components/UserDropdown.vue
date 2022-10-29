@@ -16,7 +16,11 @@
                     :src="profilePic"
                     alt="User Profile"
                 />
-                <span v-else class="w-8 h-8 rounded-full bg-white text-black text-center font-medium flex items-center justify-center text-base">{{ userFirstNameLetter }}</span>
+                <span
+                    v-else
+                    class="w-8 h-8 rounded-full bg-white text-black text-center font-medium flex items-center justify-center text-base"
+                    >{{ userFirstNameLetter }}</span
+                >
             </button>
         </div>
         <Transition name="fade">
@@ -48,8 +52,9 @@ export default {
     mixins: [globalMixins],
     data() {
         return {
+            userData: null,
             dropActive: false,
-            profilePic: this.$fire.auth.currentUser.photoURL,
+            profilePic: null,
             userFirstNameLetter: null,
             menuList: [
                 // {
@@ -70,11 +75,26 @@ export default {
             }
         },
         async getFirstLetterFromName() {
-            this.userFirstNameLetter = (await this.getUserFullName()).charAt(0);
+            let firstLetter = await this.getUserFullName();
+            firstLetter = !!firstLetter ? firstLetter.charAt(0) : null;
+            this.userFirstNameLetter = firstLetter;
+        },
+        getUserData() {
+            this.$fire.auth.onAuthStateChanged((user) => {
+                if (user) {
+                    this.setProfilePic(user);
+                }
+            });
+        },
+        setProfilePic(user) {
+            this.profilePic = !!user.photoURL ? user.photoURL : null;
+            !!user && this.getFirstLetterFromName();
         }
     },
+    created() {
+        !$nuxt.isOffline && this.getUserData();
+    },
     mounted() {
-        this.getFirstLetterFromName();
         document.addEventListener('click', this.clickOutsideClose);
     },
     destroyed() {
@@ -82,5 +102,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped></style>

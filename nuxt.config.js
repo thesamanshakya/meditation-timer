@@ -4,6 +4,11 @@ export default {
 
     // Target: https://go.nuxtjs.dev/config-target
     // target: 'static',
+    loadingIndicator: {
+        name: 'three-bounce',
+        color: '#FFF',
+        background: '#1E75FF'
+    },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -59,7 +64,7 @@ export default {
     modules: [
         '@nuxtjs/style-resources',
         '@nuxtjs/pwa',
-        '@nuxtjs/onesignal',
+        // '@nuxtjs/onesignal',
         '@nuxtjs/auth-next',
         '@nuxtjs/google-fonts',
         [
@@ -75,19 +80,12 @@ export default {
                     measurementId: 'G-2G68W6SHKX'
                 },
                 services: {
-                    auth: {
-                        initialize: {
-                            onAuthStateChangedAction:
-                                'onAuthStateChangedAction',
-                            subscribeManually: false
-                        }
-                    },
+                    auth: true,
                     database: true
                 }
             }
         ]
     ],
-
     pwa: {
         manifest: {
             short_name: 'Hamro Meditation Timer',
@@ -97,24 +95,24 @@ export default {
             useWebmanifestExtension: false,
             start_url: '/?source=pwa',
             background_color: '#000',
-            display: 'standalone',
+            display: 'fullscreen',
             orientation: 'portrait',
             scope: '/',
             theme_color: '#1E75FF'
-            // shortcuts: [
-            //     {
-            //         name: 'Hamro Meditation Timer',
-            //         short_name: 'Hamro Meditation Timer',
-            //         description: 'Made by Saman with ❤',
-            //         url: '/app?source=pwa',
-            //         icons: [
-            //             {
-            //                 src: '/favicon/192x192.png',
-            //                 sizes: '192x192'
-            //             }
-            //         ]
-            //     }
-            // ]
+        },
+        workbox: {
+            preCaching: [
+                '/',
+                '/favicon.ico',
+                '/icon.png',
+                '/media/bell/gong-1.mp3',
+                '/media/bell/gong-2.mp3',
+                '/media/bell/gong-3.mp3',
+                '/media/bell/gong-4.mp3',
+                '/media/instructions/anapana/english.mp3',
+                '/media/instructions/anapana/hindi.mp3',
+                '/media/instructions/anapana/nepali.mp3'
+            ]
         }
     },
 
@@ -124,26 +122,26 @@ export default {
         }
     },
 
-    oneSignal: {
-        init: {
-            appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
-            allowLocalhostAsSecureOrigin: true,
-            welcomeNotification: {
-                disable: true
-            }
-        }
-    },
+    // oneSignal: {
+    //     init: {
+    //         appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
+    //         allowLocalhostAsSecureOrigin: true,
+    //         welcomeNotification: {
+    //             disable: true
+    //         }
+    //     }
+    // },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-        loaders: {
-            sass: {
-                implementation: require('sass')
-            },
-            scss: {
-                implementation: require('sass')
-            }
-        },
+        // loaders: {
+        //     sass: {
+        //         implementation: require('sass')
+        //     },
+        //     scss: {
+        //         implementation: require('sass')
+        //     }
+        // },
         postcss: {
             plugins: {
                 tailwindcss: {},

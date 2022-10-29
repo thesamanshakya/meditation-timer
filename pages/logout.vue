@@ -2,7 +2,7 @@
 export default {
     asyncData() {
         $nuxt.$fire.auth.signOut();
-        $nuxt.$router.push('/login')
+        $nuxt.$router.push('/login');
     }
 };
 </script>

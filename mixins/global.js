@@ -1,7 +1,7 @@
 export const globalMixins = {
     methods: {
         async getUserFullName() {
-            const user = this.$fire.auth.currentUser;
+            const user = $nuxt.isOffline ? null : this.$fire.auth.currentUser;
             if (!!user) {
                 if (!!user.displayName) {
                     return user.displayName;
