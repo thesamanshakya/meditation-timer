@@ -11,7 +11,7 @@
         <Transition>
             <span
                 class="s-dropdown absolute z-10 pt-4 cursor-default -right-3 top-full after:content-[''] after:absolute after:-mb-4 after:bottom-full after:right-[14px] after:w-0 after:h-0 after:border-8 after:border-transparent after:border-b-white"
-                v-show="settingsActive"
+                v-if="settingsActive"
             >
                 <span
                     class="s-dd block rounded-md p-4 text-sm bg-black border border-white min-w-[240px]"
@@ -65,7 +65,7 @@
                                     >
                                         <label
                                             for="custom-audio"
-                                            class="border-2 border-white rounded-[30px] text-sm leading-none text-white bg-transparent outline-none block px-3 py-4 cursor-pointer text-center -mb-[7px] hover:bg-white hover:text-black"
+                                            class="border-2 border-white rounded-[30px] text-sm leading-none text-white bg-transparent outline-none block px-3 py-3 cursor-pointer text-center -mb-[7px] hover:bg-white hover:text-black"
                                             >Select Audio</label
                                         >
                                         <input
@@ -120,23 +120,15 @@ export default {
                 !this.presetsList.guidedInstruction.statusActive;
         },
         selectInstructionAudio(index) {
+            const preset = this.presetsList.guidedInstruction;
             this.customAudioActive =
-                index == this.presetsList.guidedInstruction.language.length - 1
-                    ? true
-                    : false;
-            this.presetsList.guidedInstruction.language.forEach(
-                (elm, index) => {
-                    if (elm.hasOwnProperty('statusActive'))
-                        delete elm.statusActive;
-                }
-            );
-            this.presetsList.guidedInstruction.language[
-                index
-            ].statusActive = true;
-            this.presetsList.guidedInstruction.languageTitle =
-                this.presetsList.guidedInstruction.language[index].language;
-            this.presetsList.guidedInstruction.activePath =
-                this.presetsList.guidedInstruction.language[index].url;
+                index == preset.language.length - 1 ? true : false;
+            preset.language.forEach((elm, index) => {
+                if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
+            });
+            preset.language[index].statusActive = true;
+            preset.languageTitle = preset.language[index].language;
+            preset.activePath = preset.language[index].url;
             this.$forceUpdate();
         },
         clickOutsideClose(e) {
