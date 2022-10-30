@@ -131,7 +131,7 @@
                     <span
                         class="interval-text text-base ml-4 md:text-lg md:ml-5"
                     >
-                        Interval bell
+                        Interval Bell
                         {{
                             presetsList.intervalBell
                                 ? 'at ' +
@@ -161,7 +161,11 @@
 
                 <div
                     class="custom-playing text-center p-9 pt-0"
-                    v-if="presetsList.guidedInstruction.statusActive"
+                    v-if="
+                        (presetsList.guidedInstruction.statusActive ||
+                            presetsList.backgroundSound.statusActive) &&
+                        !completeAction
+                    "
                 >
                     <div class="inline-block align-top relative pl-8">
                         <div
@@ -185,14 +189,7 @@
                         <i
                             id="custom-audio-text"
                             class="text-left capitalize inline-block align-middle text-base not-italic ml-3 max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap md:ml-5 md:max-w-none"
-                            >{{
-                                !!this.presetsList.guidedInstruction
-                                    .languageTitle
-                                    ? this.presetsList.guidedInstruction
-                                          .languageTitle
-                                    : this.presetsList.guidedInstruction
-                                          .language[0].language
-                            }}</i
+                            >{{ getAudioTitle }}</i
                         >
                     </div>
                 </div>
@@ -310,6 +307,28 @@ export default {
                         {
                             language: 'custom',
                             url: null
+                        }
+                    ]
+                },
+                backgroundSound: {
+                    statusActive: false,
+                    activePath: '/media/sounds/nature/forest-with-birds.mp3',
+                    audio: null,
+                    soundTitle: null,
+                    soundActive: 0,
+                    sound: [
+                        {
+                            soundTitle: 'Forest with Birds',
+                            url: '/media/sounds/nature/forest-with-birds.mp3',
+                            statusActive: true
+                        },
+                        {
+                            soundTitle: 'Water in Stream',
+                            url: '/media/sounds/nature/water-in-stream.mp3'
+                        },
+                        {
+                            soundTitle: 'River with Birds',
+                            url: '/media/sounds/nature/birds-river.mp3'
                         }
                     ]
                 },
@@ -502,6 +521,9 @@ export default {
             if (this.presetsList.guidedInstruction.statusActive) {
                 this.stopGuidedAudio();
                 this.playGuidedAudio();
+            } else if (this.presetsList.backgroundSound.statusActive) {
+                this.stopBackgroundSound();
+                this.playBackgroundSound();
             } else {
                 this.stopBellSound();
                 this.playBellSound();
@@ -510,33 +532,48 @@ export default {
         stopAudio() {
             if (this.presetsList.guidedInstruction.statusActive) {
                 this.stopGuidedAudio();
+            } else if (this.presetsList.backgroundSound.statusActive) {
+                this.stopBackgroundSound();
             }
             this.stopBellSound();
         },
         playBellSound() {
-            let bellSound = this.presetsList.bellSound;
-            bellSound.audio = new Audio(bellSound.activePath);
-            bellSound.audio.play();
+            this.presetsList.bellSound.audio = new Audio(
+                this.presetsList.bellSound.activePath
+            );
+            this.presetsList.bellSound.audio.play();
         },
         stopBellSound() {
-            let bellSound = this.presetsList.bellSound;
-            if (!!bellSound.audio) {
-                bellSound.audio.pause();
-                bellSound.audio.currentTime = 0;
-                bellSound.audio = null;
+            if (!!this.presetsList.bellSound.audio) {
+                this.presetsList.bellSound.audio.pause();
+                this.presetsList.bellSound.audio.currentTime = 0;
+                this.presetsList.bellSound.audio = null;
             }
         },
         playGuidedAudio() {
-            let guidedInstruction = this.presetsList.guidedInstruction;
-            guidedInstruction.audio = new Audio(guidedInstruction.activePath);
-            guidedInstruction.audio.play();
+            this.presetsList.guidedInstruction.audio = new Audio(
+                this.presetsList.guidedInstruction.activePath
+            );
+            this.presetsList.guidedInstruction.audio.play();
         },
         stopGuidedAudio() {
-            let guidedInstruction = this.presetsList.guidedInstruction;
-            if (!!guidedInstruction.audio) {
-                guidedInstruction.audio.pause();
-                guidedInstruction.audio.currentTime = 0;
-                guidedInstruction.audio = null;
+            if (!!this.presetsList.guidedInstruction.audio) {
+                this.presetsList.guidedInstruction.audio.pause();
+                this.presetsList.guidedInstruction.audio.currentTime = 0;
+                this.presetsList.guidedInstruction.audio = null;
+            }
+        },
+        playBackgroundSound() {
+            this.presetsList.backgroundSound.audio = new Audio(
+                this.presetsList.backgroundSound.activePath
+            );
+            this.presetsList.backgroundSound.audio.play();
+        },
+        stopBackgroundSound() {
+            if (!!this.presetsList.backgroundSound.audio) {
+                this.presetsList.backgroundSound.audio.pause();
+                this.presetsList.backgroundSound.audio.currentTime = 0;
+                this.presetsList.backgroundSound.audio = null;
             }
         }
     },
@@ -544,6 +581,24 @@ export default {
         let localData = localStorage.getItem('presetsList');
         if (localData !== null) {
             this.presetsList = JSON.parse(localData);
+        }
+    },
+    computed: {
+        getAudioTitle() {
+            let title = null;
+            let guidedInstruction = this.presetsList.guidedInstruction;
+            let backgroundSound = this.presetsList.backgroundSound;
+            if (guidedInstruction.statusActive) {
+                title = !!guidedInstruction.languageTitle
+                    ? guidedInstruction.languageTitle
+                    : guidedInstruction.language[0].language;
+                title += ' Guided Meditation';
+            } else if (backgroundSound.statusActive) {
+                title = !!backgroundSound.soundTitle
+                    ? backgroundSound.soundTitle
+                    : backgroundSound.sound[0].soundTitle;
+            }
+            return title;
         }
     },
     mounted() {

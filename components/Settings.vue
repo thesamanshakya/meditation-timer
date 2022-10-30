@@ -96,71 +96,33 @@
                                 >Background Sounds
                                 <input
                                     type="checkbox"
-                                    v-model="guidedMeditationCheck"
-                                    @change="toggleInstructionAudio"
+                                    v-model="backgroundSoundCheck"
+                                    @change="toggleBackgroundSound"
                                 />
                                 <span class="checkmark"></span>
                             </label>
-                            <ul v-if="guidedMeditationCheck" class="pl-9 pt-4">
+                            <ul v-if="backgroundSoundCheck" class="pl-9 pt-4">
                                 <li
-                                    v-for="(instruction, index) in presetsList
-                                        .guidedInstruction.language"
+                                    v-for="(sound, index) in presetsList
+                                        .backgroundSound.sound"
                                     :key="index"
                                     class="mb-4"
                                 >
                                     <label class="c-checkbox">
-                                        {{
-                                            capitalizeFirstLetter(
-                                                instruction.language
-                                            )
-                                        }}
-                                        Audio
+                                        {{ sound.soundTitle }}
                                         <input
                                             type="radio"
                                             :value="index"
                                             v-model="
-                                                presetsList.guidedInstruction
-                                                    .languageActive
+                                                presetsList.backgroundSound
+                                                    .soundActive
                                             "
                                             @change="
-                                                selectInstructionAudio(index)
+                                                selectBackgroundSound(index)
                                             "
                                         />
                                         <span class="checkmark"></span>
                                     </label>
-                                    <div
-                                        class="relative pt-4 pr-1 pb-1 before:w-6 before:h-6 before:absolute before:border-t before:border-r before:rounded-tr-md before:right-4 before:-top-2 before:content-['']"
-                                        v-if="
-                                            customAudioActive &&
-                                            presetsList.guidedInstruction
-                                                .language.length ==
-                                                index + 1
-                                        "
-                                    >
-                                        <label
-                                            for="custom-audio"
-                                            class="border-2 border-white rounded-[30px] text-sm leading-none text-white bg-transparent outline-none block px-3 py-3 cursor-pointer text-center -mb-[7px] hover:bg-white hover:text-black"
-                                            >Select Audio</label
-                                        >
-                                        <input
-                                            id="custom-audio"
-                                            type="file"
-                                            accept="audio/*"
-                                            class="hidden"
-                                            @change="setCustomAudio"
-                                        />
-                                        <span
-                                            class="whitespace-no-wrap text-center overflow-hidden block text-xs pt-3 text-ellipsis max-w-[165px]"
-                                            v-if="
-                                                !!presetsList.guidedInstruction
-                                                    .customAudioFileName
-                                            "
-                                            >{{
-                                                presetsList.guidedInstruction
-                                                    .customAudioFileName
-                                            }}</span
-                                        >
-                                    </div>
                                 </li>
                             </ul>
                         </li>
@@ -182,7 +144,8 @@ export default {
                     this.presetsList.guidedInstruction.language.length - 1 ??
                 true,
             guidedMeditationCheck:
-                this.presetsList.guidedInstruction.statusActive
+                this.presetsList.guidedInstruction.statusActive,
+            backgroundSoundCheck: this.presetsList.backgroundSound.statusActive
         };
     },
     methods: {
@@ -190,19 +153,39 @@ export default {
             return string.charAt(0).toUpperCase() + string.slice(1);
         },
         toggleInstructionAudio() {
-            let guidedInstruction = this.presetsList.guidedInstruction;
-            guidedInstruction.statusActive = !guidedInstruction.statusActive;
+            this.presetsList.guidedInstruction.statusActive =
+                !this.presetsList.guidedInstruction.statusActive;
+            this.backgroundSoundCheck = false;
+            this.presetsList.backgroundSound.statusActive = false;
+        },
+        toggleBackgroundSound() {
+            this.presetsList.backgroundSound.statusActive =
+                !this.presetsList.backgroundSound.statusActive;
+            this.guidedMeditationCheck = false;
+            this.presetsList.guidedInstruction.statusActive = false;
         },
         selectInstructionAudio(index) {
-            let preset = this.presetsList.guidedInstruction;
+            let guidedInstruction = this.presetsList.guidedInstruction;
             this.customAudioActive =
-                index == preset.language.length - 1 ? true : false;
-            preset.language.forEach((elm, index) => {
+                index == guidedInstruction.language.length - 1 ? true : false;
+            guidedInstruction.language.forEach((elm, index) => {
                 if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
             });
-            preset.language[index].statusActive = true;
-            preset.languageTitle = preset.language[index].language;
-            preset.activePath = preset.language[index].url;
+            guidedInstruction.language[index].statusActive = true;
+            guidedInstruction.languageTitle =
+                guidedInstruction.language[index].language;
+            guidedInstruction.activePath =
+                guidedInstruction.language[index].url;
+            this.$forceUpdate();
+        },
+        selectBackgroundSound(index) {
+            let bgSound = this.presetsList.backgroundSound;
+            bgSound.sound.forEach((elm, index) => {
+                if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
+            });
+            bgSound.sound[index].statusActive = true;
+            bgSound.soundTitle = bgSound.sound[index].soundTitle;
+            bgSound.activePath = bgSound.sound[index].url;
             this.$forceUpdate();
         },
         clickOutsideClose(e) {
