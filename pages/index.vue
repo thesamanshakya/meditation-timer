@@ -474,33 +474,29 @@ export default {
 
         //app timer presets actions
         selectTimeList(index) {
-            this.presetsList.time.forEach((elm, index) => {
+            let time = this.presetsList.time;
+            time.forEach((elm, index) => {
                 if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
             });
-            this.presetsList.time[index].statusActive = true;
-            this.presetsList.totalDurationInMins =
-                this.presetsList.time[index].time;
+            time[index].statusActive = true;
+            this.presetsList.totalDurationInMins = time[index].time;
             this.$forceUpdate();
         },
         selectBellList(index) {
-            this.presetsList.bellSound.list.forEach((elm, index) => {
+            let bellSound = this.presetsList.bellSound;
+            bellSound.list.forEach((elm, index) => {
                 if (elm.hasOwnProperty('statusActive')) delete elm.statusActive;
             });
-            this.presetsList.bellSound.list[index].statusActive = true;
-            this.presetsList.bellSound.activePath =
-                this.presetsList.bellSound.list[index].url;
+            bellSound.list[index].statusActive = true;
+            bellSound.activePath = bellSound.list[index].url;
             this.$forceUpdate();
         },
         toggleIntervalBell() {
-            console.log('fired');
-            console.log(this.presetsList.intervalBell, 'one');
             this.presetsList.intervalBell = !this.presetsList.intervalBell;
-            console.log(this.presetsList.intervalBell, 'two');
         },
         addExtraDuration(extraTime) {
             this.presetsList.totalDurationInMins += extraTime;
         },
-
         // audio related
         playAudio() {
             if (this.presetsList.guidedInstruction.statusActive) {
@@ -518,29 +514,29 @@ export default {
             this.stopBellSound();
         },
         playBellSound() {
-            this.presetsList.bellSound.audio = new Audio(
-                this.presetsList.bellSound.activePath
-            );
-            this.presetsList.bellSound.audio.play();
+            let bellSound = this.presetsList.bellSound;
+            bellSound.audio = new Audio(bellSound.activePath);
+            bellSound.audio.play();
         },
         stopBellSound() {
-            if (!!this.presetsList.bellSound.audio) {
-                this.presetsList.bellSound.audio.pause();
-                this.presetsList.bellSound.audio.currentTime = 0;
-                this.presetsList.bellSound.audio = null;
+            let bellSound = this.presetsList.bellSound;
+            if (!!bellSound.audio) {
+                bellSound.audio.pause();
+                bellSound.audio.currentTime = 0;
+                bellSound.audio = null;
             }
         },
         playGuidedAudio() {
-            this.presetsList.guidedInstruction.audio = new Audio(
-                this.presetsList.guidedInstruction.activePath
-            );
-            this.presetsList.guidedInstruction.audio.play();
+            let guidedInstruction = this.presetsList.guidedInstruction;
+            guidedInstruction.audio = new Audio(guidedInstruction.activePath);
+            guidedInstruction.audio.play();
         },
         stopGuidedAudio() {
-            if (!!this.presetsList.guidedInstruction.audio) {
-                this.presetsList.guidedInstruction.audio.pause();
-                this.presetsList.guidedInstruction.audio.currentTime = 0;
-                this.presetsList.guidedInstruction.audio = null;
+            let guidedInstruction = this.presetsList.guidedInstruction;
+            if (!!guidedInstruction.audio) {
+                guidedInstruction.audio.pause();
+                guidedInstruction.audio.currentTime = 0;
+                guidedInstruction.audio = null;
             }
         }
     },

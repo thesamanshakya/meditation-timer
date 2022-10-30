@@ -90,6 +90,80 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="mb-4">
+                            <label class="c-checkbox"
+                                >Background Sounds
+                                <input
+                                    type="checkbox"
+                                    v-model="guidedMeditationCheck"
+                                    @change="toggleInstructionAudio"
+                                />
+                                <span class="checkmark"></span>
+                            </label>
+                            <ul v-if="guidedMeditationCheck" class="pl-9 pt-4">
+                                <li
+                                    v-for="(instruction, index) in presetsList
+                                        .guidedInstruction.language"
+                                    :key="index"
+                                    class="mb-4"
+                                >
+                                    <label class="c-checkbox">
+                                        {{
+                                            capitalizeFirstLetter(
+                                                instruction.language
+                                            )
+                                        }}
+                                        Audio
+                                        <input
+                                            type="radio"
+                                            :value="index"
+                                            v-model="
+                                                presetsList.guidedInstruction
+                                                    .languageActive
+                                            "
+                                            @change="
+                                                selectInstructionAudio(index)
+                                            "
+                                        />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <div
+                                        class="relative pt-4 pr-1 pb-1 before:w-6 before:h-6 before:absolute before:border-t before:border-r before:rounded-tr-md before:right-4 before:-top-2 before:content-['']"
+                                        v-if="
+                                            customAudioActive &&
+                                            presetsList.guidedInstruction
+                                                .language.length ==
+                                                index + 1
+                                        "
+                                    >
+                                        <label
+                                            for="custom-audio"
+                                            class="border-2 border-white rounded-[30px] text-sm leading-none text-white bg-transparent outline-none block px-3 py-3 cursor-pointer text-center -mb-[7px] hover:bg-white hover:text-black"
+                                            >Select Audio</label
+                                        >
+                                        <input
+                                            id="custom-audio"
+                                            type="file"
+                                            accept="audio/*"
+                                            class="hidden"
+                                            @change="setCustomAudio"
+                                        />
+                                        <span
+                                            class="whitespace-no-wrap text-center overflow-hidden block text-xs pt-3 text-ellipsis max-w-[165px]"
+                                            v-if="
+                                                !!presetsList.guidedInstruction
+                                                    .customAudioFileName
+                                            "
+                                            >{{
+                                                presetsList.guidedInstruction
+                                                    .customAudioFileName
+                                            }}</span
+                                        >
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </span>
             </span>
@@ -116,11 +190,11 @@ export default {
             return string.charAt(0).toUpperCase() + string.slice(1);
         },
         toggleInstructionAudio() {
-            this.presetsList.guidedInstruction.statusActive =
-                !this.presetsList.guidedInstruction.statusActive;
+            let guidedInstruction = this.presetsList.guidedInstruction;
+            guidedInstruction.statusActive = !guidedInstruction.statusActive;
         },
         selectInstructionAudio(index) {
-            const preset = this.presetsList.guidedInstruction;
+            let preset = this.presetsList.guidedInstruction;
             this.customAudioActive =
                 index == preset.language.length - 1 ? true : false;
             preset.language.forEach((elm, index) => {
@@ -138,16 +212,15 @@ export default {
         },
         setCustomAudio(e) {
             let files = e.target.files || e.dataTransfer.files;
+            let guidedInstruction = this.presetsList.guidedInstruction;
             if (!files.length) return;
             let file = files[0],
                 type = file.type,
                 audio = document.createElement('audio');
             if (audio.canPlayType(type)) {
-                this.presetsList.guidedInstruction.activePath =
-                    URL.createObjectURL(file);
-                this.presetsList.guidedInstruction.customAudioFileName =
-                    file.name;
-                this.presetsList.guidedInstruction.languageTitle = file.name;
+                guidedInstruction.activePath = URL.createObjectURL(file);
+                guidedInstruction.customAudioFileName = file.name;
+                guidedInstruction.languageTitle = file.name;
             } else {
                 this.$toast.open({
                     position: 'top',
