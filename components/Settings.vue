@@ -34,7 +34,7 @@
                                     :key="index"
                                     class="mb-4"
                                 >
-                                    <label class="c-checkbox radio">
+                                    <label class="c-checkbox">
                                         {{
                                             capitalizeFirstLetter(
                                                 instruction.language
@@ -43,8 +43,11 @@
                                         Audio
                                         <input
                                             type="radio"
-                                            name="instruction-type"
-                                            :checked="index == 0"
+                                            :value="index"
+                                            v-model="
+                                                presetsList.guidedInstruction
+                                                    .languageActive
+                                            "
                                             @change="
                                                 selectInstructionAudio(index)
                                             "
@@ -74,8 +77,14 @@
                                         />
                                         <span
                                             class="whitespace-no-wrap text-center overflow-hidden block text-xs pt-3 text-ellipsis max-w-[165px]"
-                                            v-if="!!customAudioFileName"
-                                            >{{ customAudioFileName }}</span
+                                            v-if="
+                                                !!presetsList.guidedInstruction
+                                                    .customAudioFileName
+                                            "
+                                            >{{
+                                                presetsList.guidedInstruction
+                                                    .customAudioFileName
+                                            }}</span
                                         >
                                     </div>
                                 </li>
@@ -94,9 +103,12 @@ export default {
     data() {
         return {
             settingsActive: false,
-            customAudioActive: false,
-            customAudioFileName: null,
-            guidedMeditationCheck: false
+            customAudioActive:
+                this.presetsList.guidedInstruction.languageActive ===
+                    this.presetsList.guidedInstruction.language.length - 1 ??
+                true,
+            guidedMeditationCheck:
+                this.presetsList.guidedInstruction.statusActive
         };
     },
     methods: {
@@ -121,6 +133,8 @@ export default {
             this.presetsList.guidedInstruction.language[
                 index
             ].statusActive = true;
+            this.presetsList.guidedInstruction.languageTitle =
+                this.presetsList.guidedInstruction.language[index].language;
             this.presetsList.guidedInstruction.activePath =
                 this.presetsList.guidedInstruction.language[index].url;
             this.$forceUpdate();
@@ -139,7 +153,9 @@ export default {
             if (audio.canPlayType(type)) {
                 this.presetsList.guidedInstruction.activePath =
                     URL.createObjectURL(file);
-                this.customAudioFileName = file.name;
+                this.presetsList.guidedInstruction.customAudioFileName =
+                    file.name;
+                this.presetsList.guidedInstruction.languageTitle = file.name;
             } else {
                 this.$toast.open({
                     position: 'top',

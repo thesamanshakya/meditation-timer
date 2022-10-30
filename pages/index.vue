@@ -184,8 +184,15 @@
                         </div>
                         <i
                             id="custom-audio-text"
-                            class="text-left inline-block align-middle text-base not-italic ml-3 max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap md:ml-5 md:max-w-none"
-                            >Guided Meditation</i
+                            class="text-left capitalize inline-block align-middle text-base not-italic ml-3 max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap md:ml-5 md:max-w-none"
+                            >{{
+                                !!this.presetsList.guidedInstruction
+                                    .languageTitle
+                                    ? this.presetsList.guidedInstruction
+                                          .languageTitle
+                                    : this.presetsList.guidedInstruction
+                                          .language[0].language
+                            }}</i
                         >
                     </div>
                 </div>
@@ -223,7 +230,7 @@
                 />
             </span>
         </div>
-        <span
+        <!-- <span
             class="install hidden fixed bg-indigo-600 rounded-none text-sm leading-6 p-5 pr-[165px] text-white md:text-base md:rounded top-0 right-0 left-0 r-0 z-[9999px] md:w-[430px] md:pr-[140px] md:pl-6"
             >Get this free app. It won't take up space on your device.
             <a
@@ -232,7 +239,7 @@
                 id="install-add"
                 >Install App</a
             ></span
-        >
+        > -->
     </div>
 </template>
 
@@ -283,6 +290,9 @@ export default {
                     statusActive: false,
                     activePath: '/media/instructions/anapana/english.mp3',
                     audio: null,
+                    languageTitle: null,
+                    languageActive: 0,
+                    customAudioFileName: null,
                     language: [
                         {
                             language: 'english',
