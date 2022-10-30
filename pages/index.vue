@@ -106,7 +106,7 @@
                                 }}</span>
                             </a>
                             <i
-                                class="add-btn text-xs -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA"
+                                class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA"
                                 @click="addExtraDuration(preset.addTime)"
                                 >Add +{{ preset.addTime }} mins</i
                             >
@@ -131,7 +131,7 @@
                     <span
                         class="interval-text text-base ml-4 md:text-lg md:ml-5"
                     >
-                        Interval Bell
+                        Interval bell
                         {{
                             presetsList.intervalBell
                                 ? 'at ' +

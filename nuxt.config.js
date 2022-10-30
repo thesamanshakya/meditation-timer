@@ -64,7 +64,7 @@ export default {
     modules: [
         '@nuxtjs/style-resources',
         '@nuxtjs/pwa',
-        // '@nuxtjs/onesignal',
+        '@nuxtjs/onesignal',
         '@nuxtjs/auth-next',
         '@nuxtjs/google-fonts',
         [
@@ -94,7 +94,7 @@ export default {
             lang: 'en',
             useWebmanifestExtension: false,
             start_url: '/?source=pwa',
-            background_color: '#000',
+            background_color: '#1E75FF',
             display: 'fullscreen',
             orientation: 'portrait',
             scope: '/',
@@ -122,15 +122,15 @@ export default {
         }
     },
 
-    // oneSignal: {
-    //     init: {
-    //         appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
-    //         allowLocalhostAsSecureOrigin: true,
-    //         welcomeNotification: {
-    //             disable: true
-    //         }
-    //     }
-    // },
+    oneSignal: {
+        init: {
+            appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
+            // allowLocalhostAsSecureOrigin: true,
+            welcomeNotification: {
+                disable: true
+            }
+        }
+    },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
