@@ -111,7 +111,11 @@ export default {
                 '/media/bell/gong-4.mp3',
                 '/media/instructions/anapana/english.mp3',
                 '/media/instructions/anapana/hindi.mp3',
-                '/media/instructions/anapana/nepali.mp3'
+                '/media/instructions/anapana/nepali.mp3',
+                '/media/sounds/nature/forest-with-birds.mp3',
+                '/media/sounds/nature/water-in-stream.mp3',
+                '/media/sounds/nature/birds-with-river.mp3',
+                '/media/sounds/nature/birds.mp3'
             ]
         }
     },

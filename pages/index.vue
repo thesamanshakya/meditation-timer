@@ -328,7 +328,11 @@ export default {
                         },
                         {
                             soundTitle: 'River with Birds',
-                            url: '/media/sounds/nature/birds-river.mp3'
+                            url: '/media/sounds/nature/birds-with-river.mp3'
+                        },
+                        {
+                            soundTitle: 'Birds',
+                            url: '/media/sounds/nature/birds.mp3'
                         }
                     ]
                 },
@@ -479,7 +483,6 @@ export default {
             this.noSleep.disable();
             if (!manualStop) {
                 //if the timer completes on its own without manual stop
-
                 this.completeAction = true; //if user manually stops the timer by clicking, do not show the "Meditation commpleted" text
                 setTimeout(() => {
                     this.completeAction = false;
@@ -567,6 +570,7 @@ export default {
             this.presetsList.backgroundSound.audio = new Audio(
                 this.presetsList.backgroundSound.activePath
             );
+            this.presetsList.backgroundSound.audio.loop = true;
             this.presetsList.backgroundSound.audio.play();
         },
         stopBackgroundSound() {
