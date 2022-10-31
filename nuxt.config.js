@@ -67,7 +67,7 @@ export default {
         '@nuxtjs/onesignal',
         '@nuxtjs/auth-next',
         '@nuxtjs/google-fonts',
-        // '@nuxtjs/google-analytics',
+        '@nuxtjs/google-analytics',
         [
             '@nuxtjs/firebase',
             {
@@ -87,9 +87,9 @@ export default {
             }
         ]
     ],
-    // googleAnalytics: {
-    //     id: 'G-BQ59PQT3H5'
-    // },
+    googleAnalytics: {
+        id: 'G-BQ59PQT3H5'
+    },
     pwa: {
         manifest: {
             short_name: 'Hamro Meditation Timer',
