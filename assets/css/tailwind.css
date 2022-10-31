@@ -58,9 +58,6 @@ body,
 #__nuxt {
     height: 100%;
 }
-body {
-    transition: background-color 0.25s ease;
-}
 .running .bell-sound li {
     @apply hidden;
 }

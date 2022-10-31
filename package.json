@@ -12,6 +12,7 @@
         "@nuxtjs/auth-next": "5.0.0-1648802546.c9880dc",
         "@nuxtjs/axios": "^5.13.6",
         "@nuxtjs/firebase": "^8.2.2",
+        "@nuxtjs/google-analytics": "^2.4.0",
         "@nuxtjs/google-fonts": "^3.0.0-0",
         "@nuxtjs/onesignal": "^3.0.0-beta.16",
         "@nuxtjs/pwa": "^3.3.5",

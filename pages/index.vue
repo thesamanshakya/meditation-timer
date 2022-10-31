@@ -1,7 +1,7 @@
 <template>
     <div
         id="wrapper"
-        class="overflow-hidden relative w-full h-full bg-black transition-all"
+        class="overflow-hidden relative w-full h-full bg-black transition-all duration-1000"
     >
         <div
             v-if="!isRunning"
