@@ -424,7 +424,6 @@ export default {
             } else if (value == 'facebook') {
                 provider =
                     new this.$fire.auth.app.firebase.auth.FacebookAuthProvider();
-                provider.addScope('user_birthday');
             }
 
             this.$fire.auth
