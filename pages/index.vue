@@ -246,7 +246,6 @@ import SvgIcons from '~/assets/fonts/symbol-defs.svg?inline';
 import NoSleep from 'nosleep.js';
 
 export default {
-    middleware: ['fireAuth'],
     data() {
         return {
             pageLoading: true,
