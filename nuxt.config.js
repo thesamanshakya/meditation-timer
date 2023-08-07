@@ -64,28 +64,28 @@ export default {
     modules: [
         '@nuxtjs/style-resources',
         '@nuxtjs/pwa',
-        '@nuxtjs/onesignal',
-        '@nuxtjs/auth-next',
+        // '@nuxtjs/onesignal',
+        // '@nuxtjs/auth-next',
         '@nuxtjs/google-fonts',
         '@nuxtjs/google-analytics',
-        [
-            '@nuxtjs/firebase',
-            {
-                config: {
-                    apiKey: 'AIzaSyA9ltzcTBAzNDxYFTK_pjuxyGMwzHaZflA',
-                    authDomain: 'meditation-timer-82fdf.firebaseapp.com',
-                    projectId: 'meditation-timer-82fdf',
-                    storageBucket: 'meditation-timer-82fdf.appspot.com',
-                    messagingSenderId: '126206087439',
-                    appId: '1:126206087439:web:e23b5a9d6b1568b4d1ee7a',
-                    measurementId: 'G-2G68W6SHKX'
-                },
-                services: {
-                    auth: true,
-                    database: true
-                }
-            }
-        ]
+        // [
+        //     '@nuxtjs/firebase',
+        //     {
+        //         config: {
+        //             apiKey: 'AIzaSyA9ltzcTBAzNDxYFTK_pjuxyGMwzHaZflA',
+        //             authDomain: 'meditation-timer-82fdf.firebaseapp.com',
+        //             projectId: 'meditation-timer-82fdf',
+        //             storageBucket: 'meditation-timer-82fdf.appspot.com',
+        //             messagingSenderId: '126206087439',
+        //             appId: '1:126206087439:web:e23b5a9d6b1568b4d1ee7a',
+        //             measurementId: 'G-2G68W6SHKX'
+        //         },
+        //         services: {
+        //             auth: true,
+        //             database: true
+        //         }
+        //     }
+        // ]
     ],
     googleAnalytics: {
         id: 'G-BQ59PQT3H5'
@@ -130,15 +130,15 @@ export default {
         }
     },
 
-    oneSignal: {
-        init: {
-            appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
-            allowLocalhostAsSecureOrigin: true,
-            welcomeNotification: {
-                disable: true
-            }
-        }
-    },
+    // oneSignal: {
+    //     init: {
+    //         appId: '7ac2a33b-4358-4eed-b29e-b034636d18b1',
+    //         allowLocalhostAsSecureOrigin: true,
+    //         welcomeNotification: {
+    //             disable: true
+    //         }
+    //     }
+    // },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
