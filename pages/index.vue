@@ -221,10 +221,10 @@
             >
                 <Battery />
                 <Settings :presetsList="presetsList" v-show="!isRunning" />
-                <UserDropdown
+                <!-- <UserDropdown
                     class="ml-6"
                     v-if="!isRunning && !$nuxt.isOffline"
-                />
+                /> -->
             </span>
         </div>
         <!-- <span
