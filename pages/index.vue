@@ -280,7 +280,7 @@ export default {
                 intervalBell: false,
                 guidedInstruction: {
                     statusActive: false,
-                    activePath: '/media/instructions/anapana/english.mp3',
+                    activePath: '/media/instructions/anapana/english-1.mp3',
                     audio: null,
                     languageTitle: null,
                     languageActive: 0,
