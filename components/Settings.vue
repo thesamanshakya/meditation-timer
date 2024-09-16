@@ -14,7 +14,7 @@
                 v-if="settingsActive"
             >
                 <span
-                    class="s-dd block rounded-md p-4 text-sm bg-black border border-white min-w-[240px]"
+                    class="s-dd block rounded-md p-4 text-sm bg-black border border-white min-w-[260px]"
                 >
                     <ul class="m-0 p-0 list-none -mb-3">
                         <li class="mb-4">

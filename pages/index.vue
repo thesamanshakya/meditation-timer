@@ -267,12 +267,8 @@ export default {
                     url: 'http://m.me/100666278588914'
                 },
                 {
-                    linkText: 'Report a bug',
-                    url: 'http://m.me/100666278588914'
-                },
-                {
                     linkText: 'Join meditation!',
-                    url: 'http://m.me/anapansati'
+                    url: 'https://www.facebook.com/profile.php?id=61565128987107'
                 },
                 {
                     linkText: 'Buy me a Coffee!',
@@ -291,9 +287,13 @@ export default {
                     customAudioFileName: null,
                     language: [
                         {
-                            language: 'english',
-                            url: '/media/instructions/anapana/english.mp3',
+                            language: 'english (Goenka)',
+                            url: '/media/instructions/anapana/english-1.mp3',
                             statusActive: true
+                        },
+                        {
+                            language: 'english',
+                            url: '/media/instructions/anapana/english.mp3'
                         },
                         {
                             language: 'hindi',
