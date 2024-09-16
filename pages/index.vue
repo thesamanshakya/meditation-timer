@@ -293,7 +293,7 @@ export default {
                         },
                         {
                             language: 'english',
-                            url: '/media/instructions/anapana/english.mp3'
+                            url: '/media/instructions/anapana/english-2.mp3'
                         },
                         {
                             language: 'hindi',
