@@ -17,7 +17,7 @@
                 <div
                     class="drawer-left fixed top-0 left-0 bottom-0 w-full max-w-xs sm:max-w-sm bg-gradient-to-b from-[#1c1c2e] to-[#0f172a] shadow-2xl overflow-y-auto pb-10 transform transition-all duration-300 ease-in-out z-50 border-r border-white/5">
                     <div class="p-5 border-b border-white/10 flex items-center justify-between">
-                        <h2 class="text-xl font-medium tracking-wide">Hamro Meditation</h2>
+                        <h2 class="text-base uppercase font-medium tracking-wider">Hamro Meditation Timer</h2>
                         <button @click="navActive = false" class="text-white/60 hover:text-white transition-colors p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -27,10 +27,10 @@
                         </button>
                     </div>
                     <div class="p-5">
-                        <ul class="nav m-0 p-0 list-none space-y-4">
+                        <ul class="nav m-0 p-0 list-none space-y-4 text-base">
                             <li v-for="(list, index) in menuList" :key="index">
                                 <a :href="list.url" target="_blank" rel="nofollow noopener"
-                                    class="flex items-center py-3 px-4 rounded-lg text-lg border border-white/10 text-white/80 font-light tracking-wide hover:bg-white/10 hover:text-white transition-all">
+                                    class="flex items-center py-2.5 px-4 rounded-lg text-lg border border-white/10 text-white/80 font-light tracking-wide hover:bg-white/10 hover:text-white transition-all">
                                     {{ list.linkText }}
                                 </a>
                             </li>
@@ -41,7 +41,7 @@
                                 <a class="text-white underline hover:text-white/80 transition-colors"
                                     href="https://saman.com.np">Saman Shakya</a>
                                 <span class="inline-block ml-2">with <span
-                                        class="text-red-500 text-4xl inline-block align-top -mt-3 ml-1">&hearts;</span></span>
+                                        class="text-red-500 text-2xl inline-block align-top -mt-1.5 ml-1">&hearts;</span></span>
                             </p>
                             <p class="italic text-base font-light text-white/60">May all beings be happy!
                                 <span class="not-italic ml-1 text-xl">&#128522;</span>
