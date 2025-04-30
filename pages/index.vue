@@ -1,25 +1,54 @@
 <template>
     <div id="wrapper"
         class="overflow-hidden relative w-full h-full bg-gradient-to-b from-black to-[rgba(20,20,35,0.95)] transition-all duration-1000">
-        <div v-if="!isRunning" id="nav-container"
+        <div v-if="!isRunning && !navActive" id="nav-container"
             class="fixed z-[9999] menu-button flex items-center flex-col appearance-none border-0 bg-transparent rounded-none w-[30px] cursor-pointer pointer-events-auto mt-5 ml-6"
             :class="{ active: navActive }" @click="navActive = !navActive">
             <span v-for="index in 3" :key="index"
-                class="i-bar block w-full h-[3px] bg-white transition-all mt-[5px]"></span>
+                class="i-bar block w-full h-[3px] bg-white transition-all duration-300 mt-[5px]" :class="{
+                    'rotate-45 translate-y-[8px]': navActive && index === 1,
+                    'opacity-0': navActive && index === 2,
+                    '-rotate-45 -translate-y-[8px]': navActive && index === 3
+                }"></span>
         </div>
-        <Transition name="fade">
-            <div v-if="navActive"
-                class="fixed h-screen z-10 nav-content mt-16 top-0 left-0 px-6 py-3 bg-black w-full text-center md:text-left md:w-[90%] md:max-w-[250px]">
-                <ul class="nav m-0 p-0 list-none">
-                    <li class="mb-4" v-for="(list, index) in menuList" :key="index">
-                        <a :href="list.url" target="_blank" rel="nofollow noopener"
-                            class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all">{{ list.linkText
-                            }}</a>
-                    </li>
-                </ul>
-                <span class="text-base block">App created by<i class="block font-normal not-italic"><a class="underline"
-                            href="https://saman.com.np">Saman Shakya</a>
-                        with &hearts;</i><i class="not-italic">May all beings be happy! &#128522;</i></span>
+        <Transition name="drawer-left">
+            <div v-if="navActive" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+                @click.self="navActive = false">
+                <div
+                    class="drawer-left fixed top-0 left-0 bottom-0 w-full max-w-xs sm:max-w-sm bg-gradient-to-b from-[#1c1c2e] to-[#0f172a] shadow-2xl overflow-y-auto pb-10 transform transition-all duration-300 ease-in-out z-50 border-r border-white/5">
+                    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+                        <h2 class="text-xl font-medium tracking-wide">Hamro Meditation</h2>
+                        <button @click="navActive = false" class="text-white/60 hover:text-white transition-colors p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <ul class="nav m-0 p-0 list-none space-y-4">
+                            <li v-for="(list, index) in menuList" :key="index">
+                                <a :href="list.url" target="_blank" rel="nofollow noopener"
+                                    class="flex items-center py-3 px-4 rounded-lg text-lg border border-white/10 text-white/80 font-light tracking-wide hover:bg-white/10 hover:text-white transition-all">
+                                    {{ list.linkText }}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="mt-5 pt-7 border-t border-white/10 text-white/70">
+                            <p class="mb-3 tracking-wide uppercase text-sm">App created by</p>
+                            <p class="font-normal mt-1">
+                                <a class="text-white underline hover:text-white/80 transition-colors"
+                                    href="https://saman.com.np">Saman Shakya</a>
+                                <span class="inline-block ml-2">with <span
+                                        class="text-red-500 text-4xl inline-block align-top -mt-3 ml-1">&hearts;</span></span>
+                            </p>
+                            <p class="italic text-base font-light text-white/60">May all beings be happy!
+                                <span class="not-italic ml-1 text-xl">&#128522;</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </Transition>
         <div class="w1 flex items-center justify-center pb-2" :class="{ running: isRunning }">
@@ -84,7 +113,7 @@
                 <span
                     class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
                     v-if="completeAction">COMPLETED!</span>
-                <span class="timer-display block leading-none mb-5 text-[21vw] md:text-[25vh]" v-else>
+                <span class="timer-display block leading-none mb-5 text-[25vw] md:text-[25vh]" v-else>
                     {{
                         isRunning
                             ? timeParser(tickerInMins)
@@ -145,7 +174,7 @@
             </span>
         </div>
         <!-- <span
-            class="install hidden fixed bg-indigo-600 rounded-none text-sm leading-6 p-5 pr-[165px] text-white md:text-base md:rounded top-0 right-0 left-0 r-0 z-[9999px] md:w-[430px] md:pr-[140px] md:pl-6"
+            class="install hidden fixed bg-indigo-600 rounded-none text-sm leading-6 p-5 pr-[165px] text-white md:text-base md:rounded top-0 right-0 left-0 r-0 z-[9999px] md:text-base md:rounded top-0 right-0 left-0 r-0 z-[9999px] md:w-[430px] md:pr-[140px] md:pl-6"
             >Get this free app. It won't take up space on your device.
             <a
                 href="javscript:void(0)"
@@ -604,5 +633,38 @@ $themeColours: (
 
 span.timer.block {
     font-weight: 100;
+}
+
+// Left drawer animation
+.drawer-left-enter-active,
+.drawer-left-leave-active {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.drawer-left-enter-from,
+.drawer-left-leave-to {
+    opacity: 0;
+}
+
+.drawer-left-enter-from .drawer-left,
+.drawer-left-leave-to .drawer-left {
+    transform: translateX(-100%);
+}
+
+// Burger animation
+#nav-container.active {
+    .i-bar {
+        &:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        &:nth-child(2) {
+            opacity: 0;
+        }
+
+        &:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+    }
 }
 </style>
