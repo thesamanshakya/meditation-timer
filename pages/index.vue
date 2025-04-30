@@ -1,101 +1,53 @@
 <template>
-    <div
-        id="wrapper"
-        class="overflow-hidden relative w-full h-full bg-black transition-all duration-1000"
-    >
-        <div
-            v-if="!isRunning"
-            id="nav-container"
+    <div id="wrapper"
+        class="overflow-hidden relative w-full h-full bg-gradient-to-b from-black to-[rgba(20,20,35,0.95)] transition-all duration-1000">
+        <div v-if="!isRunning" id="nav-container"
             class="fixed z-[9999] menu-button flex items-center flex-col appearance-none border-0 bg-transparent rounded-none w-[30px] cursor-pointer pointer-events-auto mt-5 ml-6"
-            :class="{ active: navActive }"
-            @click="navActive = !navActive"
-        >
-            <span
-                v-for="index in 3"
-                :key="index"
-                class="i-bar block w-full h-[3px] bg-white transition-all mt-[5px]"
-            ></span>
+            :class="{ active: navActive }" @click="navActive = !navActive">
+            <span v-for="index in 3" :key="index"
+                class="i-bar block w-full h-[3px] bg-white transition-all mt-[5px]"></span>
         </div>
         <Transition name="fade">
-            <div
-                v-if="navActive"
-                class="fixed h-screen z-10 nav-content mt-16 top-0 left-0 px-6 py-3 bg-black w-full text-center md:text-left md:w-[90%] md:max-w-[250px]"
-            >
+            <div v-if="navActive"
+                class="fixed h-screen z-10 nav-content mt-16 top-0 left-0 px-6 py-3 bg-black w-full text-center md:text-left md:w-[90%] md:max-w-[250px]">
                 <ul class="nav m-0 p-0 list-none">
-                    <li
-                        class="mb-4"
-                        v-for="(list, index) in menuList"
-                        :key="index"
-                    >
-                        <a
-                            :href="list.url"
-                            target="_blank"
-                            rel="nofollow noopener"
-                            class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all"
-                            >{{ list.linkText }}</a
-                        >
+                    <li class="mb-4" v-for="(list, index) in menuList" :key="index">
+                        <a :href="list.url" target="_blank" rel="nofollow noopener"
+                            class="text-xl block pb-3 hover:text-white hover:pl-1 transition-all">{{ list.linkText
+                            }}</a>
                     </li>
                 </ul>
-                <span class="text-base block"
-                    >App created by<i class="block font-normal not-italic"
-                        ><a class="underline" href="https://saman.com.np"
-                            >Saman Shakya</a
-                        >
-                        with &hearts;</i
-                    ><i class="not-italic"
-                        >May all beings be happy! &#128522;</i
-                    ></span
-                >
+                <span class="text-base block">App created by<i class="block font-normal not-italic"><a class="underline"
+                            href="https://saman.com.np">Saman Shakya</a>
+                        with &hearts;</i><i class="not-italic">May all beings be happy! &#128522;</i></span>
             </div>
         </Transition>
-        <div
-            class="w1 flex items-center justify-center pb-2"
-            :class="{ running: isRunning }"
-        >
+        <div class="w1 flex items-center justify-center pb-2" :class="{ running: isRunning }">
             <div class="text-center flex-1">
                 <SvgIcons />
-                <div
-                    class="text-base top-1/2 right-8 mb-6 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
-                >
-                    <strong class="font-medium mb-5 hidden md:block"
-                        >Start/End Bell</strong
-                    >
+                <div class="text-base top-1/2 right-8 mb-6 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]">
+                    <strong class="font-medium mb-5 hidden md:block">Start/End Bell</strong>
                     <ul
-                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:block overflow-hidden"
-                    >
-                        <li
-                            v-for="(bell, index) in presetsList.bellSound.list"
-                            :key="index"
-                            class="mb-2"
-                            :class="{
-                                active: presetsList.bellSound.list[index]
-                                    .statusActive
-                            }"
-                        >
-                            <a
-                                @click="selectBellList(index)"
-                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full"
-                                >{{ bell.name }}</a
-                            >
+                        class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:block overflow-hidden">
+                        <li v-for="(bell, index) in presetsList.bellSound.list" :key="index" class="mb-2" :class="{
+                            active: presetsList.bellSound.list[index]
+                                .statusActive
+                        }">
+                            <a @click="selectBellList(index)"
+                                class="py-2 px-4 cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full transition-all hover:shadow-sm">{{
+                                    bell.name }}</a>
                         </li>
                     </ul>
                 </div>
                 <div class="controls" v-if="!isRunning">
                     <ul
-                        class="presets m-0 p-0 list-none flex justify-center leading-none pb-7 text-[5.5vw] md:text-[4vh]"
-                    >
-                        <li
-                            v-for="(preset, index) in presetsList.time"
-                            :key="index"
-                            class="mb-3 relative mx-2.5 md:mb-4 md:mx-4"
-                            :class="{
+                        class="presets m-0 p-0 list-none flex justify-center leading-none pb-7 text-[5.5vw] md:text-[4vh]">
+                        <li v-for="(preset, index) in presetsList.time" :key="index"
+                            class="mb-3 relative mx-2.5 md:mb-4 md:mx-4" :class="{
                                 active: presetsList.time[index].statusActive
-                            }"
-                        >
-                            <a
-                                @click="selectTimeList(index)"
-                                class="px-6 py-6 pt-5 cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all"
-                            >
+                            }">
+                            <a @click="selectTimeList(index)"
+                                class="px-6 py-6 pt-5 cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] backdrop-blur-sm">
                                 {{
                                     preset.time >= 60
                                         ? preset.time / 60
@@ -103,55 +55,37 @@
                                 }}
                                 <span class="block pt-[10%]">{{
                                     preset.time >= 60 ? 'hour' : 'mins'
-                                }}</span>
+                                    }}</span>
                             </a>
-                            <i
-                                class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA"
-                                @click="addExtraDuration(preset.addTime)"
-                                >Add +{{ preset.addTime }} mins</i
-                            >
+                            <i class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
+                                @click="addExtraDuration(preset.addTime)">Add +{{ preset.addTime }} mins</i>
                         </li>
                     </ul>
                 </div>
-                <div
-                    class="interval mt-3 flex items-center justify-center mb-6 md:mt-4"
-                >
-                    <input
-                        type="checkbox"
-                        id="interval-switch"
-                        :checked="presetsList.intervalBell"
-                        @change="toggleIntervalBell"
-                        class="h-0 w-0 invisible"
-                    />
-                    <label
-                        for="interval-switch"
-                        class="cursor-pointer block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white w-12 h-6 after:absolute after:w-4 after:h-4 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all"
-                        v-if="!isRunning"
-                    ></label>
-                    <span
-                        class="interval-text text-base ml-4 md:text-lg md:ml-5"
-                    >
+                <div class="interval mt-3 flex items-center justify-center mb-6 md:mt-4">
+                    <input type="checkbox" id="interval-switch" :checked="presetsList.intervalBell"
+                        @change="toggleIntervalBell" class="h-0 w-0 invisible" />
+                    <label for="interval-switch"
+                        class="cursor-pointer block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white w-12 h-6 after:absolute after:w-4 after:h-4 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all after:duration-300 hover:after:shadow-[0_0_5px_rgba(255,255,255,0.7)]"
+                        v-if="!isRunning"></label>
+                    <span class="interval-text text-base ml-4 md:text-lg md:ml-5">
                         Interval Bell
                         {{
                             presetsList.intervalBell
                                 ? 'at ' +
-                                  Math.floor(
-                                      presetsList.totalDurationInMins / 2
-                                  ) +
-                                  ' mins'
+                                Math.floor(
+                                    presetsList.totalDurationInMins / 2
+                                ) +
+                                ' mins'
                                 : 'is currently OFF'
                         }}
                     </span>
                 </div>
                 <span
-                    class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse"
-                    v-if="completeAction"
-                    >COMPLETED!</span
-                >
-                <span
-                    class="timer block leading-none mb-5 text-[21vw] md:text-[25vh]"
-                    v-else
-                >
+                    class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+                    v-if="completeAction">COMPLETED!</span>
+                <span class="timer block leading-none mb-5 text-[21vw] md:text-[25vh] font-light tracking-tighter"
+                    v-else>
                     {{
                         isRunning
                             ? timeParser(tickerInMins)
@@ -159,47 +93,35 @@
                     }}
                 </span>
 
-                <div
-                    class="custom-playing text-center p-9 pt-0"
-                    v-if="
-                        (presetsList.guidedInstruction.statusActive ||
-                            presetsList.backgroundSound.statusActive) &&
-                        !completeAction
-                    "
-                >
+                <div class="custom-playing text-center p-9 pt-0" v-if="
+                    (presetsList.guidedInstruction.statusActive ||
+                        presetsList.backgroundSound.statusActive) &&
+                    !completeAction
+                ">
                     <div class="inline-block align-top relative pl-8">
-                        <div
-                            class="absolute left-0 -top-[3px] pr-3 scale-50 md:scale-75"
-                        >
+                        <div class="absolute left-0 -top-[3px] pr-3 scale-50 md:scale-75">
                             <div
-                                class="icon speaker w-0 h-0 bg-transparent border-y-[15px] border-r-[20px] border-r-white border-y-transparent relative before:content-[''] before:absolute before:-top-[5px] before:left-0 before:w-5 before:h-[10px] before:bg-white"
-                            ></div>
-                            <div
-                                class="w-[50px] h-[50px] overflow-hidden rotate-[135deg] absolute left-full -top-[10px]"
-                                :class="{ 'animate-pulse': isRunning }"
-                            >
+                                class="icon speaker w-0 h-0 bg-transparent border-y-[15px] border-r-[20px] border-r-white border-y-transparent relative before:content-[''] before:absolute before:-top-[5px] before:left-0 before:w-5 before:h-[10px] before:bg-white">
+                            </div>
+                            <div class="w-[50px] h-[50px] overflow-hidden rotate-[135deg] absolute left-full -top-[10px]"
+                                :class="{ 'animate-pulse': isRunning }">
                                 <div
-                                    class="border-[5px] border-white rounded-[50%] w-[25px] h-[25px] top-[35px] left-[35px] absolute"
-                                ></div>
+                                    class="border-[5px] border-white rounded-[50%] w-[25px] h-[25px] top-[35px] left-[35px] absolute">
+                                </div>
                                 <div
-                                    class="border-[5px] border-white rounded-[50%] w-[40px] h-[40px] top-[25px] left-[25px] absolute"
-                                ></div>
+                                    class="border-[5px] border-white rounded-[50%] w-[40px] h-[40px] top-[25px] left-[25px] absolute">
+                                </div>
                             </div>
                         </div>
-                        <i
-                            id="custom-audio-text"
-                            class="text-left capitalize inline-block align-middle text-base not-italic ml-3 max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap md:ml-5 md:max-w-none"
-                            >{{ getAudioTitle }}</i
-                        >
+                        <i id="custom-audio-text"
+                            class="text-left capitalize inline-block align-middle text-base not-italic ml-3 max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap md:ml-5 md:max-w-none">{{
+                                getAudioTitle }}</i>
                     </div>
                 </div>
 
                 <button
-                    class="btn-action bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all focus:outline-none focus:border-none hover:scale-105 outline-none"
-                    type="button"
-                    @click="toggleTimer"
-                    v-if="!completeAction"
-                >
+                    class="btn-action bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all duration-300 ease-in-out focus:outline-none focus:border-none hover:scale-105 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.6)] outline-none active:scale-95"
+                    type="button" @click="toggleTimer" v-if="!completeAction">
                     <svg class="icon icon-play-button" v-if="!isRunning">
                         <use xlink:href="#icon-play-button"></use>
                     </svg>
@@ -209,16 +131,12 @@
                 </button>
             </div>
             <span
-                class="text-base text-center absolute pointer-events-none cursor-default inset-3 top-auto mx-auto md:text-lg"
-                v-if="!isRunning"
-            >
+                class="text-base text-center absolute pointer-events-none cursor-default inset-3 top-auto mx-auto md:text-lg animate-fadeIn opacity-80"
+                v-if="!isRunning">
                 "{{ quote.quote }}"
-                <span class="block md:inline">- {{ quote.author }}</span>
+                <span class="block md:inline italic font-light">- {{ quote.author }}</span>
             </span>
-            <span
-                class="absolute flex items-center right-6 top-6"
-                v-if="!navActive"
-            >
+            <span class="absolute flex items-center right-6 top-6" v-if="!navActive">
                 <Battery />
                 <Settings :presetsList="presetsList" v-show="!isRunning" />
                 <!-- <UserDropdown
@@ -430,7 +348,7 @@ export default {
             bodyElem.removeAttribute('class');
             bodyElem.classList.add(
                 this.colorTheme[
-                    Math.floor(Math.random() * this.colorTheme.length)
+                Math.floor(Math.random() * this.colorTheme.length)
                 ]
             );
         },
@@ -619,26 +537,43 @@ export default {
 
 <style lang="scss">
 $themeColours: (
-    'purple': #af049a,
-    'red': #af1616,
-    'blue': #0048b3,
-    'pink': #c50052,
-    'green': #00863c
+    'purple': linear-gradient(135deg, #9d00e7 0%, #7928ca 100%),
+    'red': linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%),
+    'blue': linear-gradient(135deg, #12c2e9 0%, #0062b3 100%),
+    'pink': linear-gradient(135deg, #f953c6 0%, #b91d73 100%),
+    'green': linear-gradient(135deg, #43e97b 0%, #00863c 100%)
 );
+
 @each $themeColour, $i in $themeColours {
     body {
         &.#{$themeColour} {
+
             #wrapper,
             .add-btn,
             .nav-content,
             .s-dd,
-            .interval input:checked + label:after {
+            .interval input:checked+label:after {
                 background: $i;
             }
-            .battery > span {
+
+            .battery>span {
                 border-color: $i;
             }
         }
     }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 1.5s ease-in-out;
 }
 </style>
