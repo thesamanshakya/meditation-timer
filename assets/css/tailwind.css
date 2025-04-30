@@ -102,7 +102,7 @@ body,
     @apply bg-white text-black;
 }
 .presets li.active a {
-    @apply bg-white text-black scale-110;
+    @apply bg-white text-black scale-110 pt-4 md:pt-6;
 }
 .presets li.active .add-btn {
     @apply block;
