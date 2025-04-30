@@ -166,6 +166,7 @@
             </span>
             <span class="absolute flex items-center right-6 top-6" v-if="!navActive">
                 <Battery />
+                <Statistics />
                 <Settings :presetsList="presetsList" v-show="!isRunning" />
                 <!-- <UserDropdown
                     class="ml-6"
@@ -190,6 +191,7 @@
 import { quotes } from '~/assets/data/quotes.js';
 import SvgIcons from '~/assets/fonts/symbol-defs.svg?inline';
 import NoSleep from 'nosleep.js';
+import Statistics from '~/components/Statistics.vue';
 
 export default {
     data() {
@@ -434,6 +436,14 @@ export default {
                 }, 5000);
                 this.stopAudio();
                 this.playBellSound(); //always play ending sound bell after timer completes
+
+                // Save meditation session data
+                const meditationData = JSON.parse(localStorage.getItem('meditationData') || '[]');
+                meditationData.push({
+                    date: new Date().toISOString(),
+                    duration: this.presetsList.totalDurationInMins
+                });
+                localStorage.setItem('meditationData', JSON.stringify(meditationData));
             }
             clearInterval(this.intervalFuncs.timer);
             this.tickerInMins = this.presetsList.totalDurationInMins;
@@ -558,7 +568,8 @@ export default {
     },
     components: {
         SvgIcons,
-        NoSleep
+        NoSleep,
+        Statistics
     }
 };
 </script>
