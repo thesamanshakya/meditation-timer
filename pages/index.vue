@@ -47,7 +47,7 @@
                                 active: presetsList.time[index].statusActive
                             }">
                             <a @click="selectTimeList(index)"
-                                class="px-6 py-6 pt-5 cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] backdrop-blur-sm">
+                                class="selection-timer px-6 py-6 pt-5 cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] backdrop-blur-sm">
                                 {{
                                     preset.time >= 60
                                         ? preset.time / 60
@@ -55,7 +55,7 @@
                                 }}
                                 <span class="block pt-[10%]">{{
                                     preset.time >= 60 ? 'hour' : 'mins'
-                                    }}</span>
+                                }}</span>
                             </a>
                             <i class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
                                 @click="addExtraDuration(preset.addTime)">Add +{{ preset.addTime }} mins</i>
@@ -84,8 +84,7 @@
                 <span
                     class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
                     v-if="completeAction">COMPLETED!</span>
-                <span class="timer block leading-none mb-5 text-[21vw] md:text-[25vh] font-light tracking-tighter"
-                    v-else>
+                <span class="timer-display block leading-none mb-5 text-[21vw] md:text-[25vh]" v-else>
                     {{
                         isRunning
                             ? timeParser(tickerInMins)
@@ -575,5 +574,35 @@ $themeColours: (
 
 .animate-fadeIn {
     animation: fadeIn 1.5s ease-in-out;
+}
+
+.timer {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    letter-spacing: -0.05em;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.timer-display {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    letter-spacing: -0.07em;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.selection-timer {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.07em;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+span.timer.block {
+    font-weight: 100;
 }
 </style>

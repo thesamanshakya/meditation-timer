@@ -176,8 +176,11 @@ export default {
 
     googleFonts: {
         families: {
-            Roboto: true
-        }
+            Roboto: [100, 300, 400, 700],
+            'Roboto Condensed': [300, 400],
+            'Inter': [100, 200, 300, 400, 500]
+        },
+        display: 'swap'
     },
 
     // oneSignal: {
