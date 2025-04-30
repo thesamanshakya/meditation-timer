@@ -68,7 +68,7 @@ body,
     @apply pointer-events-none cursor-default;
 }
 .c-checkbox {
-    @apply block relative p-0 pt-[2px] pl-9 cursor-pointer;
+    @apply relative cursor-pointer;
 }
 .c-checkbox input {
     @apply absolute opacity-0 cursor-pointer h-0 w-0;
