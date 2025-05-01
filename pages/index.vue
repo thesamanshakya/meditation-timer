@@ -84,7 +84,7 @@
                                 }}
                                 <span class="block pt-[10%]">{{
                                     preset.time >= 60 ? 'hour' : 'mins'
-                                    }}</span>
+                                }}</span>
                             </a>
                             <i class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
                                 @click="addExtraDuration(preset.addTime)">Add +{{ preset.addTime }} mins</i>
@@ -730,7 +730,7 @@ export default {
             NoSleep,
             Statistics
         }
-    };
+    }
 </script>
 
 <style lang="scss">
