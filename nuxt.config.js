@@ -30,7 +30,24 @@ export default {
             },
             { name: 'format-detection', content: 'telephone=no' }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        script: [
+            {
+                src: 'https://www.googletagmanager.com/gtag/js?id=G-BQ59PQT3H5',
+                async: true
+            },
+            {
+                hid: 'gtag-script',
+                innerHTML: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-BQ59PQT3H5');
+                `,
+                type: 'text/javascript'
+            }
+        ],
+        __dangerouslyDisableSanitizers: ['script']
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
@@ -67,7 +84,7 @@ export default {
         // '@nuxtjs/onesignal',
         // '@nuxtjs/auth-next',
         '@nuxtjs/google-fonts',
-        '@nuxtjs/google-analytics',
+        // '@nuxtjs/google-analytics',
         // [
         //     '@nuxtjs/firebase',
         //     {
@@ -87,9 +104,9 @@ export default {
         //     }
         // ]
     ],
-    googleAnalytics: {
-        id: 'G-BQ59PQT3H5'
-    },
+    // googleAnalytics: {
+    //     id: 'G-BQ59PQT3H5'
+    // },
     pwa: {
         manifest: {
             short_name: 'Hamro Meditation Timer',
