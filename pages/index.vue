@@ -2,14 +2,18 @@
   <div id="wrapper"
     class="overflow-hidden relative w-full h-full bg-gradient-to-b from-black to-[rgba(20,20,35,0.95)] transition-all duration-1000">
     <div v-if="!isRunning && !navActive" id="nav-container"
-      class="fixed z-[9999] menu-button flex items-center flex-col appearance-none border-0 bg-transparent rounded-none w-[30px] cursor-pointer pointer-events-auto mt-5 ml-6"
+      class="fixed z-20 menu-button flex items-center justify-center appearance-none border-0 bg-transparent rounded-none w-[40px] h-[40px] cursor-pointer pointer-events-auto mt-3 ml-4"
       :class="{ active: navActive }" @click="navActive = !navActive">
-      <span v-for="index in 3" :key="index"
-        class="i-bar block w-full h-[3px] bg-white transition-all duration-300 mt-[5px]" :class="{
-          'rotate-45 translate-y-[8px]': navActive && index === 1,
-          'opacity-0': navActive && index === 2,
-          '-rotate-45 -translate-y-[8px]': navActive && index === 3
-        }"></span>
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="transition-all duration-300"
+          :class="{ 'translate-y-1.5 rotate-45': navActive, 'translate-y-0': !navActive }" />
+        <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="transition-all duration-300" :class="{ 'opacity-0': navActive, 'opacity-100': !navActive }" />
+        <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="transition-all duration-300"
+          :class="{ '-translate-y-1.5 -rotate-45': navActive, 'translate-y-0': !navActive }" />
+      </svg>
     </div>
     <Transition name="drawer-left">
       <div v-if="navActive" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" @click.self="navActive = false">
