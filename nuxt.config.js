@@ -124,79 +124,79 @@ export default {
                 '/media/sounds/nature/birds.mp3'
 
             ],
-            runtimeCaching: [
-                {
-                    urlPattern: /^.*\.(mp3)$/i,
-                    handler: 'StaleWhileRevalidate',
-                    options: {
-                        cacheName: 'audio-cache',
-                        cacheableResponse: {
-                            statuses: [0, 200]
-                        },
-                        fetchOptions: {
-                            mode: 'no-cors'
-                        },
-                        expiration: {
-                            maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-                            maxEntries: 30,
-                            purgeOnQuotaError: true
-                        }
-                    }
-                },
-                {
-                    urlPattern: '/media/bell/.*',
-                    handler: 'CacheFirst',
-                    options: {
-                        cacheName: 'bell-sounds',
-                        cacheableResponse: {
-                            statuses: [0, 200]
-                        },
-                        fetchOptions: {
-                            mode: 'no-cors'
-                        },
-                        expiration: {
-                            maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-                            purgeOnQuotaError: true
-                        }
-                    }
-                },
-                {
-                    urlPattern: '/media/instructions/.*',
-                    handler: 'CacheFirst',
-                    options: {
-                        cacheName: 'meditation-instructions',
-                        cacheableResponse: {
-                            statuses: [0, 200]
-                        },
-                        fetchOptions: {
-                            mode: 'no-cors'
-                        },
-                        expiration: {
-                            maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-                            purgeOnQuotaError: true
-                        }
-                    }
-                },
-                {
-                    urlPattern: '/media/sounds/.*',
-                    handler: 'CacheFirst',
-                    options: {
-                        cacheName: 'background-sounds',
-                        cacheableResponse: {
-                            statuses: [0, 200]
-                        },
-                        fetchOptions: {
-                            mode: 'no-cors'
-                        },
-                        expiration: {
-                            maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-                            purgeOnQuotaError: true
-                        }
-                    }
-                }
-            ],
-            skipWaiting: true,
-            clientsClaim: true
+            // runtimeCaching: [
+            //     {
+            //         urlPattern: /^.*\.(mp3)$/i,
+            //         handler: 'StaleWhileRevalidate',
+            //         options: {
+            //             cacheName: 'audio-cache',
+            //             cacheableResponse: {
+            //                 statuses: [0, 200]
+            //             },
+            //             fetchOptions: {
+            //                 mode: 'no-cors'
+            //             },
+            //             expiration: {
+            //                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            //                 maxEntries: 30,
+            //                 purgeOnQuotaError: true
+            //             }
+            //         }
+            //     },
+            //     {
+            //         urlPattern: '/media/bell/.*',
+            //         handler: 'CacheFirst',
+            //         options: {
+            //             cacheName: 'bell-sounds',
+            //             cacheableResponse: {
+            //                 statuses: [0, 200]
+            //             },
+            //             fetchOptions: {
+            //                 mode: 'no-cors'
+            //             },
+            //             expiration: {
+            //                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            //                 purgeOnQuotaError: true
+            //             }
+            //         }
+            //     },
+            //     {
+            //         urlPattern: '/media/instructions/.*',
+            //         handler: 'CacheFirst',
+            //         options: {
+            //             cacheName: 'meditation-instructions',
+            //             cacheableResponse: {
+            //                 statuses: [0, 200]
+            //             },
+            //             fetchOptions: {
+            //                 mode: 'no-cors'
+            //             },
+            //             expiration: {
+            //                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            //                 purgeOnQuotaError: true
+            //             }
+            //         }
+            //     },
+            //     {
+            //         urlPattern: '/media/sounds/.*',
+            //         handler: 'CacheFirst',
+            //         options: {
+            //             cacheName: 'background-sounds',
+            //             cacheableResponse: {
+            //                 statuses: [0, 200]
+            //             },
+            //             fetchOptions: {
+            //                 mode: 'no-cors'
+            //             },
+            //             expiration: {
+            //                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            //                 purgeOnQuotaError: true
+            //             }
+            //         }
+            //     }
+            // ],
+            // skipWaiting: true,
+            // clientsClaim: true
         }
     },
 
