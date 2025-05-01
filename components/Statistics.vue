@@ -20,9 +20,6 @@
           <div class="p-5 border-b border-white/10 flex items-center justify-between">
             <h2 class="text-xl font-medium tracking-wide">Meditation Statistics</h2>
             <div class="flex items-center">
-              <button @click="clearAllData" class="text-white/60 hover:text-white transition-colors p-2 mr-2 text-sm">
-                Clear Data
-              </button>
               <button @click="statisticsActive = false" class="text-white/60 hover:text-white transition-colors p-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -130,6 +127,25 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Data Management Buttons -->
+          <div class="border-t border-white/10 mt-5 p-5">
+            <div class="grid grid-cols-3 gap-2">
+              <button @click="exportData"
+                class="bg-white/10 hover:bg-white/15 rounded-lg py-3 px-4 text-sm font-medium transition-colors">
+                Export Data
+              </button>
+              <label for="import-file"
+                class="bg-white/10 hover:bg-white/15 rounded-lg py-3 px-4 text-sm font-medium transition-colors text-center cursor-pointer">
+                Import Data
+              </label>
+              <button @click="clearAllData"
+                class="bg-red-500/20 hover:bg-red-500/30 text-red-200 rounded-lg py-3 px-4 text-sm font-medium transition-colors">
+                Clear Data
+              </button>
+              <input type="file" id="import-file" @change="importData" class="hidden" accept=".json">
             </div>
           </div>
         </div>
@@ -292,6 +308,61 @@ export default {
         localStorage.removeItem('meditationData');
         this.meditationData = [];
       }
+    },
+    exportData() {
+      // Create a JSON file with meditation data
+      const dataStr = JSON.stringify(this.meditationData);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+      // Create a download link and trigger download
+      const exportFileName = `meditation-data-${new Date().toISOString().split('T')[0]}.json`;
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileName);
+      linkElement.click();
+    },
+    importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedData = JSON.parse(e.target.result);
+
+          // Validate data structure
+          if (!Array.isArray(importedData)) {
+            alert('Invalid data format. Import failed.');
+            return;
+          }
+
+          // Confirm before replacing or merging data
+          if (this.meditationData.length > 0) {
+            if (confirm('Do you want to merge with existing data? Click Cancel to replace all data.')) {
+              // Merge data, avoiding duplicates by ID
+              const existingIds = new Set(this.meditationData.map(item => item.id));
+              const newData = importedData.filter(item => !existingIds.has(item.id));
+              this.meditationData = [...this.meditationData, ...newData];
+            } else {
+              // Replace all data
+              this.meditationData = importedData;
+            }
+          } else {
+            // No existing data, just import
+            this.meditationData = importedData;
+          }
+
+          // Save to localStorage
+          localStorage.setItem('meditationData', JSON.stringify(this.meditationData));
+          alert('Data imported successfully');
+
+          // Reset the file input
+          event.target.value = '';
+        } catch (error) {
+          alert('Failed to import data: ' + error.message);
+        }
+      };
+      reader.readAsText(file);
     },
     formatMinutes(minutes) {
       return minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
