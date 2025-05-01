@@ -147,6 +147,11 @@
               </button>
               <input type="file" id="import-file" @change="importData" class="hidden" accept=".json">
             </div>
+
+            <!-- <button @click="generateDummyData"
+              class="mt-4 w-full bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 rounded-lg py-3 px-4 text-sm font-medium transition-colors">
+              Generate Demo Data
+            </button> -->
           </div>
         </div>
       </div>
@@ -363,6 +368,69 @@ export default {
         }
       };
       reader.readAsText(file);
+    },
+    generateDummyData() {
+      if (this.meditationData.length > 0) {
+        if (!confirm('This will add demo data to your existing meditation records. Continue?')) {
+          return;
+        }
+      }
+
+      // Generate random sessions over the past 30 days
+      const dummyData = [];
+      const now = new Date();
+
+      // Ensure we have data for current streak
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        date.setHours(this.getRandomInt(5, 23), this.getRandomInt(0, 59), 0, 0);
+
+        dummyData.push({
+          id: Date.now() - (i * 100000) - this.getRandomInt(1000, 9999),
+          date: date.toISOString(),
+          duration: this.getRandomInt(5, 30)
+        });
+      }
+
+      // Add more random sessions in the past month
+      for (let i = 7; i < 30; i++) {
+        // Skip some days to make data more realistic
+        if (Math.random() > 0.6) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - i);
+          date.setHours(this.getRandomInt(5, 23), this.getRandomInt(0, 59), 0, 0);
+
+          // Create 1-2 sessions for some days
+          const sessionCount = Math.random() > 0.8 ? 2 : 1;
+
+          for (let j = 0; j < sessionCount; j++) {
+            const sessionDate = new Date(date);
+            if (j > 0) {
+              sessionDate.setHours(sessionDate.getHours() + this.getRandomInt(1, 4));
+            }
+
+            dummyData.push({
+              id: Date.now() - (i * 100000) - this.getRandomInt(1000, 9999) - (j * 100),
+              date: sessionDate.toISOString(),
+              duration: this.getRandomInt(5, 60)
+            });
+          }
+        }
+      }
+
+      // Add the dummy data to existing data
+      this.meditationData = [...this.meditationData, ...dummyData];
+
+      // Save to localStorage
+      localStorage.setItem('meditationData', JSON.stringify(this.meditationData));
+
+      alert(`Added ${dummyData.length} demo meditation sessions`);
+    },
+    getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     },
     formatMinutes(minutes) {
       return minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
