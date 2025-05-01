@@ -108,16 +108,33 @@ export default {
             preCaching: [
                 '/',
                 '/favicon.ico',
-                '/icon.png'
+                '/icon.png',
+                '/media/bell/gong-1.mp3',
+                '/media/bell/gong-2.mp3',
+                '/media/bell/gong-3.mp3',
+                '/media/bell/gong-4.mp3',
+                '/media/sounds/nature/forest-with-birds.mp3',
+                '/media/instructions/anapana/english-1.mp3',
+                '/media/instructions/anapana/english-2.mp3',
+                '/media/instructions/anapana/hindi.mp3',
+                '/media/instructions/anapana/nepali.mp3',
+                '/media/sounds/nature/forest-with-birds.mp3',
+                '/media/sounds/nature/water-in-stream.mp3',
+                '/media/sounds/nature/birds-with-river.mp3',
+                '/media/sounds/nature/birds.mp3'
+
             ],
             runtimeCaching: [
                 {
                     urlPattern: /^.*\.(mp3)$/i,
-                    handler: 'CacheFirst',
+                    handler: 'StaleWhileRevalidate',
                     options: {
                         cacheName: 'audio-cache',
                         cacheableResponse: {
                             statuses: [0, 200]
+                        },
+                        fetchOptions: {
+                            mode: 'no-cors'
                         },
                         expiration: {
                             maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
@@ -134,6 +151,9 @@ export default {
                         cacheableResponse: {
                             statuses: [0, 200]
                         },
+                        fetchOptions: {
+                            mode: 'no-cors'
+                        },
                         expiration: {
                             maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
                             purgeOnQuotaError: true
@@ -148,6 +168,9 @@ export default {
                         cacheableResponse: {
                             statuses: [0, 200]
                         },
+                        fetchOptions: {
+                            mode: 'no-cors'
+                        },
                         expiration: {
                             maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
                             purgeOnQuotaError: true
@@ -161,6 +184,9 @@ export default {
                         cacheName: 'background-sounds',
                         cacheableResponse: {
                             statuses: [0, 200]
+                        },
+                        fetchOptions: {
+                            mode: 'no-cors'
                         },
                         expiration: {
                             maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year

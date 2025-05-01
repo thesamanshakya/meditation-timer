@@ -84,7 +84,7 @@
                                 }}
                                 <span class="block pt-[10%]">{{
                                     preset.time >= 60 ? 'hour' : 'mins'
-                                }}</span>
+                                    }}</span>
                             </a>
                             <i class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
                                 @click="addExtraDuration(preset.addTime)">Add +{{ preset.addTime }} mins</i>
@@ -499,7 +499,29 @@ export default {
             this.presetsList.bellSound.audio = new Audio(
                 this.presetsList.bellSound.activePath
             );
-            this.presetsList.bellSound.audio.play();
+            this.presetsList.bellSound.audio.addEventListener('error', (e) => {
+                console.error('Error loading bell sound:', e);
+                // Try to use cached version if available
+                this.tryFallbackAudio(this.presetsList.bellSound.activePath);
+            });
+
+            // Add event for mobile browsers that might need interaction
+            this.presetsList.bellSound.audio.addEventListener('canplaythrough', () => {
+                const playPromise = this.presetsList.bellSound.audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn('Bell sound playback was prevented:', error);
+                    });
+                }
+            });
+
+            // Try to play immediately
+            const playPromise = this.presetsList.bellSound.audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.warn('Bell sound playback was prevented:', error);
+                });
+            }
         },
         stopBellSound() {
             if (!!this.presetsList.bellSound.audio) {
@@ -512,7 +534,30 @@ export default {
             this.presetsList.guidedInstruction.audio = new Audio(
                 this.presetsList.guidedInstruction.activePath
             );
-            this.presetsList.guidedInstruction.audio.play();
+
+            this.presetsList.guidedInstruction.audio.addEventListener('error', (e) => {
+                console.error('Error loading guided instruction:', e);
+                // Try to use cached version if available
+                this.tryFallbackAudio(this.presetsList.guidedInstruction.activePath);
+            });
+
+            // Add event for mobile browsers that might need interaction
+            this.presetsList.guidedInstruction.audio.addEventListener('canplaythrough', () => {
+                const playPromise = this.presetsList.guidedInstruction.audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn('Guided audio playback was prevented:', error);
+                    });
+                }
+            });
+
+            // Try to play immediately
+            const playPromise = this.presetsList.guidedInstruction.audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.warn('Guided audio playback was prevented:', error);
+                });
+            }
         },
         stopGuidedAudio() {
             if (!!this.presetsList.guidedInstruction.audio) {
@@ -526,7 +571,30 @@ export default {
                 this.presetsList.backgroundSound.activePath
             );
             this.presetsList.backgroundSound.audio.loop = true;
-            this.presetsList.backgroundSound.audio.play();
+
+            this.presetsList.backgroundSound.audio.addEventListener('error', (e) => {
+                console.error('Error loading background sound:', e);
+                // Try to use cached version if available
+                this.tryFallbackAudio(this.presetsList.backgroundSound.activePath);
+            });
+
+            // Add event for mobile browsers that might need interaction
+            this.presetsList.backgroundSound.audio.addEventListener('canplaythrough', () => {
+                const playPromise = this.presetsList.backgroundSound.audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn('Background sound playback was prevented:', error);
+                    });
+                }
+            });
+
+            // Try to play immediately
+            const playPromise = this.presetsList.backgroundSound.audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.warn('Background sound playback was prevented:', error);
+                });
+            }
         },
         stopBackgroundSound() {
             if (!!this.presetsList.backgroundSound.audio) {
@@ -534,44 +602,135 @@ export default {
                 this.presetsList.backgroundSound.audio.currentTime = 0;
                 this.presetsList.backgroundSound.audio = null;
             }
-        }
-    },
-    created() {
-        let localData = localStorage.getItem('presetsList');
-        if (localData !== null) {
-            this.presetsList = JSON.parse(localData);
-        }
-    },
-    computed: {
-        getAudioTitle() {
-            let title = null;
-            let guidedInstruction = this.presetsList.guidedInstruction;
-            let backgroundSound = this.presetsList.backgroundSound;
-            if (guidedInstruction.statusActive) {
-                title = !!guidedInstruction.languageTitle
-                    ? guidedInstruction.languageTitle
-                    : guidedInstruction.language[0].language;
-                title += ' Guided Meditation';
-            } else if (backgroundSound.statusActive) {
-                title = !!backgroundSound.soundTitle
-                    ? backgroundSound.soundTitle
-                    : backgroundSound.sound[0].soundTitle;
+        },
+        // Add new method to handle fallback for offline scenarios
+        tryFallbackAudio(audioPath) {
+            // Check if we have the audio in cache and try to use it
+            if ('caches' in window) {
+                caches.match(audioPath).then(response => {
+                    if (response) {
+                        return response.blob();
+                    }
+                    return null;
+                }).then(blob => {
+                    if (blob) {
+                        // We have a cached version, use it
+                        const objectURL = URL.createObjectURL(blob);
+                        const audio = new Audio(objectURL);
+                        audio.play().catch(err => {
+                            console.warn('Fallback audio playback failed:', err);
+                        });
+                    } else {
+                        console.error('No cached version available for', audioPath);
+                    }
+                }).catch(err => {
+                    console.error('Error trying to use cached audio:', err);
+                });
             }
-            return title;
+        },
+        preloadAudio() {
+            // Preload common audio files to ensure they're available offline
+            const audioFiles = [
+                // Bell sounds
+                ...this.presetsList.bellSound.list.map(item => item.url),
+                // Background sounds
+                ...this.presetsList.backgroundSound.sound.map(item => item.url),
+                // Guided instructions 
+                ...this.presetsList.guidedInstruction.language
+                    .filter(item => item.url) // Filter out null urls (custom uploads)
+                    .map(item => item.url)
+            ];
+
+            // Create audio elements for preloading
+            audioFiles.forEach(audioPath => {
+                if (!audioPath) return;
+
+                const audio = new Audio();
+
+                // Add a load event listener to handle success
+                audio.addEventListener('canplaythrough', () => {
+                    console.log(`Preloaded audio: ${audioPath}`);
+                }, { once: true });
+
+                // Add error handling
+                audio.addEventListener('error', () => {
+                    console.warn(`Failed to preload audio: ${audioPath}`);
+                }, { once: true });
+
+                // Set the source and begin loading
+                audio.src = audioPath;
+                audio.preload = 'auto';
+                audio.load();
+            });
+        },
+        initAudioContext() {
+            // Create a silent audio context to unlock audio on iOS and some mobile browsers
+            const unlockAudio = () => {
+                // Create an audio context if available
+                if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    const audioCtx = new AudioContextClass();
+
+                    // Create a silent buffer and play it
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+
+                    // Play the silent sound (this will be blocked until user interaction)
+                    if (source.start) {
+                        source.start(0);
+                    } else {
+                        source.noteOn(0);
+                    }
+
+                    // Resume the audio context if needed
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                }
+
+                // Also create a silent audio element and play it
+                const silentAudio = new Audio();
+            }
+        },
+        created() {
+            let localData = localStorage.getItem('presetsList');
+            if (localData !== null) {
+                this.presetsList = JSON.parse(localData);
+            }
+        },
+        computed: {
+            getAudioTitle() {
+                let title = null;
+                let guidedInstruction = this.presetsList.guidedInstruction;
+                let backgroundSound = this.presetsList.backgroundSound;
+                if (guidedInstruction.statusActive) {
+                    title = !!guidedInstruction.languageTitle
+                        ? guidedInstruction.languageTitle
+                        : guidedInstruction.language[0].language;
+                    title += ' Guided Meditation';
+                } else if (backgroundSound.statusActive) {
+                    title = !!backgroundSound.soundTitle
+                        ? backgroundSound.soundTitle
+                        : backgroundSound.sound[0].soundTitle;
+                }
+                return title;
+            }
+        },
+        mounted() {
+            this.setBgQuoteChange();
+            this.preloadAudio();
+        },
+        destroyed() {
+            this.stopBgQuoteChange();
+        },
+        components: {
+            SvgIcons,
+            NoSleep,
+            Statistics
         }
-    },
-    mounted() {
-        this.setBgQuoteChange();
-    },
-    destroyed() {
-        this.stopBgQuoteChange();
-    },
-    components: {
-        SvgIcons,
-        NoSleep,
-        Statistics
-    }
-};
+    };
 </script>
 
 <style lang="scss">
