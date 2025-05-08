@@ -100,22 +100,85 @@
                                     rel="nofollow noopener"
                                     class="flex items-center py-2.5 px-4 rounded-lg text-lg border border-white/10 text-white/80 font-light tracking-wide hover:bg-white/10 hover:text-white transition-all hover:shadow-lg group"
                                 >
-                                    <span class="icon-container flex items-center justify-center w-8 h-8 mr-3 rounded-full bg-white/10 group-hover:bg-white/20 transition-all">
-                                        <svg v-if="list.icon === 'message'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    <span
+                                        class="icon-container flex items-center justify-center w-8 h-8 mr-3 rounded-full bg-white/10 group-hover:bg-white/20 transition-all"
+                                    >
+                                        <svg
+                                            v-if="list.icon === 'message'"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                                            ></path>
                                         </svg>
-                                        <svg v-if="list.icon === 'community'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="9" cy="7" r="4"></circle>
-                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        <svg
+                                            v-if="list.icon === 'community'"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
+                                            <path
+                                                d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                                            ></path>
+                                            <circle
+                                                cx="9"
+                                                cy="7"
+                                                r="4"
+                                            ></circle>
+                                            <path
+                                                d="M23 21v-2a4 4 0 0 0-3-3.87"
+                                            ></path>
+                                            <path
+                                                d="M16 3.13a4 4 0 0 1 0 7.75"
+                                            ></path>
                                         </svg>
-                                        <svg v-if="list.icon === 'coffee'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-                                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-                                            <line x1="6" y1="1" x2="6" y2="4"></line>
-                                            <line x1="10" y1="1" x2="10" y2="4"></line>
-                                            <line x1="14" y1="1" x2="14" y2="4"></line>
+                                        <svg
+                                            v-if="list.icon === 'coffee'"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
+                                            <path
+                                                d="M18 8h1a4 4 0 0 1 0 8h-1"
+                                            ></path>
+                                            <path
+                                                d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"
+                                            ></path>
+                                            <line
+                                                x1="6"
+                                                y1="1"
+                                                x2="6"
+                                                y2="4"
+                                            ></line>
+                                            <line
+                                                x1="10"
+                                                y1="1"
+                                                x2="10"
+                                                y2="4"
+                                            ></line>
+                                            <line
+                                                x1="14"
+                                                y1="1"
+                                                x2="14"
+                                                y2="4"
+                                            ></line>
                                         </svg>
                                     </span>
                                     {{ list.linkText }}
@@ -325,6 +388,33 @@
                 >
             </span>
             <span
+                class="text-xs text-center absolute pointer-events-none cursor-default top-16 left-0 right-0 mx-auto md:text-sm animate-fadeIn opacity-70"
+                v-if="!isRunning && !completeAction"
+            >
+                <span
+                    class="inline-flex items-center text-sm rounded-full backdrop-blur-sm"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-3 w-3 mr-1"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                        ></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    {{ activeMeditators }} people are meditating right now
+                </span>
+            </span>
+            <span
                 class="absolute flex items-center right-6 top-6"
                 v-if="!navActive"
             >
@@ -347,6 +437,41 @@
               >Install App</a
           ></span
       > -->
+        <!-- Facebook Community Banner -->
+        <Transition name="fade">
+            <div
+                v-if="showFacebookBanner"
+                class="fixed bottom-4 left-0 right-0 mx-auto w-11/12 max-w-xs bg-blue-600/90 text-white p-2 rounded-lg shadow-lg backdrop-blur-sm z-50 animate-slideUp"
+            >
+                <div class="flex items-center justify-between w-full text-sm">
+                    <div class="flex items-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 mr-1.5 flex-shrink-0"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                            ></path>
+                        </svg>
+                        <span>Be a part of our community!</span>
+                    </div>
+                    <a
+                        href="https://www.facebook.com/groups/1664234698303384"
+                        target="_blank"
+                        rel="nofollow noopener"
+                        class="bg-white text-blue-600 px-2 py-0.5 rounded text-xs font-medium hover:bg-blue-100 transition-colors ml-2"
+                    >
+                        Join Now
+                    </a>
+                </div>
+            </div>
+        </Transition>
     </div>
 </template>
 
@@ -361,6 +486,8 @@ export default {
         return {
             pageLoading: true,
             navActive: false,
+            showFacebookBanner: false,
+            activeMeditators: 0,
             colorTheme: ['purple', 'red', 'blue', 'pink', 'green'],
             quotes: quotes,
             quote: '',
@@ -681,10 +808,12 @@ export default {
         },
         playGuidedAudio() {
             // If this is a custom audio and we need to load it from IndexedDB
-            if (this.presetsList.guidedInstruction.customAudioId && 
-                !this.presetsList.guidedInstruction.activePath && 
-                this.presetsList.guidedInstruction.languageActive === this.presetsList.guidedInstruction.language.length - 1) {
-                
+            if (
+                this.presetsList.guidedInstruction.customAudioId &&
+                !this.presetsList.guidedInstruction.activePath &&
+                this.presetsList.guidedInstruction.languageActive ===
+                    this.presetsList.guidedInstruction.language.length - 1
+            ) {
                 this.loadCustomAudioFile(() => {
                     // Create and play audio after loading the file
                     this.presetsList.guidedInstruction.audio = new Audio(
@@ -715,10 +844,9 @@ export default {
             this.presetsList.backgroundSound.audio.play();
         },
         stopBackgroundSound() {
-            if (!!this.presetsList.backgroundSound.audio) {
+            if (this.presetsList.backgroundSound.audio) {
                 this.presetsList.backgroundSound.audio.pause();
                 this.presetsList.backgroundSound.audio.currentTime = 0;
-                this.presetsList.backgroundSound.audio = null;
             }
         },
         loadCustomAudioFile(callback) {
@@ -727,12 +855,12 @@ export default {
                 if (callback) callback();
                 return;
             }
-            
+
             const audioId = this.presetsList.guidedInstruction.customAudioId;
-            
+
             // Open the IndexedDB database
             const request = indexedDB.open('MeditationTimerAudio', 1);
-            
+
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 // Create an object store if it doesn't exist
@@ -740,54 +868,97 @@ export default {
                     db.createObjectStore('audioFiles', { keyPath: 'id' });
                 }
             };
-            
+
             request.onsuccess = (event) => {
                 const db = event.target.result;
                 const transaction = db.transaction(['audioFiles'], 'readonly');
                 const store = transaction.objectStore('audioFiles');
-                
+
                 // Get the file with the given ID
                 const getRequest = store.get(audioId);
-                
+
                 getRequest.onsuccess = (event) => {
                     if (event.target.result) {
                         const { file } = event.target.result;
                         // Create a blob URL for the file
                         const blobUrl = URL.createObjectURL(file);
                         this.presetsList.guidedInstruction.activePath = blobUrl;
-                        
+
                         if (callback) callback();
                     } else {
-                        console.error('Custom audio file not found in IndexedDB');
+                        console.error(
+                            'Custom audio file not found in IndexedDB'
+                        );
                         // Reset to default if file not found
-                        const customIndex = this.presetsList.guidedInstruction.language.length - 1;
-                        this.presetsList.guidedInstruction.activePath = 
-                            this.presetsList.guidedInstruction.language[customIndex].url;
-                            
+                        const customIndex =
+                            this.presetsList.guidedInstruction.language.length -
+                            1;
+                        this.presetsList.guidedInstruction.activePath =
+                            this.presetsList.guidedInstruction.language[
+                                customIndex
+                            ].url;
+
                         if (callback) callback();
                     }
                 };
-                
+
                 getRequest.onerror = (event) => {
-                    console.error('Error loading custom audio file:', event.target.error);
+                    console.error(
+                        'Error loading custom audio file:',
+                        event.target.error
+                    );
                     if (callback) callback();
                 };
             };
-            
+
             request.onerror = (event) => {
                 console.error('IndexedDB error:', event.target.error);
                 if (callback) callback();
             };
+        },
+        // Facebook banner methods
+        showFacebookBannerWithTimeout() {
+            // Check if banner has been shown before
+            const bannerShown = localStorage.getItem('facebookBannerShown');
+
+            if (!bannerShown) {
+                // Show banner after 5 seconds
+                setTimeout(() => {
+                    this.showFacebookBanner = true;
+
+                    // Store that banner has been shown
+                    localStorage.setItem('facebookBannerShown', 'true');
+
+                    // Hide banner after 10 seconds
+                    this.facebookBannerTimeout = setTimeout(() => {
+                        this.closeFacebookBanner();
+                    }, 10000);
+                }, 5000);
+            }
+        },
+
+        closeFacebookBanner() {
+            this.showFacebookBanner = false;
+            clearTimeout(this.facebookBannerTimeout);
+        },
+
+        // Generate random number of active meditators
+        setRandomMeditators() {
+            // Random number between 4 and 20
+            this.activeMeditators = Math.floor(Math.random() * 17) + 4;
         }
     },
     created() {
         let localData = localStorage.getItem('presetsList');
         if (localData !== null) {
             this.presetsList = JSON.parse(localData);
-            
+
             // If we have a custom audio ID and it's the active option, load the audio file
-            if (this.presetsList.guidedInstruction.customAudioId && 
-                this.presetsList.guidedInstruction.languageActive === this.presetsList.guidedInstruction.language.length - 1) {
+            if (
+                this.presetsList.guidedInstruction.customAudioId &&
+                this.presetsList.guidedInstruction.languageActive ===
+                    this.presetsList.guidedInstruction.language.length - 1
+            ) {
                 this.loadCustomAudioFile();
             }
         }
@@ -812,9 +983,12 @@ export default {
     },
     mounted() {
         this.setBgQuoteChange();
+        this.showFacebookBannerWithTimeout();
+        this.setRandomMeditators();
     },
     destroyed() {
         this.stopBgQuoteChange();
+        clearTimeout(this.facebookBannerTimeout);
     },
     components: {
         SvgIcons,
@@ -823,6 +997,35 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+/* Facebook banner animations */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slideUp {
+    animation: slideUp 0.5s ease-out forwards;
+}
+</style>
 
 <style lang="scss">
 $themeColours: (
