@@ -213,10 +213,10 @@
                                     >&#128522;</span
                                 >
                             </p>
-                            <div class="text-center mt-4">
+                            <div class="mt-6">
                                 <button
                                     @click="resetCache"
-                                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                                    class="px-4 py-2 border border-red-500 text-red-500 text-sm rounded-lg transition-colors"
                                 >
                                     Reset App Cache
                                 </button>
