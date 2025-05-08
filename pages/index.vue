@@ -387,33 +387,7 @@
                     >- {{ quote.author }}</span
                 >
             </span>
-            <span
-                class="text-xs text-center absolute pointer-events-none cursor-default top-16 left-0 right-0 mx-auto md:text-sm animate-fadeIn opacity-70"
-                v-if="!isRunning && !completeAction"
-            >
-                <span
-                    class="inline-flex items-center text-sm rounded-full backdrop-blur-sm"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-3 w-3 mr-1"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path
-                            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
-                        ></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    {{ activeMeditators }} people are meditating right now
-                </span>
-            </span>
+
             <span
                 class="absolute flex items-center right-6 top-6"
                 v-if="!navActive"
@@ -487,7 +461,6 @@ export default {
             pageLoading: true,
             navActive: false,
             showFacebookBanner: false,
-            activeMeditators: 0,
             colorTheme: ['purple', 'red', 'blue', 'pink', 'green'],
             quotes: quotes,
             quote: '',
@@ -940,12 +913,6 @@ export default {
         closeFacebookBanner() {
             this.showFacebookBanner = false;
             clearTimeout(this.facebookBannerTimeout);
-        },
-
-        // Generate random number of active meditators
-        setRandomMeditators() {
-            // Random number between 4 and 20
-            this.activeMeditators = Math.floor(Math.random() * 17) + 4;
         }
     },
     created() {
@@ -984,7 +951,6 @@ export default {
     mounted() {
         this.setBgQuoteChange();
         this.showFacebookBannerWithTimeout();
-        this.setRandomMeditators();
     },
     destroyed() {
         this.stopBgQuoteChange();
