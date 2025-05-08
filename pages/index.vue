@@ -213,6 +213,14 @@
                                     >&#128522;</span
                                 >
                             </p>
+                            <div class="text-center mt-4">
+                                <button
+                                    @click="resetCache"
+                                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                                >
+                                    Reset App Cache
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -913,6 +921,39 @@ export default {
         closeFacebookBanner() {
             this.showFacebookBanner = false;
             clearTimeout(this.facebookBannerTimeout);
+        },
+        resetCache() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .getRegistrations()
+                    .then((registrations) => {
+                        for (const registration of registrations) {
+                            registration.unregister();
+                        }
+                        // Clear caches
+                        caches
+                            .keys()
+                            .then((cacheNames) => {
+                                return Promise.all(
+                                    cacheNames.map((cacheName) => {
+                                        return caches.delete(cacheName);
+                                    })
+                                );
+                            })
+                            .then(() => {
+                                this.$toast.success(
+                                    'Cache cleared successfully! Reloading page...'
+                                );
+                                setTimeout(() => {
+                                    window.location.reload(true);
+                                }, 1000);
+                            });
+                    });
+            } else {
+                this.$toast.error(
+                    'Service Worker is not supported in this browser'
+                );
+            }
         }
     },
     created() {
