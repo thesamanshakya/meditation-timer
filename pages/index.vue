@@ -488,7 +488,7 @@ export default {
                 },
                 {
                     linkText: 'Join our community',
-                    url: 'https://www.facebook.com/profile.php?id=61565128987107',
+                    url: 'https://www.facebook.com/groups/1664234698303384',
                     icon: 'community'
                 },
                 {
