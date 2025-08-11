@@ -251,32 +251,7 @@
             </li>
           </ul>
         </div>
-        <div
-          class="interval mt-3 flex items-center justify-center mb-6 md:mt-4"
-        >
-          <input
-            type="checkbox"
-            id="interval-switch"
-            :checked="presetsList.intervalBell"
-            @change="toggleIntervalBell"
-            class="h-0 w-0 invisible"
-          />
-          <label
-            for="interval-switch"
-            class="cursor-pointer block relative bg-transparent -indent-[9999px] rounded-[100px] border-2 border-white w-12 h-6 after:absolute after:w-4 after:h-4 after:left-[2px] after:content-[''] after:top-[2px] after:bg-white after:rounded-[90px] after:transition-all after:duration-300 hover:after:shadow-[0_0_5px_rgba(255,255,255,0.7)]"
-            v-if="!isRunning"
-          ></label>
-          <span class="interval-text text-base ml-4 md:text-lg md:ml-5">
-            Interval Bell
-            {{
-              presetsList.intervalBell
-                ? 'at ' +
-                  Math.floor(presetsList.totalDurationInMins / 2) +
-                  ' mins'
-                : 'is currently OFF'
-            }}
-          </span>
-        </div>
+
         <span
           class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
           v-if="completeAction"
@@ -292,6 +267,32 @@
               : timeParser(presetsList.totalDurationInMins)
           }}
         </span>
+
+        <!-- Bell Status Indicators -->
+        <div
+          class="bell-status text-center mb-4"
+          v-if="
+            !completeAction &&
+            (presetsList.intervalBell || presetsList.endingBell.enabled)
+          "
+        >
+          <div class="flex flex-col items-center gap-1">
+            <div
+              v-if="presetsList.intervalBell"
+              class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm"
+            >
+              Interval bell at
+              {{ Math.floor(presetsList.totalDurationInMins / 2) }} mins
+            </div>
+            <div
+              v-if="presetsList.endingBell.enabled"
+              class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm"
+            >
+              Ending bell {{ presetsList.endingBell.timeInMins }} mins after
+              session
+            </div>
+          </div>
+        </div>
 
         <div
           class="custom-playing text-center p-9 pt-0"
@@ -327,7 +328,7 @@
         </div>
 
         <button
-          class="btn-action -mt-12 bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all duration-300 ease-in-out focus:outline-none focus:border-none hover:scale-105 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.6)] outline-none active:scale-95"
+          class="btn-action -mt-7 md:-mt-12 bg-transparent text-[24vw] md:text-[18vh] text-white border-0 transition-all duration-300 ease-in-out focus:outline-none focus:border-none hover:scale-105 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.6)] outline-none active:scale-95"
           type="button"
           @click="toggleTimer"
           v-if="!completeAction"
@@ -427,6 +428,7 @@ const intervalIds = reactive({
   bgQuoteChange: null,
   timer: null,
   fbTimeout: null,
+  endingBell: null,
 });
 
 const menuList = [
@@ -445,6 +447,10 @@ const menuList = [
 const presetsList = reactive({
   totalDurationInMins: 10,
   intervalBell: false,
+  endingBell: {
+    enabled: false,
+    timeInMins: 7,
+  },
   guidedInstruction: {
     statusActive: false,
     activePath: '/media/instructions/anapana/english-1.mp3',
@@ -591,11 +597,14 @@ function startTimer() {
   let tickerInSeconds = presetsList.totalDurationInMins * 60;
   tickerInMins.value = tickerInSeconds / 60;
   const tempTicker = tickerInSeconds;
+
   intervalIds.timer = setInterval(() => {
+    // Check for interval bell (at halfway point)
     if (presetsList.intervalBell && tickerInSeconds === tempTicker / 2) {
       stopBellSound();
       playBellSound();
     }
+
     if (tickerInSeconds >= 0) {
       tickerInSeconds--;
       tickerInMins.value = tickerInSeconds / 60;
@@ -618,6 +627,15 @@ function stopTimer(manualStop = false) {
     stopAudio();
     playBellSound();
 
+    // Schedule ending bell if enabled
+    if (presetsList.endingBell.enabled) {
+      intervalIds.endingBell = setTimeout(() => {
+        stopBellSound();
+        playBellSound();
+        intervalIds.endingBell = null;
+      }, presetsList.endingBell.timeInMins * 60 * 1000);
+    }
+
     const meditationData = JSON.parse(
       localStorage.getItem('meditationData') || '[]'
     );
@@ -628,6 +646,10 @@ function stopTimer(manualStop = false) {
     localStorage.setItem('meditationData', JSON.stringify(meditationData));
   }
   if (intervalIds.timer) clearInterval(intervalIds.timer);
+  if (intervalIds.endingBell) {
+    clearTimeout(intervalIds.endingBell);
+    intervalIds.endingBell = null;
+  }
   tickerInMins.value = presetsList.totalDurationInMins;
 }
 
@@ -636,6 +658,10 @@ function selectTimeList(index) {
     item.statusActive = i === index;
   });
   presetsList.totalDurationInMins = presetsList.time[index].time;
+  // Validate ending bell time after preset change
+  if (presetsList.endingBell.enabled) {
+    validateEndingBellTime();
+  }
 }
 
 function selectBellList(index) {
@@ -645,12 +671,26 @@ function selectBellList(index) {
   presetsList.bellSound.activePath = presetsList.bellSound.list[index].url;
 }
 
-function toggleIntervalBell() {
-  presetsList.intervalBell = !presetsList.intervalBell;
+function validateEndingBellTime() {
+  // Ensure ending bell time is valid (between 1 and total duration - 1)
+  if (presetsList.endingBell.timeInMins < 1) {
+    presetsList.endingBell.timeInMins = 1;
+  } else if (
+    presetsList.endingBell.timeInMins >= presetsList.totalDurationInMins
+  ) {
+    presetsList.endingBell.timeInMins = Math.max(
+      1,
+      presetsList.totalDurationInMins - 1
+    );
+  }
 }
 
 function addExtraDuration(extraTime) {
   presetsList.totalDurationInMins += extraTime;
+  // Validate ending bell time after duration change
+  if (presetsList.endingBell.enabled) {
+    validateEndingBellTime();
+  }
 }
 
 // Audio
@@ -857,6 +897,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopBgQuoteChange();
   if (intervalIds.fbTimeout) clearTimeout(intervalIds.fbTimeout);
+  if (intervalIds.endingBell) clearTimeout(intervalIds.endingBell);
 });
 </script>
 
@@ -895,7 +936,6 @@ onBeforeUnmount(() => {
 .add-btn,
 .nav-content,
 .s-dd,
-.interval input:checked + label:after,
 .battery > span {
   transition: background 2s ease-in-out, border-color 2s ease-in-out;
 }
@@ -904,8 +944,7 @@ onBeforeUnmount(() => {
 body.purple #wrapper,
 body.purple .add-btn,
 body.purple .nav-content,
-body.purple .s-dd,
-body.purple .interval input:checked + label:after {
+body.purple .s-dd {
   background: linear-gradient(135deg, #9d00e7 0%, #7928ca 100%);
 }
 body.purple .battery > span {
@@ -915,8 +954,7 @@ body.purple .battery > span {
 body.red #wrapper,
 body.red .add-btn,
 body.red .nav-content,
-body.red .s-dd,
-body.red .interval input:checked + label:after {
+body.red .s-dd {
   background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
 }
 body.red .battery > span {
@@ -926,8 +964,7 @@ body.red .battery > span {
 body.blue #wrapper,
 body.blue .add-btn,
 body.blue .nav-content,
-body.blue .s-dd,
-body.blue .interval input:checked + label:after {
+body.blue .s-dd {
   background: linear-gradient(135deg, #12c2e9 0%, #0062b3 100%);
 }
 body.blue .battery > span {
@@ -937,8 +974,7 @@ body.blue .battery > span {
 body.pink #wrapper,
 body.pink .add-btn,
 body.pink .nav-content,
-body.pink .s-dd,
-body.pink .interval input:checked + label:after {
+body.pink .s-dd {
   background: linear-gradient(135deg, #f953c6 0%, #b91d73 100%);
 }
 body.pink .battery > span {
@@ -948,8 +984,7 @@ body.pink .battery > span {
 body.green #wrapper,
 body.green .add-btn,
 body.green .nav-content,
-body.green .s-dd,
-body.green .interval input:checked + label:after {
+body.green .s-dd {
   background: linear-gradient(135deg, #43e97b 0%, #00863c 100%);
 }
 body.green .battery > span {

@@ -217,6 +217,127 @@
                   </div>
                 </div>
               </li>
+
+              <li>
+                <label
+                  class="c-checkbox flex items-center gap-3 justify-between w-full"
+                >
+                  <span class="text-lg font-medium tracking-wide"
+                    >Interval Bell</span
+                  >
+                  <div
+                    class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="absolute w-6 h-6 opacity-0 cursor-pointer"
+                      v-model="presetsList.intervalBell"
+                    />
+                    <span
+                      class="absolute w-full h-full transition-all duration-300 ease-in-out bg-white/10 rounded-full shadow-inner"
+                    ></span>
+                    <span
+                      class="absolute left-0 w-6 h-6 transition-all duration-300 transform bg-white rounded-full shadow-lg"
+                      :class="{
+                        'translate-x-6 bg-[#43e97b]': presetsList.intervalBell,
+                      }"
+                    ></span>
+                  </div>
+                </label>
+                <div v-if="presetsList.intervalBell" class="">
+                  <p class="text-sm text-white/70">
+                    Bell will ring at
+                    {{ Math.floor(presetsList.totalDurationInMins / 2) }}
+                    minutes (halfway through your session)
+                  </p>
+                </div>
+              </li>
+
+              <li>
+                <label
+                  class="c-checkbox flex items-center gap-3 justify-between w-full"
+                >
+                  <span class="text-lg font-medium tracking-wide"
+                    >Ending Bell</span
+                  >
+                  <div
+                    class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="absolute w-6 h-6 opacity-0 cursor-pointer"
+                      v-model="presetsList.endingBell.enabled"
+                      @change="validateEndingBellTime"
+                    />
+                    <span
+                      class="absolute w-full h-full transition-all duration-300 ease-in-out bg-white/10 rounded-full shadow-inner"
+                    ></span>
+                    <span
+                      class="absolute left-0 w-6 h-6 transition-all duration-300 transform bg-white rounded-full shadow-lg"
+                      :class="{
+                        'translate-x-6 bg-[#43e97b]':
+                          presetsList.endingBell.enabled,
+                      }"
+                    ></span>
+                  </div>
+                </label>
+                <div v-if="presetsList.endingBell.enabled" class="mt-3">
+                  <div class="flex items-center gap-3">
+                    <label class="text-sm text-white/80 whitespace-nowrap"
+                      >Ring after:</label
+                    >
+                    <div class="flex items-center gap-1">
+                      <button
+                        @click="decrementEndingBellTime"
+                        class="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/30 rounded-l-md transition-colors"
+                      >
+                        <svg
+                          class="w-3 h-3 text-white"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                      <input
+                        type="number"
+                        v-model.number="presetsList.endingBell.timeInMins"
+                        min="1"
+                        max="60"
+                        class="w-12 px-1 py-1 text-center text-black text-sm border-t border-b border-white/30 bg-white/90 focus:bg-white focus:outline-none"
+                        @input="validateEndingBellTime"
+                        readonly
+                      />
+                      <button
+                        @click="incrementEndingBellTime"
+                        class="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/30 rounded-r-md transition-colors"
+                      >
+                        <svg
+                          class="w-3 h-3 text-white"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <span class="text-sm text-white/80">minutes</span>
+                  </div>
+                  <p class="text-xs text-white/60 mt-2">
+                    Bell will ring
+                    {{ presetsList.endingBell.timeInMins }} minutes after your
+                    session ends
+                  </p>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -448,6 +569,30 @@ const loadAudioFile = (id, callback) => {
     console.error('IndexedDB error:', event.target.error);
     callback(null);
   };
+};
+
+const validateEndingBellTime = () => {
+  // Ensure ending bell time is valid (between 1 and 60)
+  if (props.presetsList.endingBell.timeInMins < 1) {
+    props.presetsList.endingBell.timeInMins = 1;
+  } else if (props.presetsList.endingBell.timeInMins > 60) {
+    props.presetsList.endingBell.timeInMins = 60;
+  }
+  saveToLocalStorage();
+};
+
+const incrementEndingBellTime = () => {
+  if (props.presetsList.endingBell.timeInMins < 60) {
+    props.presetsList.endingBell.timeInMins++;
+    saveToLocalStorage();
+  }
+};
+
+const decrementEndingBellTime = () => {
+  if (props.presetsList.endingBell.timeInMins > 1) {
+    props.presetsList.endingBell.timeInMins--;
+    saveToLocalStorage();
+  }
 };
 
 const saveToLocalStorage = () => {
