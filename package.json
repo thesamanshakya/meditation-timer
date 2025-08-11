@@ -33,11 +33,13 @@
     },
     "dependencies": {
         "nosleep.js": "^0.12.0",
-        "nuxt": "^4.0.0"
+        "nuxt": "^4.0.0",
+        "nuxt-gtag": "^3.0.3"
     },
     "devDependencies": {
         "@nuxtjs/google-fonts": "^3.2.0",
         "@tailwindcss/postcss": "^4.0.0",
+        "@vite-pwa/nuxt": "^1.0.4",
         "autoprefixer": "^10.4.18",
         "sass": "^1.77.0",
         "tailwindcss": "^4.0.0"
