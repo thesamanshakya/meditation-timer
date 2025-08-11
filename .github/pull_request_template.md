@@ -1,10 +1,13 @@
 ## Description
+
 Brief description of the changes and their purpose.
 
 ## Type of Change
+
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Breaking change (fix or feature that would cause existing functionality to
+      not work as expected)
 - [ ] Documentation update
 - [ ] Audio content addition
 - [ ] Translation/localization
@@ -12,9 +15,11 @@ Brief description of the changes and their purpose.
 - [ ] Code refactoring
 
 ## Meditation Context
+
 How does this change enhance the meditation experience?
 
 ## Testing
+
 - [ ] I have tested this change locally
 - [ ] I have tested on mobile devices
 - [ ] I have tested with different audio settings
@@ -22,9 +27,11 @@ How does this change enhance the meditation experience?
 - [ ] I have tested statistics tracking (if applicable)
 
 ## Screenshots (if applicable)
+
 Add screenshots or recordings to show the changes.
 
 ## Checklist
+
 - [ ] My code follows the project's style guidelines
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
@@ -35,4 +42,5 @@ Add screenshots or recordings to show the changes.
 - [ ] Any dependent changes have been merged and published
 
 ## Additional Notes
+
 Any additional information that reviewers should know.

@@ -1,10 +1,15 @@
 # Contributing to Hamro Meditation Timer
 
-Thank you for your interest in contributing to Hamro Meditation Timer! This project aims to make meditation more accessible and peaceful for everyone. We welcome contributions from developers, designers, meditation practitioners, and anyone passionate about mindfulness.
+Thank you for your interest in contributing to Hamro Meditation Timer! This
+project aims to make meditation more accessible and peaceful for everyone. We
+welcome contributions from developers, designers, meditation practitioners, and
+anyone passionate about mindfulness.
 
 ## 🌟 Code of Conduct
 
-By participating in this project, you agree to maintain a respectful, inclusive, and mindful environment. We embrace the principles of compassion and understanding that meditation teaches us.
+By participating in this project, you agree to maintain a respectful, inclusive,
+and mindful environment. We embrace the principles of compassion and
+understanding that meditation teaches us.
 
 ## 🚀 Getting Started
 
@@ -38,6 +43,7 @@ By participating in this project, you agree to maintain a respectful, inclusive,
 ### 🐛 Bug Reports
 
 If you find a bug, please create an issue with:
+
 - A clear, descriptive title
 - Steps to reproduce the issue
 - Expected vs actual behavior
@@ -47,6 +53,7 @@ If you find a bug, please create an issue with:
 ### ✨ Feature Requests
 
 For new features, please:
+
 - Check if a similar feature request already exists
 - Clearly describe the feature and its benefits
 - Consider how it aligns with meditation principles
@@ -55,11 +62,13 @@ For new features, please:
 ### 💻 Code Contributions
 
 #### Before You Start
+
 - Check existing issues and pull requests
 - Discuss major changes in an issue first
 - Keep changes focused and atomic
 
 #### Development Workflow
+
 1. Create a feature branch: `git checkout -b feature/your-feature-name`
 2. Make your changes
 3. Test thoroughly on multiple devices/browsers
@@ -68,6 +77,7 @@ For new features, please:
 6. Create a pull request
 
 #### Code Style Guidelines
+
 - Follow Vue.js and Nuxt.js best practices
 - Use meaningful variable and function names
 - Add comments for complex logic
@@ -79,6 +89,7 @@ For new features, please:
 We welcome high-quality audio content:
 
 #### Guided Meditations
+
 - Must be original content or properly licensed
 - High audio quality (minimum 128kbps, preferably 320kbps)
 - Clear, calm narration
@@ -86,6 +97,7 @@ We welcome high-quality audio content:
 - Follow established meditation practices
 
 #### Background Sounds
+
 - Natural, calming sounds
 - Seamless loops
 - No jarring transitions
@@ -93,6 +105,7 @@ We welcome high-quality audio content:
 - Original or Creative Commons licensed
 
 #### Audio Technical Requirements
+
 - Format: MP3 or WAV
 - Sample Rate: 44.1 kHz or higher
 - Bit Depth: 16-bit minimum
@@ -101,6 +114,7 @@ We welcome high-quality audio content:
 ### 🌐 Translations
 
 Help make meditation accessible worldwide:
+
 - Add new language support
 - Translate existing content
 - Ensure cultural sensitivity
@@ -109,6 +123,7 @@ Help make meditation accessible worldwide:
 ### 📚 Documentation
 
 Improve our guides and documentation:
+
 - Fix typos and grammar
 - Add missing information
 - Create tutorials
@@ -118,18 +133,21 @@ Improve our guides and documentation:
 ## 🔧 Technical Guidelines
 
 ### Component Structure
+
 - Keep components small and focused
 - Use Vue 3 Composition API
 - Follow reactive programming principles
 - Maintain accessibility standards
 
 ### Performance Considerations
+
 - Optimize audio files for web delivery
 - Use lazy loading where appropriate
 - Minimize bundle size
 - Test on slower devices
 
 ### Browser Support
+
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - Mobile responsive design
 - Touch-friendly interfaces
@@ -138,6 +156,7 @@ Improve our guides and documentation:
 ## 🧪 Testing
 
 Before submitting:
+
 - Test on multiple browsers
 - Verify mobile responsiveness
 - Check accessibility with screen readers
@@ -156,6 +175,7 @@ Before submitting:
 ## 🎨 Design Principles
 
 Maintain our mindful aesthetic:
+
 - Calm, peaceful color schemes
 - Clean, uncluttered interfaces
 - Intuitive navigation
@@ -185,6 +205,7 @@ Maintain our mindful aesthetic:
 ## 🎯 Project Roadmap
 
 Current focus areas:
+
 - Improved accessibility
 - More guided meditation options
 - Better mobile experience
@@ -215,6 +236,7 @@ Current focus areas:
 ## 🙏 Recognition
 
 Contributors will be recognized in:
+
 - README acknowledgments
 - Release notes
 - Project credits
@@ -222,6 +244,7 @@ Contributors will be recognized in:
 ## 💝 Donation and Support
 
 This is a free, open-source project. If you find it valuable, consider:
+
 - Contributing code or content
 - Sharing with others
 - Providing feedback
@@ -229,6 +252,8 @@ This is a free, open-source project. If you find it valuable, consider:
 
 ---
 
-Remember: We're building this together with mindfulness and compassion. Every contribution, no matter how small, helps make meditation more accessible to everyone.
+Remember: We're building this together with mindfulness and compassion. Every
+contribution, no matter how small, helps make meditation more accessible to
+everyone.
 
 **May all beings find peace and happiness! 🙏**
