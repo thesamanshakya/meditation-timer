@@ -80,7 +80,15 @@ export default defineNuxtConfig({
 
   pwa: {
     registerType: 'autoUpdate',
+    injectRegister: false,
+    filename: 'sw.js',
     includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.png'],
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallbackAllowlist: [/^\/$/],
+      type: 'module',
+    },
     manifest: {
       short_name: 'Hamro Meditation Timer',
       name: 'Hamro Meditation Timer',
@@ -129,6 +137,7 @@ export default defineNuxtConfig({
     workbox: {
       globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
       cleanupOutdatedCaches: true,
+      mode: 'GenerateSW',
       additionalManifestEntries: [
         { url: '/', revision: null },
         { url: '/favicon.ico', revision: null },
@@ -153,6 +162,7 @@ export default defineNuxtConfig({
         { url: '/media/sounds/nature/birds.mp3', revision: null },
       ],
       navigateFallback: '/',
+      navigateFallbackDenylist: [/^\/_nuxt\//, /^\/api\//],
       runtimeCaching: [
         {
           urlPattern: ({ request }) => request.destination === 'document',
