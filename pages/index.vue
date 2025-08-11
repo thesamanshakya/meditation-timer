@@ -259,14 +259,24 @@
         >
         <span
           class="timer-display block leading-none mb-5 text-[25vw] md:text-[25vh]"
+          :class="{ 'text-yellow-300': isPostSession }"
           v-else
         >
           {{
             isRunning
-              ? timeParser(tickerInMins)
+              ? timeParser(Math.abs(tickerInMins))
               : timeParser(presetsList.totalDurationInMins)
           }}
         </span>
+
+        <!-- Post-session indicator -->
+        <div v-if="isRunning && isPostSession" class="text-center mb-4">
+          <div
+            class="text-sm text-yellow-300 bg-yellow-500/20 px-3 py-1 rounded-full backdrop-blur-sm animate-pulse"
+          >
+            Waiting for ending bell...
+          </div>
+        </div>
 
         <!-- Bell Status Indicators -->
         <div
@@ -423,6 +433,7 @@ const quote = ref('');
 const tickerInMins = ref(null);
 const isRunning = ref(false);
 const completeAction = ref(false);
+const isPostSession = ref(false);
 const noSleep = new NoSleep();
 const intervalIds = reactive({
   bgQuoteChange: null,
@@ -592,24 +603,50 @@ function stopBgQuoteChange() {
 
 function startTimer() {
   isRunning.value = true;
+  isPostSession.value = false;
   stopBgQuoteChange();
   noSleep.enable();
   let tickerInSeconds = presetsList.totalDurationInMins * 60;
   tickerInMins.value = tickerInSeconds / 60;
   const tempTicker = tickerInSeconds;
+  let postSessionSeconds = 0;
 
   intervalIds.timer = setInterval(() => {
     // Check for interval bell (at halfway point)
     if (presetsList.intervalBell && tickerInSeconds === tempTicker / 2) {
-      stopBellSound();
       playBellSound();
     }
 
-    if (tickerInSeconds >= 0) {
+    if (tickerInSeconds > 0) {
       tickerInSeconds--;
       tickerInMins.value = tickerInSeconds / 60;
-    } else {
-      stopTimer();
+    } else if (tickerInSeconds === 0) {
+      // Main session ended
+      tickerInSeconds--;
+      tickerInMins.value = 0;
+      stopAudio();
+      playBellSound();
+
+      // Check if ending bell is enabled
+      if (presetsList.endingBell.enabled) {
+        isPostSession.value = true;
+        completeAction.value = false;
+      } else {
+        stopTimer();
+        return;
+      }
+    } else if (isPostSession.value) {
+      // Post-session countdown to ending bell
+      postSessionSeconds++;
+      const remainingEndingBellTime =
+        presetsList.endingBell.timeInMins * 60 - postSessionSeconds;
+      tickerInMins.value = -remainingEndingBellTime / 60; // Negative to show countdown
+
+      if (postSessionSeconds >= presetsList.endingBell.timeInMins * 60) {
+        // Time for ending bell
+        playBellSound();
+        stopTimer();
+      }
     }
   }, 1000);
   localStorage.setItem('presetsList', JSON.stringify(presetsList));
@@ -617,23 +654,19 @@ function startTimer() {
 
 function stopTimer(manualStop = false) {
   isRunning.value = false;
+  isPostSession.value = false;
   setBgQuoteChange();
   noSleep.disable();
+
   if (!manualStop) {
     completeAction.value = true;
     setTimeout(() => {
       completeAction.value = false;
     }, 5000);
-    stopAudio();
-    playBellSound();
 
-    // Schedule ending bell if enabled
-    if (presetsList.endingBell.enabled) {
-      intervalIds.endingBell = setTimeout(() => {
-        stopBellSound();
-        playBellSound();
-        intervalIds.endingBell = null;
-      }, presetsList.endingBell.timeInMins * 60 * 1000);
+    // Only stop audio and save data if this is a natural completion
+    if (!isPostSession.value) {
+      stopAudio();
     }
 
     const meditationData = JSON.parse(
@@ -644,7 +677,11 @@ function stopTimer(manualStop = false) {
       duration: presetsList.totalDurationInMins,
     });
     localStorage.setItem('meditationData', JSON.stringify(meditationData));
+  } else {
+    // Manual stop - stop everything
+    stopAudio();
   }
+
   if (intervalIds.timer) clearInterval(intervalIds.timer);
   if (intervalIds.endingBell) {
     clearTimeout(intervalIds.endingBell);
@@ -702,7 +739,7 @@ function playAudio() {
     stopBackgroundSound();
     playBackgroundSound();
   } else {
-    stopBellSound();
+    // Just play the bell sound - no need to stop it first since playBellSound() handles this
     playBellSound();
   }
 }
@@ -717,14 +754,55 @@ function stopAudio() {
 }
 
 function playBellSound() {
-  presetsList.bellSound.audio = new Audio(presetsList.bellSound.activePath);
-  presetsList.bellSound.audio.play();
+  try {
+    // Stop any existing bell sound first
+    stopBellSound();
+
+    presetsList.bellSound.audio = new Audio(presetsList.bellSound.activePath);
+
+    // Add error handling for audio loading
+    presetsList.bellSound.audio.addEventListener('error', (e) => {
+      console.error('Error loading bell sound:', e);
+    });
+
+    // Play the audio with error handling
+    const playPromise = presetsList.bellSound.audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          console.log('Bell sound played successfully');
+        })
+        .catch((error) => {
+          console.error('Error playing bell sound:', error);
+          // Try to play again after a short delay
+          setTimeout(() => {
+            if (presetsList.bellSound.audio) {
+              presetsList.bellSound.audio
+                .play()
+                .catch((e) => console.error('Retry failed:', e));
+            }
+          }, 100);
+        });
+    }
+  } catch (error) {
+    console.error('Error in playBellSound:', error);
+  }
 }
 
 function stopBellSound() {
-  if (presetsList.bellSound.audio) {
-    presetsList.bellSound.audio.pause();
-    presetsList.bellSound.audio.currentTime = 0;
+  try {
+    if (presetsList.bellSound.audio) {
+      // Check if it's a valid Audio object
+      if (presetsList.bellSound.audio instanceof Audio) {
+        presetsList.bellSound.audio.pause();
+        presetsList.bellSound.audio.currentTime = 0;
+      }
+    }
+  } catch (error) {
+    console.error('Error stopping bell sound:', error);
+  } finally {
+    // Always reset to null to prevent future errors
     presetsList.bellSound.audio = null;
   }
 }
