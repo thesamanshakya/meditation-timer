@@ -115,7 +115,8 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      preCaching: [
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      additionalManifestEntries: [
         '/',
         '/favicon.ico',
         '/icon.png',
