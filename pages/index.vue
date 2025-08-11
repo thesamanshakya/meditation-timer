@@ -890,6 +890,16 @@ onBeforeUnmount(() => {
 </style>
 
 <style>
+/* Base transition for smooth background changes */
+#wrapper,
+.add-btn,
+.nav-content,
+.s-dd,
+.interval input:checked + label:after,
+.battery > span {
+  transition: background 2s ease-in-out, border-color 2s ease-in-out;
+}
+
 /* Theme backgrounds (was SCSS map/loop) */
 body.purple #wrapper,
 body.purple .add-btn,
