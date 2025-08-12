@@ -308,7 +308,7 @@
                         v-model.number="presetsList.endingBell.timeInMins"
                         min="1"
                         max="60"
-                        class="w-12 px-1 py-1 text-center text-black text-sm border-t border-b border-white/30 bg-white/90 focus:bg-white focus:outline-none"
+                        class="w-12 px-1 py-1 -mx-1 h-8 text-center text-black text-sm border-t border-b border-white/30 bg-white/90 focus:bg-white focus:outline-none"
                         @input="validateEndingBellTime"
                         readonly
                       />
