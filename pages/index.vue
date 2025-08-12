@@ -631,6 +631,7 @@ function startTimer() {
       if (presetsList.endingBell.enabled) {
         isPostSession.value = true;
         completeAction.value = false;
+        playBellSound();
       } else {
         stopTimer();
         return;
@@ -645,14 +646,14 @@ function startTimer() {
       if (postSessionSeconds >= presetsList.endingBell.timeInMins * 60) {
         // Time for ending bell
         playBellSound();
-        stopTimer();
+        stopTimer(false, true); // Pass true to indicate ending bell is playing
       }
     }
   }, 1000);
   localStorage.setItem('presetsList', JSON.stringify(presetsList));
 }
 
-function stopTimer(manualStop = false) {
+function stopTimer(manualStop = false, endingBellPlaying = false) {
   isRunning.value = false;
   isPostSession.value = false;
   setBgQuoteChange();
@@ -666,7 +667,17 @@ function stopTimer(manualStop = false) {
 
     // Only stop audio and save data if this is a natural completion
     if (!isPostSession.value) {
-      stopAudio();
+      // Don't stop bell sound if ending bell is currently playing
+      if (endingBellPlaying) {
+        // Stop other audio but not bell sound
+        if (presetsList.guidedInstruction.statusActive) {
+          stopGuidedAudio();
+        } else if (presetsList.backgroundSound.statusActive) {
+          stopBackgroundSound();
+        }
+      } else {
+        stopAudio();
+      }
     }
 
     const meditationData = JSON.parse(
@@ -678,7 +689,7 @@ function stopTimer(manualStop = false) {
     });
     localStorage.setItem('meditationData', JSON.stringify(meditationData));
   } else {
-    // Manual stop - stop everything
+    // Manual stop - stop everything including bell sound
     stopAudio();
   }
 
@@ -755,11 +766,24 @@ function stopAudio() {
 
 function playBellSound() {
   try {
-    // Stop any existing bell sound first
-    stopBellSound();
+    // Stop any existing bell sound first, but with a small delay to prevent race conditions
+    if (presetsList.bellSound.audio) {
+      stopBellSound();
+      // Small delay to ensure the previous audio is fully stopped
+      setTimeout(() => {
+        createAndPlayBellSound();
+      }, 10);
+    } else {
+      createAndPlayBellSound();
+    }
+  } catch (error) {
+    console.error('Error in playBellSound:', error);
+  }
+}
 
+function createAndPlayBellSound() {
+  try {
     presetsList.bellSound.audio = new Audio(presetsList.bellSound.activePath);
-
     // Add error handling for audio loading
     presetsList.bellSound.audio.addEventListener('error', (e) => {
       console.error('Error loading bell sound:', e);
@@ -786,7 +810,7 @@ function playBellSound() {
         });
     }
   } catch (error) {
-    console.error('Error in playBellSound:', error);
+    console.error('Error in createAndPlayBellSound:', error);
   }
 }
 
