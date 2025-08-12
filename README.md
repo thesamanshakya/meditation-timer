@@ -15,11 +15,20 @@ statistics tracking.
   hour sessions
 - **Custom Duration**: Add extra time to any preset with the "Add +" buttons
 - **Interval Bell**: Optional bell chiming at the halfway point of your session
+- **Ending Bell with Timer**: Configurable bell that rings when your meditation
+  session ends, with customizable duration and sound selection
 - **Large, Clear Display**: Easy-to-read timer with responsive design
 
 ### 🎵 Audio Options
 
-- **Start/End Bell Sounds**: Choose from 4 different gong sounds
+- **Start/End Bell Sounds**: Choose from 4 different gong sounds to mark the
+  beginning and end of your session
+- **Ending Bell Configuration**:
+  - Set custom duration for how long the ending bell rings (e.g., 10 seconds, 30
+    seconds, 1 minute)
+  - Choose from multiple bell sound options (Gong 1-4, or S.N. Goenka bell)
+  - Independent volume control for ending bell
+  - Option to disable ending bell completely
 - **Guided Meditation**:
   - English (Goenka method)
   - Hindi instructions
