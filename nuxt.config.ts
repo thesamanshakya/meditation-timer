@@ -148,6 +148,7 @@ export default defineNuxtConfig({
       ],
       cleanupOutdatedCaches: true,
       mode: 'GenerateSW',
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB limit
       additionalManifestEntries: [{ url: '/', revision: null }],
       navigateFallback: '/',
       navigateFallbackDenylist: [/^\/_nuxt\//, /^\/api\//],
