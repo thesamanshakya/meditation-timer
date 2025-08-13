@@ -104,7 +104,7 @@ export default defineNuxtConfig({
       lang: 'en',
       start_url: '/',
       background_color: '#1E75FF',
-      display: 'standalone',
+      display: 'fullscreen',
       orientation: 'portrait',
       scope: '/',
       theme_color: '#1E75FF',
