@@ -242,7 +242,7 @@
             >
               <a
                 @click="selectBellList(index)"
-                class="py-2 px-3 text-[13px] cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full transition-all hover:shadow-sm"
+                class="py-2 px-3 max-sm:text-[13px] cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full transition-all hover:shadow-sm"
                 >{{ $t(`bellSounds.${bell.name}`) }}</a
               >
             </li>
