@@ -1,7 +1,7 @@
 <template>
   <span class="statistics text-2xl leading-none ml-6 cursor-pointer relative">
     <i
-      @click="statisticsActive = !statisticsActive"
+      @click="toggleStatistics"
       class="inline-block align-top transition-all duration-300"
     >
       <svg
@@ -255,6 +255,161 @@
                 </div>
               </div>
 
+              <!-- Session Ratings Chart -->
+              <div
+                v-if="hasRatingData"
+                class="mb-8 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-base font-medium text-white/80">
+                    Session Ratings Over Time
+                  </h3>
+                  <div class="flex gap-1">
+                    <button
+                      v-for="period in timePeriods"
+                      :key="period.key"
+                      @click="selectedTimePeriod = period.key"
+                      class="px-3 py-1 text-xs rounded-full transition-all"
+                      :class="{
+                        'bg-[#43e97b]/20 text-[#43e97b] border border-[#43e97b]/50':
+                          selectedTimePeriod === period.key,
+                        'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80':
+                          selectedTimePeriod !== period.key,
+                      }"
+                    >
+                      {{ period.label }}
+                    </button>
+                  </div>
+                </div>
+                <div class="h-40 relative">
+                  <svg
+                    class="w-full h-full"
+                    viewBox="0 0 400 160"
+                    preserveAspectRatio="none"
+                  >
+                    <!-- Grid lines -->
+                    <g class="grid-lines">
+                      <line
+                        v-for="i in 5"
+                        :key="`grid-${i}`"
+                        :x1="40"
+                        :y1="(i - 1) * 32 + 20"
+                        :x2="380"
+                        :y2="(i - 1) * 32 + 20"
+                        stroke="rgba(255,255,255,0.1)"
+                        stroke-width="1"
+                      />
+                    </g>
+
+                    <!-- Y-axis labels -->
+                    <g class="y-labels">
+                      <text
+                        v-for="i in 5"
+                        :key="`y-label-${i}`"
+                        :x="35"
+                        :y="(5 - i) * 32 + 25"
+                        fill="rgba(255,255,255,0.6)"
+                        font-size="10"
+                        text-anchor="end"
+                      >
+                        {{ i }}
+                      </text>
+                    </g>
+
+                    <!-- Rating line -->
+                    <polyline
+                      :points="ratingLinePoints"
+                      fill="none"
+                      stroke="url(#ratingGradient)"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+
+                    <!-- Rating points -->
+                    <circle
+                      v-for="(point, index) in ratingChartData"
+                      :key="`point-${index}`"
+                      :cx="point.x"
+                      :cy="point.y"
+                      r="3"
+                      fill="#43e97b"
+                      class="cursor-pointer hover:r-4 transition-all"
+                    >
+                      <title>
+                        {{ point.rating }} stars - {{ point.dateLabel }}
+                      </title>
+                    </circle>
+
+                    <!-- Gradient definition -->
+                    <defs>
+                      <linearGradient
+                        id="ratingGradient"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="0%"
+                      >
+                        <stop
+                          offset="0%"
+                          style="stop-color: #43e97b; stop-opacity: 0.8"
+                        />
+                        <stop
+                          offset="100%"
+                          style="stop-color: #38d9a9; stop-opacity: 0.8"
+                        />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+
+                <!-- Rating Statistics -->
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                  <div class="text-center">
+                    <p class="text-2xl font-light">
+                      {{ averageRating.toFixed(1) }}
+                    </p>
+                    <p class="text-xs text-white/60">Avg. Rating</p>
+                  </div>
+                  <div class="text-center">
+                    <p class="text-2xl font-light">{{ highestRating }}</p>
+                    <p class="text-xs text-white/60">Highest</p>
+                  </div>
+                  <div class="text-center">
+                    <p class="text-2xl font-light">{{ totalRatings }}</p>
+                    <p class="text-xs text-white/60">
+                      {{
+                        selectedTimePeriod === 'all'
+                          ? 'Total Rated'
+                          : `Rated (${
+                              timePeriods.find(
+                                (p) => p.key === selectedTimePeriod
+                              )?.label
+                            })`
+                      }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Period Info -->
+                <div class="mt-3 text-center">
+                  <p class="text-xs text-white/50">
+                    Showing {{ filteredRatedSessions.length }} rated session{{
+                      filteredRatedSessions.length === 1 ? '' : 's'
+                    }}
+                    {{
+                      selectedTimePeriod !== 'all'
+                        ? `from the last ${
+                            timePeriods.find(
+                              (p) => p.key === selectedTimePeriod
+                            )?.label
+                          }`
+                        : 'from all time'
+                    }}
+                  </p>
+                </div>
+              </div>
+
               <!-- Recent History -->
               <div
                 class="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
@@ -334,11 +489,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const statisticsActive = ref(false);
 const meditationData = ref([]);
 const confirmClearActive = ref(false);
+const selectedTimePeriod = ref('week');
+
+const timePeriods = [
+  { key: 'week', label: '7D', days: 7 },
+  { key: 'month', label: '30D', days: 30 },
+  { key: 'quarter', label: '3M', days: 90 },
+  { key: 'year', label: '1Y', days: 365 },
+  { key: 'all', label: 'All', days: null },
+];
 
 // Computed properties
 const hasData = computed(() => {
@@ -359,7 +523,10 @@ const totalMinutes = computed(() => {
 const formatTotalTime = computed(() => {
   const hours = Math.floor(totalMinutes.value / 60);
   const minutes = totalMinutes.value % 60;
-  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+  if (hours > 0) {
+    return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+  }
+  return `${minutes}m`;
 });
 
 const formatAvgDuration = computed(() => {
@@ -399,12 +566,16 @@ const currentStreak = computed(() => {
 const weeklyActivity = computed(() => {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
 
   return days.map((label, index) => {
-    // Calculate the date for this day of the week
+    // Calculate the date for each day of the current week (starting from Sunday)
     const date = new Date(today);
-    date.setDate(today.getDate() - ((dayOfWeek - index + 7) % 7));
+    const currentDayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
+    const daysFromSunday = currentDayOfWeek; // How many days from Sunday
+    const targetDaysFromSunday = index; // Target day index (0 = Sunday, 1 = Monday, etc.)
+
+    // Calculate date for this day of the week
+    date.setDate(today.getDate() - daysFromSunday + targetDaysFromSunday);
     date.setHours(0, 0, 0, 0);
 
     const nextDay = new Date(date);
@@ -471,11 +642,108 @@ const recentSessions = computed(() => {
     .slice(0, 5);
 });
 
+// Rating-related computed properties
+const hasRatingData = computed(() => {
+  return (
+    meditationData.value &&
+    meditationData.value.some((session) => session.rating)
+  );
+});
+
+const filteredRatedSessions = computed(() => {
+  const ratedSessions = meditationData.value.filter(
+    (session) => session.rating
+  );
+
+  // Filter by selected time period
+  const now = new Date();
+  const selectedPeriod = timePeriods.find(
+    (p) => p.key === selectedTimePeriod.value
+  );
+
+  if (selectedPeriod && selectedPeriod.days) {
+    const cutoffDate = new Date(now);
+    cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod.days);
+
+    return ratedSessions.filter((session) => {
+      const sessionDate = new Date(session.date);
+      return sessionDate >= cutoffDate;
+    });
+  }
+
+  return ratedSessions;
+});
+
+const totalRatings = computed(() => {
+  return filteredRatedSessions.value.length;
+});
+
+const averageRating = computed(() => {
+  if (filteredRatedSessions.value.length === 0) return 0;
+  const sum = filteredRatedSessions.value.reduce(
+    (total, session) => total + session.rating,
+    0
+  );
+  return sum / filteredRatedSessions.value.length;
+});
+
+const highestRating = computed(() => {
+  if (filteredRatedSessions.value.length === 0) return 0;
+  return Math.max(
+    ...filteredRatedSessions.value.map((session) => session.rating)
+  );
+});
+
+const ratingChartData = computed(() => {
+  if (filteredRatedSessions.value.length === 0) return [];
+
+  // Sort ratings by date
+  const sortedRatings = [...filteredRatedSessions.value].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+
+  if (sortedRatings.length === 0) return [];
+
+  const chartWidth = 340; // 380 - 40 for margins
+  const chartHeight = 128; // 160 - 32 for margins
+  const startX = 40;
+  const startY = 20;
+
+  return sortedRatings.map((session, index) => {
+    const x =
+      startX + (index * chartWidth) / Math.max(sortedRatings.length - 1, 1);
+    const y = startY + chartHeight - ((session.rating - 1) * chartHeight) / 4; // Scale 1-5 to chart height
+
+    return {
+      x,
+      y,
+      rating: session.rating,
+      date: session.date,
+      dateLabel: formatDate(session.date),
+    };
+  });
+});
+
+const ratingLinePoints = computed(() => {
+  if (ratingChartData.value.length === 0) return '';
+  return ratingChartData.value
+    .map((point) => `${point.x},${point.y}`)
+    .join(' ');
+});
+
 // Methods
 const loadData = () => {
   const data = localStorage.getItem('meditationData');
   if (data) {
     meditationData.value = JSON.parse(data);
+  }
+};
+
+const toggleStatistics = () => {
+  statisticsActive.value = !statisticsActive.value;
+  // Reload data whenever statistics panel is opened
+  if (statisticsActive.value) {
+    loadData();
   }
 };
 
@@ -505,8 +773,12 @@ const clearAllData = () => {
 };
 
 const exportData = () => {
-  // Create a JSON file with meditation data
-  const dataStr = JSON.stringify(meditationData.value);
+  // Create a JSON file with meditation data (now includes ratings)
+  const exportData = {
+    meditationData: meditationData.value,
+    exportDate: new Date().toISOString(),
+  };
+  const dataStr = JSON.stringify(exportData);
   const dataUri =
     'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
 
@@ -529,8 +801,29 @@ const importData = (event) => {
     try {
       const importedData = JSON.parse(e.target.result);
 
-      // Validate data structure
-      if (!Array.isArray(importedData)) {
+      let meditationImportData = [];
+
+      // Handle both old format (array) and new format (object with meditationData)
+      if (Array.isArray(importedData)) {
+        // Old format - just meditation data array
+        meditationImportData = importedData;
+      } else if (importedData && typeof importedData === 'object') {
+        // New format - object with meditationData
+        meditationImportData = importedData.meditationData || [];
+
+        // Handle legacy format with separate ratingData
+        if (importedData.ratingData) {
+          // Merge ratings into meditation data
+          const ratingMap = new Map(
+            importedData.ratingData.map((rating) => [rating.id, rating.rating])
+          );
+          meditationImportData.forEach((session) => {
+            if (ratingMap.has(session.id)) {
+              session.rating = ratingMap.get(session.id);
+            }
+          });
+        }
+      } else {
         alert('Invalid data format. Import failed.');
         return;
       }
@@ -542,21 +835,24 @@ const importData = (event) => {
             'Do you want to merge with existing data? Click Cancel to replace all data.'
           )
         ) {
-          // Merge data, avoiding duplicates by ID
-          const existingIds = new Set(
+          // Merge meditation data, avoiding duplicates by ID
+          const existingMeditationIds = new Set(
             meditationData.value.map((item) => item.id)
           );
-          const newData = importedData.filter(
-            (item) => !existingIds.has(item.id)
+          const newMeditationData = meditationImportData.filter(
+            (item) => !existingMeditationIds.has(item.id)
           );
-          meditationData.value = [...meditationData.value, ...newData];
+          meditationData.value = [
+            ...meditationData.value,
+            ...newMeditationData,
+          ];
         } else {
           // Replace all data
-          meditationData.value = importedData;
+          meditationData.value = meditationImportData;
         }
       } else {
         // No existing data, just import
-        meditationData.value = importedData;
+        meditationData.value = meditationImportData;
       }
 
       // Save to localStorage
@@ -645,9 +941,12 @@ const getRandomInt = (min, max) => {
 };
 
 const formatMinutes = (minutes) => {
-  return minutes < 60
-    ? `${minutes}m`
-    : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+  if (minutes < 60) {
+    return `${minutes}m`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
 };
 
 const formatDuration = (minutes) => {
@@ -702,6 +1001,14 @@ const calculateBarHeight = (minutes) => {
   // Calculate proportional height with a minimum
   return Math.max(10, Math.min(maxHeight, (minutes / maxMinutes) * maxHeight));
 };
+
+// Watch for statistics panel visibility changes
+watch(statisticsActive, (newValue) => {
+  if (newValue) {
+    // Reload data when statistics panel opens
+    loadData();
+  }
+});
 
 // Lifecycle
 onMounted(() => {

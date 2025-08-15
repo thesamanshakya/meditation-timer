@@ -416,6 +416,14 @@
         </div>
       </div>
     </Transition>
+
+    <!-- Rating Popup -->
+    <RatingPopup
+      :show="showRatingPopup"
+      :session-duration="presetsList.totalDurationInMins"
+      @close="showRatingPopup = false"
+      @rating-submitted="onRatingSubmitted"
+    />
   </div>
 </template>
 
@@ -428,6 +436,7 @@ import NoSleep from 'nosleep.js';
 // State
 const navActive = ref(false);
 const showFacebookBanner = ref(false);
+const showRatingPopup = ref(false);
 const colorTheme = ['purple', 'red', 'blue', 'pink', 'green'];
 const quote = ref('');
 const tickerInMins = ref(null);
@@ -663,7 +672,9 @@ function stopTimer(manualStop = false, endingBellPlaying = false) {
     completeAction.value = true;
     setTimeout(() => {
       completeAction.value = false;
-    }, 5000);
+      // Show rating popup after completion animation
+      showRatingPopup.value = true;
+    }, 3000);
 
     // Only stop audio and save data if this is a natural completion
     if (!isPostSession.value) {
@@ -684,6 +695,7 @@ function stopTimer(manualStop = false, endingBellPlaying = false) {
       localStorage.getItem('meditationData') || '[]'
     );
     meditationData.push({
+      id: Date.now(),
       date: new Date().toISOString(),
       duration: presetsList.totalDurationInMins,
     });
@@ -936,6 +948,12 @@ function showFacebookBannerWithTimeout() {
 function closeFacebookBanner() {
   showFacebookBanner.value = false;
   if (intervalIds.fbTimeout) clearTimeout(intervalIds.fbTimeout);
+}
+
+// Rating handler
+function onRatingSubmitted(ratingData) {
+  console.log('Rating submitted:', ratingData);
+  // Rating is already stored in localStorage by the RatingPopup component
 }
 
 // Cache reset
