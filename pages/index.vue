@@ -738,7 +738,10 @@ function startTimer() {
         completeAction.value = false;
         playBellSound();
       } else {
-        stopTimer();
+        // Allow bell sound to play before stopping timer
+        setTimeout(() => {
+          stopTimer();
+        }, 2000); // Give 2 seconds for bell sound to play
         return;
       }
     } else if (isPostSession.value) {
@@ -754,7 +757,7 @@ function startTimer() {
         stopTimer(false, true); // Pass true to indicate ending bell is playing
       }
     }
-  }, 1000);
+  }, 10);
   localStorage.setItem('presetsList', JSON.stringify(presetsList));
 }
 
@@ -783,7 +786,13 @@ function stopTimer(manualStop = false, endingBellPlaying = false) {
           stopBackgroundSound();
         }
       } else {
-        stopAudio();
+        // Stop only guided instruction and background sound, not bell sound for natural completion
+        if (presetsList.guidedInstruction.statusActive) {
+          stopGuidedAudio();
+        }
+        if (presetsList.backgroundSound.statusActive) {
+          stopBackgroundSound();
+        }
       }
     }
 

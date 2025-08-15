@@ -73,11 +73,11 @@
     "skip": "Skip",
     "submitRating": "Submit Rating",
     "labels": {
-      "1": "Needs improvement",
-      "2": "Fair",
-      "3": "Good",
-      "4": "Very good",
-      "5": "Excellent"
+      "1": "Restless & distracted",
+      "2": "Some focus",
+      "3": "Calm & centered",
+      "4": "Deep awareness",
+      "5": "Profound peace"
     }
   },
   "community": {
