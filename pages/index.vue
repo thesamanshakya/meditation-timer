@@ -757,7 +757,7 @@ function startTimer() {
         stopTimer(false, true); // Pass true to indicate ending bell is playing
       }
     }
-  }, 10);
+  }, 1000);
   localStorage.setItem('presetsList', JSON.stringify(presetsList));
 }
 
