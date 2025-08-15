@@ -153,6 +153,30 @@
                       <line x1="10" y1="1" x2="10" y2="4"></line>
                       <line x1="14" y1="1" x2="14" y2="4"></line>
                     </svg>
+                    <svg
+                      v-if="list.icon === 'star'"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 
+                               3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 
+                               0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61
+                               -.546-1.387-1.333-1.757-1.333-1.757-1.09-.744.084-.729.084-.729
+                               1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.807 1.304 3.492.997
+                               .108-.776.418-1.304.762-1.604-2.665-.3-5.467-1.332-5.467-5.93
+                               0-1.31.468-2.38 1.235-3.22-.123-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23
+                               .957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404
+                               2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.873.12 3.176
+                               .77.84 1.233 1.91 1.233 3.22 0 4.61-2.807 5.625-5.48 5.922
+                               .43.37.823 1.102.823 2.222 0 1.606-.014 2.896-.014 3.286
+                               0 .319.216.694.825.576C20.565 22.092 24 17.592 24 12.297
+                               c0-6.627-5.373-12-12-12"
+                      />
+                    </svg>
                   </span>
                   {{ list.linkText }}
                 </a>
@@ -183,7 +207,7 @@
                   @click="resetCache"
                   class="px-4 py-2 border border-red-500 text-red-500 text-sm rounded-lg transition-colors"
                 >
-                  Reset App Cache
+                  Refresh App
                 </button>
               </div>
             </div>
@@ -363,7 +387,7 @@
 
       <span class="absolute flex items-center right-6 top-6" v-if="!navActive">
         <Battery />
-        <Statistics />
+        <Statistics v-if="!isRunning" />
         <Settings :presetsList="presetsList" v-show="!isRunning" />
         <!-- <UserDropdown
                   class="ml-6"
@@ -453,14 +477,24 @@ const intervalIds = reactive({
 
 const menuList = [
   {
+    linkText: 'What is meditation?',
+    url: 'https://anapansati.saman.com.np',
+    icon: 'community',
+  },
+  {
     linkText: 'Message us',
     url: 'http://m.me/61565128987107',
     icon: 'message',
   },
   {
     linkText: 'Join our community',
-    url: 'https://anapansati.saman.com.np',
+    url: 'https://www.facebook.com/groups/1664234698303384',
     icon: 'community',
+  },
+  {
+    linkText: 'Star on GitHub',
+    url: 'https://github.com/thesamanshakya/meditation-timer',
+    icon: 'star',
   },
 ];
 
@@ -958,7 +992,6 @@ function onRatingSubmitted(ratingData) {
 
 // Cache reset
 function resetCache() {
-  const { $toast } = useNuxtApp();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then((registrations) => {
       for (const registration of registrations) {
@@ -970,14 +1003,16 @@ function resetCache() {
           Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)))
         )
         .then(() => {
-          $toast.success('Cache cleared successfully! Reloading page...');
+          // Show success message and close sidebar
+          alert('App refreshed successfully!');
+          navActive.value = false; // Close the sidebar
           setTimeout(() => {
             window.location.reload();
           }, 1000);
         });
     });
   } else {
-    $toast.error('Service Worker is not supported in this browser');
+    alert('Service Worker is not supported in this browser');
   }
 }
 
