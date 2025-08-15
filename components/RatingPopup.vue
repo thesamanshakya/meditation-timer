@@ -12,9 +12,11 @@
         }"
       >
         <div class="text-center">
-          <h3 class="text-xl font-medium text-white mb-2">Rate Your Session</h3>
+          <h3 class="text-xl font-medium text-white mb-2">
+            {{ $t('rating.title') }}
+          </h3>
           <p class="text-white/60 text-sm mb-6">
-            How was your meditation experience?
+            {{ $t('rating.description') }}
           </p>
 
           <!-- Star Rating -->
@@ -65,7 +67,7 @@
               @click="handleSkip"
               class="flex-1 px-4 py-3 bg-white/10 hover:bg-white/15 text-white rounded-lg transition-all duration-200 text-sm font-medium touch-manipulation active:scale-95"
             >
-              Skip
+              {{ $t('rating.skip') }}
             </button>
             <button
               @click="handleSubmit"
@@ -75,7 +77,7 @@
                 'transform hover:scale-105 active:scale-95': selectedRating > 0,
               }"
             >
-              Submit Rating
+              {{ $t('rating.submitRating') }}
             </button>
           </div>
         </div>
@@ -150,15 +152,11 @@ const onTouchEnd = (rating, event) => {
   }, 100);
 };
 
+const { t } = useI18n();
+
 const getRatingLabel = (rating) => {
-  const labels = {
-    1: 'Poor - Struggled to focus',
-    2: 'Fair - Some difficulty focusing',
-    3: 'Good - Average session',
-    4: 'Very Good - Felt peaceful',
-    5: 'Excellent - Deep meditation',
-  };
-  return labels[rating] || '';
+  if (rating === 0) return '';
+  return t(`rating.labels.${rating}`);
 };
 
 const handleSkip = () => {

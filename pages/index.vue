@@ -67,7 +67,7 @@
             class="p-5 border-b border-white/10 flex items-center justify-between"
           >
             <h2 class="text-base uppercase font-medium tracking-wider">
-              Hamro Meditation Timer
+              {{ $t('app.title') }}
             </h2>
             <button
               @click="navActive = false"
@@ -183,7 +183,9 @@
               </li>
             </ul>
             <div class="mt-5 pt-7 border-t border-white/10 text-white/70">
-              <p class="mb-3 tracking-wide uppercase text-sm">App created by</p>
+              <p class="mb-3 tracking-wide uppercase text-sm">
+                {{ $t('app.createdBy') }}
+              </p>
               <p class="font-normal mt-1">
                 <a
                   class="text-white underline hover:text-white/80 transition-colors"
@@ -191,7 +193,7 @@
                   >Saman Shakya</a
                 >
                 <span class="inline-block ml-1"
-                  >with
+                  >{{ $t('app.with') }}
                   <span
                     class="text-red-500 text-2xl inline-block align-top -mt-1.5 ml-1"
                     >&hearts;</span
@@ -199,7 +201,7 @@
                 >
               </p>
               <p class="italic text-base font-light text-white/60">
-                May all beings be happy!
+                {{ $t('app.mayAllBeingsBeHappy') }}
                 <span class="not-italic ml-1 text-xl">&#128522;</span>
               </p>
               <div class="mt-6">
@@ -207,7 +209,7 @@
                   @click="resetCache"
                   class="px-4 py-2 border border-red-500 text-red-500 text-sm rounded-lg transition-colors"
                 >
-                  Refresh App
+                  {{ $t('app.refreshApp') }}
                 </button>
               </div>
             </div>
@@ -224,9 +226,9 @@
         <div
           class="text-base top-1/2 right-8 mb-6 z-10 md:-mt-32 md:absolute md:text-lg md:min-[130px]"
         >
-          <strong class="font-medium mb-5 hidden md:block"
-            >Start/End Bell</strong
-          >
+          <strong class="font-medium mb-5 hidden md:block">{{
+            $t('timer.startEndBell')
+          }}</strong>
           <ul
             class="bell-sound flex whitespace-no-wrap justify-center m-0 p-0 rounded-md md:block overflow-hidden"
           >
@@ -241,7 +243,7 @@
               <a
                 @click="selectBellList(index)"
                 class="py-2 px-4 cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full transition-all hover:shadow-sm"
-                >{{ bell.name }}</a
+                >{{ $t(`bellSounds.${bell.name}`) }}</a
               >
             </li>
           </ul>
@@ -264,13 +266,13 @@
               >
                 {{ preset.time >= 60 ? preset.time / 60 : preset.time }}
                 <span class="block pt-[10%]">{{
-                  preset.time >= 60 ? 'hour' : 'mins'
+                  preset.time >= 60 ? $t('timer.hour') : $t('timer.mins')
                 }}</span>
               </a>
               <i
                 class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
                 @click="addExtraDuration(preset.addTime)"
-                >Add +{{ preset.addTime }} mins</i
+                >{{ $t('timer.add', { time: preset.addTime }) }}</i
               >
             </li>
           </ul>
@@ -279,7 +281,7 @@
         <span
           class="timer complete font-medium text-[9vw] leading-[12vw] md:text-[10vh] animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
           v-if="completeAction"
-          >COMPLETED!</span
+          >{{ $t('timer.completed') }}</span
         >
         <span
           class="timer-display block leading-none mb-5 text-[25vw] md:text-[25vh]"
@@ -298,7 +300,7 @@
           <div
             class="text-sm text-yellow-300 bg-yellow-500/20 px-3 py-1 rounded-full backdrop-blur-sm animate-pulse"
           >
-            Waiting for ending bell...
+            {{ $t('timer.waitingForEndingBell') }}
           </div>
         </div>
 
@@ -315,15 +317,20 @@
               v-if="presetsList.intervalBell"
               class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm"
             >
-              Interval bell at
-              {{ Math.floor(presetsList.totalDurationInMins / 2) }} mins
+              {{ $t('timer.intervalBellAt') }}
+              {{ Math.floor(presetsList.totalDurationInMins / 2) }}
+              {{ $t('timer.mins') }}
             </div>
             <div
               v-if="presetsList.endingBell.enabled"
               class="text-sm text-white/70 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm"
             >
-              Ending bell {{ presetsList.endingBell.timeInMins }} mins after
-              session
+              {{
+                $t('timer.endingBell', {
+                  time: presetsList.endingBell.timeInMins,
+                })
+              }}
+              {{ $t('timer.session') }}
             </div>
           </div>
         </div>
@@ -427,7 +434,7 @@
                 d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
               ></path>
             </svg>
-            <span>Be a part of our community!</span>
+            <span>{{ $t('community.bePartOfCommunity') }}</span>
           </div>
           <a
             href="https://www.facebook.com/groups/1664234698303384"
@@ -435,7 +442,7 @@
             rel="nofollow noopener"
             class="bg-white text-blue-600 px-2 py-0.5 rounded text-xs font-medium hover:bg-blue-100 transition-colors ml-2"
           >
-            Join Now
+            {{ $t('community.joinNow') }}
           </a>
         </div>
       </div>
@@ -475,28 +482,30 @@ const intervalIds = reactive({
   endingBell: null,
 });
 
-const menuList = [
+const { t } = useI18n();
+
+const menuList = computed(() => [
   {
-    linkText: 'What is meditation?',
+    linkText: t('navigation.whatIsMeditation'),
     url: 'https://anapansati.saman.com.np',
     icon: 'community',
   },
   {
-    linkText: 'Message us',
+    linkText: t('navigation.messageUs'),
     url: 'http://m.me/61565128987107',
     icon: 'message',
   },
   {
-    linkText: 'Join our community',
+    linkText: t('navigation.joinCommunity'),
     url: 'https://www.facebook.com/groups/1664234698303384',
     icon: 'community',
   },
   {
-    linkText: 'Star on GitHub',
+    linkText: t('navigation.starOnGithub'),
     url: 'https://github.com/thesamanshakya/meditation-timer',
     icon: 'star',
   },
-];
+]);
 
 const presetsList = reactive({
   totalDurationInMins: 10,
@@ -515,7 +524,7 @@ const presetsList = reactive({
     customAudioId: null,
     language: [
       {
-        language: 'english (Goenka)',
+        language: 'englishGoenka',
         url: '/media/instructions/anapana/english-1.mp3',
         statusActive: true,
       },
@@ -539,19 +548,19 @@ const presetsList = reactive({
     soundActive: 0,
     sound: [
       {
-        soundTitle: 'Forest with Birds',
+        soundTitle: 'forestWithBirds',
         url: '/media/sounds/nature/forest-with-birds.mp3',
         statusActive: true,
       },
       {
-        soundTitle: 'Water in Stream',
+        soundTitle: 'waterInStream',
         url: '/media/sounds/nature/water-in-stream.mp3',
       },
       {
-        soundTitle: 'River with Birds',
+        soundTitle: 'riverWithBirds',
         url: '/media/sounds/nature/birds-with-river.mp3',
       },
-      { soundTitle: 'Birds', url: '/media/sounds/nature/birds.mp3' },
+      { soundTitle: 'birds', url: '/media/sounds/nature/birds.mp3' },
     ],
   },
   time: [
@@ -564,13 +573,14 @@ const presetsList = reactive({
     audio: null,
     list: [
       {
-        name: 'Gong 1',
+        name: 'gong1',
         url: '/media/bell/gong-1.mp3',
         statusActive: true,
       },
-      { name: 'Gong 2', url: '/media/bell/gong-2.mp3' },
-      { name: 'Gong 3', url: '/media/bell/gong-3.mp3' },
-      { name: 'Gong 4', url: '/media/bell/gong-4.mp3' },
+      { name: 'gong2', url: '/media/bell/gong-2.mp3' },
+      { name: 'gong3', url: '/media/bell/gong-3.mp3' },
+      { name: 'gong4', url: '/media/bell/gong-4.mp3' },
+      { name: 'snGoenka', url: '/media/bell/sn-goenka.mp3' },
     ],
   },
 });
@@ -1022,14 +1032,57 @@ const getAudioTitle = computed(() => {
   const guidedInstruction = presetsList.guidedInstruction;
   const backgroundSound = presetsList.backgroundSound;
   if (guidedInstruction.statusActive) {
-    title =
+    const languageKey =
       guidedInstruction.languageTitle || guidedInstruction.language[0].language;
-    title += ' Guided Meditation';
+    title =
+      t(`guidedMeditation.${languageKey}`) +
+      ' ' +
+      t('guidedMeditation.guidedMeditationText');
   } else if (backgroundSound.statusActive) {
-    title = backgroundSound.soundTitle || backgroundSound.sound[0].soundTitle;
+    const soundKey =
+      backgroundSound.soundTitle || backgroundSound.sound[0].soundTitle;
+    title = t(`backgroundSounds.${soundKey}`);
   }
   return title;
 });
+
+// Data migration function to ensure bell names are in correct format
+function migrateBellSoundData() {
+  const correctBellList = [
+    {
+      name: 'gong1',
+      url: '/media/bell/gong-1.mp3',
+      statusActive: true,
+    },
+    { name: 'gong2', url: '/media/bell/gong-2.mp3' },
+    { name: 'gong3', url: '/media/bell/gong-3.mp3' },
+    { name: 'gong4', url: '/media/bell/gong-4.mp3' },
+    { name: 'snGoenka', url: '/media/bell/sn-goenka.mp3' },
+  ];
+
+  // Check if bell names need migration
+  const needsMigration = presetsList.bellSound.list.some(
+    (bell) => !correctBellList.find((correct) => correct.name === bell.name)
+  );
+
+  if (needsMigration) {
+    // Find currently active bell index
+    const activeIndex = presetsList.bellSound.list.findIndex(
+      (bell) => bell.statusActive
+    );
+
+    // Reset to correct bell list
+    presetsList.bellSound.list = correctBellList;
+
+    // Restore active state if valid index
+    if (activeIndex >= 0 && activeIndex < correctBellList.length) {
+      presetsList.bellSound.list.forEach((bell, i) => {
+        bell.statusActive = i === activeIndex;
+      });
+      presetsList.bellSound.activePath = correctBellList[activeIndex].url;
+    }
+  }
+}
 
 // Init
 onMounted(() => {
@@ -1037,6 +1090,10 @@ onMounted(() => {
   if (localData !== null) {
     const parsed = JSON.parse(localData);
     Object.assign(presetsList, parsed);
+
+    // Migrate bell sound data if needed
+    migrateBellSoundData();
+
     if (
       presetsList.guidedInstruction.customAudioId &&
       presetsList.guidedInstruction.languageActive ===

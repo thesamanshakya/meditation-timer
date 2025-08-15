@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "हमारा मेडिटेशन टाइमर",
+    "description": "हमारा मेडिटेशन टाइमर - सामान द्वारा ❤ के साथ बनाया गया ध्यान के लिए सरल और हल्का उपकरण",
+    "createdBy": "ऐप निर्माता",
+    "with": "के साथ",
+    "mayAllBeingsBeHappy": "सभी प्राणी खुश रहें!",
+    "refreshApp": "ऐप रिफ्रेश करें"
+  },
+  "navigation": {
+    "whatIsMeditation": "ध्यान क्या है?",
+    "messageUs": "हमें संदेश भेजें",
+    "joinCommunity": "हमारे समुदाय में शामिल हों",
+    "starOnGithub": "GitHub पर स्टार करें"
+  },
+  "timer": {
+    "completed": "पूर्ण!",
+    "hour": "घंटा",
+    "mins": "मिनट",
+    "add": "+{time} मिनट जोड़ें",
+    "startEndBell": "शुरु/अंत घंटी",
+    "waitingForEndingBell": "अंतिम घंटी की प्रतीक्षा...",
+    "intervalBellAt": "अंतराल घंटी",
+    "endingBell": "अंतिम घंटी {time} मिनट बाद",
+    "session": "सत्र"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "guidedMeditation": "निर्देशित ध्यान",
+    "backgroundSounds": "पृष्ठभूमि ध्वनियां",
+    "intervalBell": "अंतराल घंटी",
+    "endingBell": "अंतिम घंटी",
+    "ringAfter": "बाद में बजेगी:",
+    "minutes": "मिनट",
+    "endingBellDescription": "आपका सत्र समाप्त होने के {time} मिनट बाद घंटी बजेगी",
+    "intervalBellDescription": "घंटी {time} मिनट पर बजेगी (आपके सत्र के आधे में)",
+    "selectAudio": "ऑडियो चुनें",
+    "replaceAudio": "ऑडियो बदलें",
+    "audio": "ऑडियो"
+  },
+  "statistics": {
+    "title": "ध्यान आंकड़े",
+    "noData": "अभी तक कोई ध्यान डेटा नहीं",
+    "startMeditating": "अपने आंकड़े देखने के लिए ध्यान शुरू करें!",
+    "totalSessions": "कुल सत्र",
+    "totalTime": "कुल समय",
+    "averageSession": "औसत सत्र",
+    "currentStreak": "वर्तमान श्रृंखला",
+    "longestStreak": "सबसे लंबी श्रृंखला",
+    "thisWeek": "इस सप्ताह",
+    "thisMonth": "इस महीने",
+    "last7Days": "पिछले 7 दिन",
+    "last30Days": "पिछले 30 दिन",
+    "weeklyGoal": "साप्ताहिक लक्ष्य",
+    "monthlyGoal": "मासिक लक्ष्य",
+    "days": "दिन",
+    "sessions": "सत्र",
+    "hours": "घंटे",
+    "clearData": "सभी डेटा साफ़ करें",
+    "confirmClear": "क्या आप वाकई सभी ध्यान डेटा साफ़ करना चाहते हैं? इस क्रिया को पूर्ववत नहीं किया जा सकता।",
+    "dataCleared": "सभी ध्यान डेटा साफ़ कर दिया गया है",
+    "exportData": "डेटा निर्यात करें",
+    "importData": "डेटा आयात करें",
+    "dataExported": "डेटा सफलतापूर्वक निर्यात किया गया",
+    "dataImported": "डेटा सफलतापूर्वक आयात किया गया",
+    "invalidFile": "अवैध फ़ाइल प्रारूप"
+  },
+  "rating": {
+    "title": "अपने सत्र को रेट करें",
+    "description": "आपका ध्यान अनुभव कैसा था?",
+    "skip": "छोड़ें",
+    "submitRating": "रेटिंग सबमिट करें",
+    "labels": {
+      "1": "सुधार की आवश्यकता",
+      "2": "ठीक",
+      "3": "अच्छा",
+      "4": "बहुत अच्छा",
+      "5": "उत्कृष्ट"
+    }
+  },
+  "community": {
+    "bePartOfCommunity": "हमारे समुदाय का हिस्सा बनें!",
+    "joinNow": "अभी शामिल हों"
+  },
+  "bellSounds": {
+    "gong1": "गॉन्ग 1",
+    "gong2": "गॉन्ग 2",
+    "gong3": "गॉन्ग 3",
+    "gong4": "गॉन्ग 4",
+    "snGoenka": "एस.एन. गोयन्का"
+  },
+  "backgroundSounds": {
+    "forestWithBirds": "पक्षियों के साथ जंगल",
+    "waterInStream": "नदी में पानी",
+    "riverWithBirds": "पक्षियों के साथ नदी",
+    "birds": "पक्षी"
+  },
+  "guidedMeditation": {
+    "englishGoenka": "अंग्रेजी (गोयन्का)",
+    "english": "अंग्रेजी",
+    "hindi": "हिन्दी",
+    "nepali": "नेपाली",
+    "custom": "कस्टम",
+    "guidedMeditationText": "निर्देशित ध्यान"
+  },
+  "language": {
+    "english": "English",
+    "nepali": "नेपाली",
+    "hindi": "हिन्दी",
+    "selectLanguage": "भाषा चुनें"
+  }
+}

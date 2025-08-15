@@ -56,7 +56,7 @@
             class="p-5 border-b border-white/10 flex items-center justify-between"
           >
             <h2 class="text-xl font-medium tracking-wide">
-              Meditation Statistics
+              {{ $t('statistics.title') }}
             </h2>
             <div class="flex items-center">
               <button
@@ -124,10 +124,10 @@
                 />
               </svg>
               <p class="text-lg font-light text-white/60 mb-2">
-                No meditation data yet
+                {{ $t('statistics.noData') }}
               </p>
               <p class="text-sm text-white/40">
-                Complete a meditation session to start tracking your progress
+                {{ $t('statistics.startMeditating') }}
               </p>
             </div>
 
@@ -140,7 +140,7 @@
                   <h3
                     class="text-sm uppercase tracking-wider text-white/50 mb-1"
                   >
-                    Total Sessions
+                    {{ $t('statistics.totalSessions') }}
                   </h3>
                   <p class="text-3xl font-light">
                     {{ totalSessions }}
@@ -152,7 +152,7 @@
                   <h3
                     class="text-sm uppercase tracking-wider text-white/50 mb-1"
                   >
-                    Total Time
+                    {{ $t('statistics.totalTime') }}
                   </h3>
                   <p class="text-3xl font-light">
                     {{ formatTotalTime }}
@@ -176,11 +176,15 @@
                   <h3
                     class="text-sm uppercase tracking-wider text-white/50 mb-1"
                   >
-                    Current Streak
+                    {{ $t('statistics.currentStreak') }}
                   </h3>
                   <p class="text-3xl font-light">
                     {{ currentStreak }}
-                    {{ currentStreak === 1 ? 'day' : 'days' }}
+                    {{
+                      currentStreak === 1
+                        ? $t('statistics.days').slice(0, -1)
+                        : $t('statistics.days')
+                    }}
                   </p>
                 </div>
               </div>
@@ -490,6 +494,8 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
+
+const { t } = useI18n();
 
 const statisticsActive = ref(false);
 const meditationData = ref([]);

@@ -1,0 +1,112 @@
+{
+  "app": {
+    "title": "Hamro Meditation Timer",
+    "description": "Hamro Meditation Timer - a simple and lightweight tool for meditation created by Saman with ❤",
+    "createdBy": "App created by",
+    "with": "with",
+    "mayAllBeingsBeHappy": "May all beings be happy!",
+    "refreshApp": "Refresh App"
+  },
+  "navigation": {
+    "whatIsMeditation": "What is meditation?",
+    "messageUs": "Message us",
+    "joinCommunity": "Join our community",
+    "starOnGithub": "Star on GitHub"
+  },
+  "timer": {
+    "completed": "COMPLETED!",
+    "hour": "hour",
+    "mins": "mins",
+    "add": "Add +{time} mins",
+    "startEndBell": "Start/End Bell",
+    "waitingForEndingBell": "Waiting for ending bell...",
+    "intervalBellAt": "Interval bell at",
+    "endingBell": "Ending bell {time} mins after",
+    "session": "session"
+  },
+  "settings": {
+    "title": "Settings",
+    "guidedMeditation": "Guided Meditation",
+    "backgroundSounds": "Background Sounds",
+    "intervalBell": "Interval Bell",
+    "endingBell": "Ending Bell",
+    "ringAfter": "Ring after:",
+    "minutes": "minutes",
+    "endingBellDescription": "Bell will ring {time} minutes after your session ends",
+    "intervalBellDescription": "Bell will ring at {time} minutes (halfway through your session)",
+    "selectAudio": "Select Audio",
+    "replaceAudio": "Replace Audio",
+    "audio": "Audio"
+  },
+  "statistics": {
+    "title": "Meditation Statistics",
+    "noData": "No meditation data yet",
+    "startMeditating": "Start meditating to see your statistics!",
+    "totalSessions": "Total Sessions",
+    "totalTime": "Total Time",
+    "averageSession": "Average Session",
+    "currentStreak": "Current Streak",
+    "longestStreak": "Longest Streak",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "weeklyGoal": "Weekly Goal",
+    "monthlyGoal": "Monthly Goal",
+    "days": "days",
+    "sessions": "sessions",
+    "hours": "hours",
+    "clearData": "Clear All Data",
+    "confirmClear": "Are you sure you want to clear all meditation data? This action cannot be undone.",
+    "dataCleared": "All meditation data has been cleared",
+    "exportData": "Export Data",
+    "importData": "Import Data",
+    "dataExported": "Data exported successfully",
+    "dataImported": "Data imported successfully",
+    "invalidFile": "Invalid file format"
+  },
+  "rating": {
+    "title": "Rate Your Session",
+    "description": "How was your meditation experience?",
+    "skip": "Skip",
+    "submitRating": "Submit Rating",
+    "labels": {
+      "1": "Needs improvement",
+      "2": "Fair",
+      "3": "Good",
+      "4": "Very good",
+      "5": "Excellent"
+    }
+  },
+  "community": {
+    "bePartOfCommunity": "Be a part of our community!",
+    "joinNow": "Join Now"
+  },
+  "bellSounds": {
+    "gong1": "Gong 1",
+    "gong2": "Gong 2",
+    "gong3": "Gong 3",
+    "gong4": "Gong 4",
+    "snGoenka": "S.N. Goenka"
+  },
+  "backgroundSounds": {
+    "forestWithBirds": "Forest with Birds",
+    "waterInStream": "Water in Stream",
+    "riverWithBirds": "River with Birds",
+    "birds": "Birds"
+  },
+  "guidedMeditation": {
+    "englishGoenka": "english (Goenka)",
+    "english": "english",
+    "hindi": "hindi",
+    "nepali": "nepali",
+    "custom": "custom",
+    "guidedMeditationText": "Guided Meditation"
+  },
+  "language": {
+    "english": "English",
+    "nepali": "नेपाली",
+    "hindi": "हिन्दी",
+    "selectLanguage": "Select Language"
+  }
+}

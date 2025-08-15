@@ -66,12 +66,28 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: ['@nuxtjs/google-fonts', '@vite-pwa/nuxt', 'nuxt-gtag'],
+  modules: [
+    '@nuxtjs/google-fonts',
+    '@vite-pwa/nuxt',
+    'nuxt-gtag',
+    '@nuxtjs/i18n',
+  ],
   googleFonts: {
     families: {
       Inter: [300, 400, 500, 600, 700],
     },
     display: 'swap',
+  },
+
+  i18n: {
+    defaultLocale: 'en',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: false,
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'ne', name: 'नेपाली', file: 'ne.json' },
+      { code: 'hi', name: 'हिन्दी', file: 'hi.json' },
+    ],
   },
 
   gtag: {

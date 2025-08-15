@@ -338,6 +338,50 @@
                   </p>
                 </div>
               </li>
+
+              <li>
+                <div class="border-t border-white/10 pt-6">
+                  <label class="text-lg font-medium tracking-wide block mb-4">
+                    {{ $t('language.selectLanguage') }}
+                  </label>
+                  <div class="space-y-3">
+                    <div
+                      v-for="locale in availableLocales"
+                      :key="locale.code"
+                      class="flex items-center gap-3"
+                    >
+                      <label
+                        class="flex items-center gap-3 cursor-pointer text-base flex-1"
+                      >
+                        <input
+                          type="radio"
+                          :value="locale.code"
+                          v-model="selectedLanguage"
+                          @change="switchLanguage(locale.code)"
+                          class="hidden"
+                        />
+                        <span
+                          class="w-5 h-5 rounded-full border-2 border-white/60 relative transition-all duration-200 flex items-center justify-center"
+                          :class="{
+                            'border-[#43e97b]':
+                              selectedLanguage === locale.code,
+                          }"
+                        >
+                          <span
+                            class="absolute w-0 h-0 bg-[#43e97b] rounded-full transition-all duration-200"
+                            :class="{
+                              'w-3 h-3': selectedLanguage === locale.code,
+                            }"
+                          ></span>
+                        </span>
+                        <span class="font-light tracking-wide">{{
+                          locale.name
+                        }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -364,6 +408,10 @@ const props = defineProps({
 });
 
 const { proxy } = getCurrentInstance();
+const { locale, locales, setLocale } = useI18n();
+
+const selectedLanguage = ref(locale.value);
+const availableLocales = computed(() => locales.value);
 
 const settingsActive = ref(false);
 const customAudioActive = ref(
@@ -601,6 +649,11 @@ const saveToLocalStorage = () => {
 
   // Save metadata to localStorage (not the actual file or blob URLs)
   localStorage.setItem('presetsList', JSON.stringify(presetsToSave));
+};
+
+const switchLanguage = (localeCode) => {
+  setLocale(localeCode);
+  selectedLanguage.value = localeCode;
 };
 
 const clickOutsideClose = (e) => {
