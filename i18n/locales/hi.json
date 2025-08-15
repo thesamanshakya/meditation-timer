@@ -36,7 +36,9 @@
     "intervalBellDescription": "घंटी {time} मिनट पर बजेगी (आपके सत्र के आधे में)",
     "selectAudio": "ऑडियो चुनें",
     "replaceAudio": "ऑडियो बदलें",
-    "audio": "ऑडियो"
+    "audio": "ऑडियो",
+    "fileCannotBePlayed": "क्षमा करें, यह फ़ाइल चलाई नहीं जा सकती!",
+    "failedToSaveAudio": "ऑडियो फ़ाइल सहेजने में विफल। कृपया पुनः प्रयास करें।"
   },
   "statistics": {
     "title": "ध्यान आंकड़े",

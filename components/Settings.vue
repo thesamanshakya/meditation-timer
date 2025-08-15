@@ -20,7 +20,9 @@
           <div
             class="p-5 border-b border-white/10 flex items-center justify-between"
           >
-            <h2 class="text-xl font-medium tracking-wide">Settings</h2>
+            <h2 class="text-xl font-medium tracking-wide">
+              {{ $t('settings.title') }}
+            </h2>
             <button
               @click="settingsActive = false"
               class="text-white/60 hover:text-white transition-colors p-2"
@@ -47,9 +49,9 @@
                 <label
                   class="c-checkbox flex items-center gap-3 justify-between w-full"
                 >
-                  <span class="text-lg font-medium tracking-wide"
-                    >Guided Meditation</span
-                  >
+                  <span class="text-lg font-medium tracking-wide">{{
+                    $t('settings.guidedMeditation')
+                  }}</span>
                   <div
                     class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
                   >
@@ -105,10 +107,8 @@
                         ></span>
                       </span>
                       <span class="font-light tracking-wide"
-                        >{{
-                          capitalizeFirstLetter(instruction.language)
-                        }}
-                        Audio</span
+                        >{{ capitalizeFirstLetter(instruction.language) }}
+                        {{ $t('settings.audio') }}</span
                       >
                     </label>
                     <div
@@ -126,8 +126,8 @@
                         >
                           {{
                             !!presetsList.guidedInstruction.customAudioFileName
-                              ? 'Replace Audio'
-                              : 'Select Audio'
+                              ? $t('settings.replaceAudio')
+                              : $t('settings.selectAudio')
                           }}
                         </label>
                       </div>
@@ -156,9 +156,9 @@
                 <label
                   class="c-checkbox flex items-center gap-3 justify-between w-full"
                 >
-                  <span class="text-lg font-medium tracking-wide"
-                    >Background Sounds</span
-                  >
+                  <span class="text-lg font-medium tracking-wide">{{
+                    $t('settings.backgroundSounds')
+                  }}</span>
                   <div
                     class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
                   >
@@ -211,7 +211,7 @@
                         ></span>
                       </span>
                       <span class="font-light tracking-wide">{{
-                        sound.soundTitle
+                        $t(`backgroundSounds.${sound.soundTitle}`)
                       }}</span>
                     </label>
                   </div>
@@ -222,9 +222,9 @@
                 <label
                   class="c-checkbox flex items-center gap-3 justify-between w-full"
                 >
-                  <span class="text-lg font-medium tracking-wide"
-                    >Interval Bell</span
-                  >
+                  <span class="text-lg font-medium tracking-wide">{{
+                    $t('settings.intervalBell')
+                  }}</span>
                   <div
                     class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
                   >
@@ -246,9 +246,11 @@
                 </label>
                 <div v-if="presetsList.intervalBell" class="">
                   <p class="text-sm text-white/70">
-                    Bell will ring at
-                    {{ Math.floor(presetsList.totalDurationInMins / 2) }}
-                    minutes (halfway through your session)
+                    {{
+                      $t('settings.intervalBellDescription', {
+                        time: Math.floor(presetsList.totalDurationInMins / 2),
+                      })
+                    }}
                   </p>
                 </div>
               </li>
@@ -257,9 +259,9 @@
                 <label
                   class="c-checkbox flex items-center gap-3 justify-between w-full"
                 >
-                  <span class="text-lg font-medium tracking-wide"
-                    >Ending Bell</span
-                  >
+                  <span class="text-lg font-medium tracking-wide">{{
+                    $t('settings.endingBell')
+                  }}</span>
                   <div
                     class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
                   >
@@ -283,9 +285,9 @@
                 </label>
                 <div v-if="presetsList.endingBell.enabled" class="mt-3">
                   <div class="flex items-center gap-3">
-                    <label class="text-sm text-white/80 whitespace-nowrap"
-                      >Ring after:</label
-                    >
+                    <label class="text-sm text-white/80 whitespace-nowrap">{{
+                      $t('settings.ringAfter')
+                    }}</label>
                     <div class="flex items-center gap-1">
                       <button
                         @click="decrementEndingBellTime"
@@ -329,12 +331,16 @@
                         </svg>
                       </button>
                     </div>
-                    <span class="text-sm text-white/80">minutes</span>
+                    <span class="text-sm text-white/80">{{
+                      $t('settings.minutes')
+                    }}</span>
                   </div>
                   <p class="text-xs text-white/60 mt-2">
-                    Bell will ring
-                    {{ presetsList.endingBell.timeInMins }} minutes after your
-                    session ends
+                    {{
+                      $t('settings.endingBellDescription', {
+                        time: presetsList.endingBell.timeInMins,
+                      })
+                    }}
                   </p>
                 </div>
               </li>
@@ -512,7 +518,7 @@ const setCustomAudio = (e) => {
   } else {
     proxy.$toast.open({
       position: 'top',
-      message: 'Sorry, this file cannot be played!',
+      message: proxy.$t('settings.fileCannotBePlayed'),
       type: 'error',
     });
   }
@@ -567,7 +573,7 @@ const storeAudioFile = (id, file) => {
     console.error('IndexedDB error:', event.target.error);
     proxy.$toast.open({
       position: 'top',
-      message: 'Failed to save audio file. Please try again.',
+      message: proxy.$t('settings.failedToSaveAudio'),
       type: 'error',
     });
   };

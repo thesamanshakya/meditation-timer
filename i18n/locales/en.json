@@ -36,7 +36,9 @@
     "intervalBellDescription": "Bell will ring at {time} minutes (halfway through your session)",
     "selectAudio": "Select Audio",
     "replaceAudio": "Replace Audio",
-    "audio": "Audio"
+    "audio": "Audio",
+    "fileCannotBePlayed": "Sorry, this file cannot be played!",
+    "failedToSaveAudio": "Failed to save audio file. Please try again."
   },
   "statistics": {
     "title": "Meditation Statistics",

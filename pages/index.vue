@@ -242,7 +242,7 @@
             >
               <a
                 @click="selectBellList(index)"
-                class="py-2 px-4 cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full transition-all hover:shadow-sm"
+                class="py-2 px-3 text-[13px] cursor-pointer block md:px-3 md:py-2 hover:bg-grayRGBA rounded-full transition-all hover:shadow-sm"
                 >{{ $t(`bellSounds.${bell.name}`) }}</a
               >
             </li>
@@ -262,7 +262,7 @@
             >
               <a
                 @click="selectTimeList(index)"
-                class="selection-timer px-6 py-6 pt-5 cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] backdrop-blur-sm"
+                class="selection-timer px-6 py-6 pt-5 min-w-[100px] cursor-pointer block text-center border-[3px] border-white rounded-full md:p-9 md:pt-8 hover:bg-grayRGBA transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] backdrop-blur-sm"
               >
                 {{ preset.time >= 60 ? preset.time / 60 : preset.time }}
                 <span class="block pt-[10%]">{{
@@ -270,7 +270,7 @@
                 }}</span>
               </a>
               <i
-                class="add-btn text-sm -left-2 -right-2 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
+                class="add-btn text-sm -left-2.5 -right-2.5 -bottom-5 p-2 border-2 border-white rounded-full bg-black whitespace-no-wrap hidden not-italic absolute cursor-pointer select-none md:text-base md:px-2.5 md:left-0 md:right-0 md:-bottom-5 hover:bg-grayRGBA hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all"
                 @click="addExtraDuration(preset.addTime)"
                 >{{ $t('timer.add', { time: preset.addTime }) }}</i
               >
@@ -459,9 +459,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useHead, useRoute, useNuxtApp } from '#imports';
-import { quotes } from '~/assets/data/quotes.js';
+import {
+  ref,
+  reactive,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+} from 'vue';
+import { useHead, useRoute, useNuxtApp, useI18n } from '#imports';
 import NoSleep from 'nosleep.js';
 
 // State
@@ -482,7 +488,42 @@ const intervalIds = reactive({
   endingBell: null,
 });
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
+
+// Reactive reference for current quotes
+const currentQuotes = ref([]);
+
+// Load quotes based on current locale
+async function loadQuotes() {
+  try {
+    const currentLocale = locale.value || 'en';
+    let quotesModule;
+
+    switch (currentLocale) {
+      case 'hi':
+        quotesModule = await import('~/assets/data/quotes-hi.js');
+        break;
+      case 'ne':
+        quotesModule = await import('~/assets/data/quotes-ne.js');
+        break;
+      default:
+        quotesModule = await import('~/assets/data/quotes-en.js');
+        break;
+    }
+
+    currentQuotes.value = quotesModule.quotes || [];
+  } catch (error) {
+    console.error('Error loading quotes:', error);
+    // Fallback quotes if loading fails
+    currentQuotes.value = [
+      {
+        quote:
+          'Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment.',
+        author: 'The Buddha',
+      },
+    ];
+  }
+}
 
 const menuList = computed(() => [
   {
@@ -625,7 +666,18 @@ function timeParser(time) {
 }
 
 function getQuote() {
-  return quotes[Math.floor(Math.random() * quotes.length)];
+  const quotesArray = currentQuotes.value;
+
+  if (quotesArray && quotesArray.length > 0) {
+    return quotesArray[Math.floor(Math.random() * quotesArray.length)];
+  } else {
+    // Fallback quote if no quotes are available
+    return {
+      quote:
+        'Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment.',
+      author: 'The Buddha',
+    };
+  }
 }
 
 function setBodyBgColor() {
@@ -1084,8 +1136,94 @@ function migrateBellSoundData() {
   }
 }
 
+// Data migration function to ensure background sound titles are in correct format
+function migrateBackgroundSoundData() {
+  const correctSoundList = [
+    {
+      soundTitle: 'forestWithBirds',
+      url: '/media/sounds/nature/forest-with-birds.mp3',
+      statusActive: true,
+    },
+    {
+      soundTitle: 'waterInStream',
+      url: '/media/sounds/nature/water-in-stream.mp3',
+    },
+    {
+      soundTitle: 'riverWithBirds',
+      url: '/media/sounds/nature/birds-with-river.mp3',
+    },
+    { soundTitle: 'birds', url: '/media/sounds/nature/birds.mp3' },
+  ];
+
+  // Mapping from translated titles back to keys (for migration)
+  const titleKeyMap = {
+    'Forest with Birds': 'forestWithBirds',
+    'Water in Stream': 'waterInStream',
+    'River with Birds': 'riverWithBirds',
+    Birds: 'birds',
+    // Add other language mappings if needed
+    'पक्षियों के साथ जंगल': 'forestWithBirds',
+    'नदी में पानी': 'waterInStream',
+    'पक्षियों के साथ नदी': 'riverWithBirds',
+    पक्षी: 'birds',
+    'चराहरूसहित जङ्गल': 'forestWithBirds',
+    'खोलामा पानी': 'waterInStream',
+    'चराहरूसहित नदी': 'riverWithBirds',
+    चराहरू: 'birds',
+  };
+
+  // Check if background sound titles need migration
+  const needsMigration = presetsList.backgroundSound.sound.some(
+    (sound) =>
+      !correctSoundList.find(
+        (correct) => correct.soundTitle === sound.soundTitle
+      )
+  );
+
+  if (needsMigration) {
+    // Find currently active sound index
+    const activeIndex = presetsList.backgroundSound.sound.findIndex(
+      (sound) => sound.statusActive
+    );
+
+    // Migrate each sound title if it's a translated value
+    presetsList.backgroundSound.sound.forEach((sound, index) => {
+      if (titleKeyMap[sound.soundTitle]) {
+        sound.soundTitle = titleKeyMap[sound.soundTitle];
+      }
+    });
+
+    // If no sound is marked as active, reset to correct structure
+    if (
+      activeIndex === -1 ||
+      !presetsList.backgroundSound.sound[activeIndex] ||
+      !correctSoundList.find(
+        (correct) =>
+          correct.soundTitle ===
+          presetsList.backgroundSound.sound[activeIndex].soundTitle
+      )
+    ) {
+      presetsList.backgroundSound.sound = correctSoundList;
+      presetsList.backgroundSound.soundTitle = correctSoundList[0].soundTitle;
+      presetsList.backgroundSound.activePath = correctSoundList[0].url;
+    } else {
+      // Update the main soundTitle if it was also translated
+      const activeSound = presetsList.backgroundSound.sound[activeIndex];
+      if (titleKeyMap[presetsList.backgroundSound.soundTitle]) {
+        presetsList.backgroundSound.soundTitle =
+          titleKeyMap[presetsList.backgroundSound.soundTitle];
+      }
+      // Ensure it matches the active sound's title
+      presetsList.backgroundSound.soundTitle = activeSound.soundTitle;
+    }
+  }
+}
+
 // Init
-onMounted(() => {
+onMounted(async () => {
+  // Load quotes first
+  await loadQuotes();
+
   const localData = localStorage.getItem('presetsList');
   if (localData !== null) {
     const parsed = JSON.parse(localData);
@@ -1093,6 +1231,9 @@ onMounted(() => {
 
     // Migrate bell sound data if needed
     migrateBellSoundData();
+
+    // Migrate background sound data if needed
+    migrateBackgroundSoundData();
 
     if (
       presetsList.guidedInstruction.customAudioId &&
@@ -1104,6 +1245,15 @@ onMounted(() => {
   }
   setBgQuoteChange();
   showFacebookBannerWithTimeout();
+});
+
+// Watch for locale changes to reload quotes
+watch(locale, async () => {
+  await loadQuotes();
+  // Update current quote if not running
+  if (!isRunning.value) {
+    quote.value = getQuote();
+  }
 });
 
 onBeforeUnmount(() => {
