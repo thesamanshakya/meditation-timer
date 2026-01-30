@@ -38,7 +38,17 @@
     "replaceAudio": "Replace Audio",
     "audio": "Audio",
     "fileCannotBePlayed": "Sorry, this file cannot be played!",
-    "failedToSaveAudio": "Failed to save audio file. Please try again."
+    "failedToSaveAudio": "Failed to save audio file. Please try again.",
+    "breakReminder": "Break Reminder",
+    "breakReminderDescription": "Play a gong sound at regular intervals to remind you to take a break",
+    "reminderInterval": "Every:",
+    "hour": "hour",
+    "hours": "hours",
+    "seconds": "seconds"
+  },
+  "breakReminder": {
+    "notificationTitle": "Time for a Break",
+    "notificationBody": "Take a moment to breathe and relax"
   },
   "statistics": {
     "title": "Meditation Statistics",

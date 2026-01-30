@@ -395,7 +395,12 @@
       <span class="absolute flex items-center right-6 top-6" v-if="!navActive">
         <Battery />
         <Statistics v-if="!isRunning" />
-        <Settings :presetsList="presetsList" v-show="!isRunning" />
+        <Settings 
+          :presetsList="presetsList" 
+          v-show="!isRunning"
+          @toggle-break-reminder="toggleBreakReminder"
+          @update-break-reminder-interval="updateBreakReminderInterval"
+        />
         <!-- <UserDropdown
                   class="ml-6"
                   v-if="!isRunning && !$nuxt.isOffline"
@@ -486,6 +491,7 @@ const intervalIds = reactive({
   timer: null,
   fbTimeout: null,
   endingBell: null,
+  breakReminder: null,
 });
 
 const { t, locale } = useI18n();
@@ -554,6 +560,10 @@ const presetsList = reactive({
   endingBell: {
     enabled: false,
     timeInMins: 7,
+  },
+  breakReminder: {
+    enabled: false,
+    intervalMinutes: 15,
   },
   guidedInstruction: {
     statusActive: false,
@@ -901,9 +911,17 @@ function playBellSound() {
 function createAndPlayBellSound() {
   try {
     presetsList.bellSound.audio = new Audio(presetsList.bellSound.activePath);
+    
     // Add error handling for audio loading
     presetsList.bellSound.audio.addEventListener('error', (e) => {
       console.error('Error loading bell sound:', e);
+    });
+
+    // Clean up audio object after it finishes playing
+    presetsList.bellSound.audio.addEventListener('ended', () => {
+      if (presetsList.bellSound.audio) {
+        presetsList.bellSound.audio = null;
+      }
     });
 
     // Play the audio with error handling
@@ -1034,6 +1052,134 @@ function loadCustomAudioFile(callback) {
     console.error('IndexedDB error:', e.target.error);
     if (callback) callback();
   };
+}
+
+// Break Reminder
+async function startBreakReminder() {
+  if (!presetsList.breakReminder.enabled) return;
+  
+  // Clear any existing interval
+  stopBreakReminder();
+  
+  // Request notification permission for background alerts
+  await requestNotificationPermission();
+  
+  const intervalMs = presetsList.breakReminder.intervalMinutes * 60 * 1000;
+  
+  intervalIds.breakReminder = setInterval(() => {
+    playBreakReminderSound();
+    showBreakReminderNotification();
+  }, intervalMs);
+}
+
+// Request notification permission
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    console.log('This browser does not support notifications');
+    return false;
+  }
+  
+  if (Notification.permission === 'granted') {
+    return true;
+  }
+  
+  if (Notification.permission !== 'denied') {
+    const permission = await Notification.requestPermission();
+    return permission === 'granted';
+  }
+  
+  return false;
+}
+
+// Show notification for break reminder (works in background)
+function showBreakReminderNotification() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    return;
+  }
+  
+  const options = {
+    body: t('breakReminder.notificationBody'),
+    icon: '/icon-192x192.png',
+    badge: '/icon-96x96.png',
+    tag: 'break-reminder',
+    renotify: true,
+    requireInteraction: false,
+    vibrate: [200, 100, 200],
+  };
+  
+  try {
+    const notification = new Notification(t('breakReminder.notificationTitle'), options);
+    
+    // Auto-close notification after 5 seconds
+    setTimeout(() => {
+      notification.close();
+    }, 5000);
+    
+    // When user clicks notification, focus the app
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
+  } catch (error) {
+    console.error('Error showing notification:', error);
+  }
+}
+
+// Play a short bell sound for break reminder (stops after 3 seconds)
+function playBreakReminderSound() {
+  try {
+    const breakAudio = new Audio(presetsList.bellSound.activePath);
+    
+    breakAudio.addEventListener('error', (e) => {
+      console.error('Error loading break reminder sound:', e);
+    });
+
+    breakAudio.play().then(() => {
+      // Stop the sound after 3 seconds
+      setTimeout(() => {
+        if (breakAudio) {
+          breakAudio.pause();
+          breakAudio.currentTime = 0;
+        }
+      }, 20000);
+    }).catch((error) => {
+      console.error('Error playing break reminder sound:', error);
+    });
+  } catch (error) {
+    console.error('Error in playBreakReminderSound:', error);
+  }
+}
+
+function stopBreakReminder() {
+  if (intervalIds.breakReminder) {
+    clearInterval(intervalIds.breakReminder);
+    intervalIds.breakReminder = null;
+  }
+}
+
+async function toggleBreakReminder(enabled) {
+  presetsList.breakReminder.enabled = enabled;
+  
+  if (enabled) {
+    await startBreakReminder();
+  } else {
+    stopBreakReminder();
+  }
+  
+  // Save to localStorage
+  localStorage.setItem('presetsList', JSON.stringify(presetsList));
+}
+
+function updateBreakReminderInterval(minutes) {
+  presetsList.breakReminder.intervalMinutes = minutes;
+  
+  // If enabled, restart with new interval
+  if (presetsList.breakReminder.enabled) {
+    startBreakReminder();
+  }
+  
+  // Save to localStorage
+  localStorage.setItem('presetsList', JSON.stringify(presetsList));
 }
 
 // Facebook banner
@@ -1254,6 +1400,11 @@ onMounted(async () => {
   }
   setBgQuoteChange();
   showFacebookBannerWithTimeout();
+  
+  // Start break reminder if it was enabled
+  if (presetsList.breakReminder && presetsList.breakReminder.enabled) {
+    startBreakReminder();
+  }
 });
 
 // Watch for locale changes to reload quotes
@@ -1267,6 +1418,7 @@ watch(locale, async () => {
 
 onBeforeUnmount(() => {
   stopBgQuoteChange();
+  stopBreakReminder();
   if (intervalIds.fbTimeout) clearTimeout(intervalIds.fbTimeout);
   if (intervalIds.endingBell) clearTimeout(intervalIds.endingBell);
 });

@@ -38,7 +38,17 @@
     "replaceAudio": "अडियो बदल्नुहोस्",
     "audio": "अडियो",
     "fileCannotBePlayed": "माफ गर्नुहोस्, यो फाइल चलाउन सकिंदैन!",
-    "failedToSaveAudio": "अडियो फाइल बचत गर्न असफल। कृपया फेरि प्रयास गर्नुहोस्।"
+    "failedToSaveAudio": "अडियो फाइल बचत गर्न असफल। कृपया फेरि प्रयास गर्नुहोस्।",
+    "breakReminder": "ब्रेक रिमाइन्डर",
+    "breakReminderDescription": "तपाईंलाई ब्रेक लिन सम्झाउन नियमित अन्तरालमा घण्टी बजाउनुहोस्",
+    "reminderInterval": "हरेक:",
+    "hour": "घण्टा",
+    "hours": "घण्टा",
+    "seconds": "सेकेन्ड"
+  },
+  "breakReminder": {
+    "notificationTitle": "ब्रेक लिने समय",
+    "notificationBody": "सास फेर्नुहोस् र आराम गर्नुहोस्"
   },
   "statistics": {
     "title": "ध्यान तथ्याङ्क",

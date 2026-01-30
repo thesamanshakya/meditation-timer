@@ -38,7 +38,17 @@
     "replaceAudio": "ऑडियो बदलें",
     "audio": "ऑडियो",
     "fileCannotBePlayed": "क्षमा करें, यह फ़ाइल चलाई नहीं जा सकती!",
-    "failedToSaveAudio": "ऑडियो फ़ाइल सहेजने में विफल। कृपया पुनः प्रयास करें।"
+    "failedToSaveAudio": "ऑडियो फ़ाइल सहेजने में विफल। कृपया पुनः प्रयास करें।",
+    "breakReminder": "विराम अनुस्मारक",
+    "breakReminderDescription": "नियमित अंतराल पर घंटी बजाएं ताकि आपको विराम लेने की याद आए",
+    "reminderInterval": "हर:",
+    "hour": "घंटा",
+    "hours": "घंटे",
+    "seconds": "सेकंड"
+  },
+  "breakReminder": {
+    "notificationTitle": "विराम का समय",
+    "notificationBody": "सांस लें और आराम करें"
   },
   "statistics": {
     "title": "ध्यान आंकड़े",

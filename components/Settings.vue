@@ -346,6 +346,58 @@
               </li>
 
               <li>
+                <label
+                  class="c-checkbox flex items-center gap-3 justify-between w-full"
+                >
+                  <span class="text-lg font-medium tracking-wide">{{
+                    $t('settings.breakReminder')
+                  }}</span>
+                  <div
+                    class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      class="absolute w-6 h-6 opacity-0 cursor-pointer"
+                      v-model="breakReminderEnabled"
+                      @change="toggleBreakReminder"
+                    />
+                    <span
+                      class="absolute w-full h-full transition-all duration-300 ease-in-out bg-white/10 rounded-full shadow-inner"
+                    ></span>
+                    <span
+                      class="absolute left-0 w-6 h-6 transition-all duration-300 transform bg-white rounded-full shadow-lg"
+                      :class="{
+                        'translate-x-6 bg-[#43e97b]': breakReminderEnabled,
+                      }"
+                    ></span>
+                  </div>
+                </label>
+                <div v-if="breakReminderEnabled" class="mt-4">
+                  <p class="text-sm text-white/70 mb-3">
+                    {{ $t('settings.breakReminderDescription') }}
+                  </p>
+                  <div class="flex items-center gap-3">
+                    <label class="text-sm text-white/80 whitespace-nowrap">{{
+                      $t('settings.reminderInterval')
+                    }}</label>
+                    <select
+                      v-model="breakReminderInterval"
+                      @change="updateBreakReminderInterval"
+                      class="flex-1 px-3 py-2 text-sm text-black bg-white/90 border border-white/30 rounded-md focus:outline-none focus:ring-2 focus:ring-[#43e97b]"
+                    >
+                      <option :value="0.5">30 {{ $t('settings.seconds') }}</option>
+                      <option :value="15">15 {{ $t('settings.minutes') }}</option>
+                      <option :value="30">30 {{ $t('settings.minutes') }}</option>
+                      <option :value="45">45 {{ $t('settings.minutes') }}</option>
+                      <option :value="60">1 {{ $t('settings.hour') }}</option>
+                      <option :value="90">1.5 {{ $t('settings.hours') }}</option>
+                      <option :value="120">2 {{ $t('settings.hours') }}</option>
+                    </select>
+                  </div>
+                </div>
+              </li>
+
+              <li>
                 <div class="border-t border-white/10 pt-6">
                   <label class="text-lg font-medium tracking-wide block mb-4">
                     {{ $t('language.selectLanguage') }}
@@ -400,6 +452,7 @@
 import {
   ref,
   computed,
+  watch,
   onMounted,
   onBeforeUnmount,
   getCurrentInstance,
@@ -412,6 +465,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['toggle-break-reminder', 'update-break-reminder-interval']);
 
 const { proxy } = getCurrentInstance();
 const { locale, locales, setLocale } = useI18n();
@@ -429,6 +484,33 @@ const guidedMeditationCheck = ref(
 );
 const backgroundSoundCheck = ref(
   props.presetsList.backgroundSound.statusActive
+);
+const breakReminderEnabled = ref(
+  props.presetsList.breakReminder?.enabled ?? false
+);
+const breakReminderInterval = ref(
+  props.presetsList.breakReminder?.intervalMinutes ?? 15
+);
+
+// Watch for changes to break reminder settings (e.g., when loaded from localStorage)
+watch(
+  () => props.presetsList.breakReminder?.enabled,
+  (newValue) => {
+    if (newValue !== undefined) {
+      breakReminderEnabled.value = newValue;
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  () => props.presetsList.breakReminder?.intervalMinutes,
+  (newValue) => {
+    if (newValue !== undefined) {
+      breakReminderInterval.value = newValue;
+    }
+  },
+  { immediate: true }
 );
 
 const capitalizeFirstLetter = (string) => {
@@ -452,6 +534,14 @@ const toggleBackgroundSound = () => {
     !props.presetsList.backgroundSound.statusActive;
   guidedMeditationCheck.value = false;
   props.presetsList.guidedInstruction.statusActive = false;
+};
+
+const toggleBreakReminder = () => {
+  emit('toggle-break-reminder', breakReminderEnabled.value);
+};
+
+const updateBreakReminderInterval = () => {
+  emit('update-break-reminder-interval', breakReminderInterval.value);
 };
 
 const selectInstructionAudio = (index) => {
