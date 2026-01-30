@@ -372,7 +372,7 @@
                     ></span>
                   </div>
                 </label>
-                <div v-if="breakReminderEnabled" class="mt-4">
+                <!-- <div v-if="breakReminderEnabled" class="mt-4">
                   <p class="text-sm text-white/70 mb-3">
                     {{ $t('settings.breakReminderDescription') }}
                   </p>
@@ -394,7 +394,7 @@
                       <option :value="120">2 {{ $t('settings.hours') }}</option>
                     </select>
                   </div>
-                </div>
+                </div> -->
               </li>
 
               <li>
