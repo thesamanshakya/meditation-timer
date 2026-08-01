@@ -96,7 +96,7 @@ export default defineNuxtConfig({
 
   pwa: {
     registerType: 'autoUpdate',
-    injectRegister: false,
+    injectRegister: 'register',
     filename: 'sw.js',
     includeAssets: [
       'favicon.ico',
@@ -160,7 +160,7 @@ export default defineNuxtConfig({
     },
     workbox: {
       globPatterns: [
-        '**/*.{js,css,html,png,svg,ico,woff2,mp3,json,webmanifest}',
+        '**/*.{js,css,html,png,jpg,jpeg,svg,ico,woff2,mp3,json,webmanifest}',
       ],
       cleanupOutdatedCaches: true,
       mode: 'GenerateSW',
@@ -180,20 +180,26 @@ export default defineNuxtConfig({
           },
         },
         {
-          urlPattern: /^.*\.(mp3)$/i,
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
           handler: 'StaleWhileRevalidate',
           options: {
-            cacheName: 'audio-cache',
+            cacheName: 'google-fonts-stylesheets',
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            },
+          },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-webfonts',
             cacheableResponse: {
               statuses: [0, 200],
-            },
-            fetchOptions: {
-              mode: 'no-cors',
             },
             expiration: {
               maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
               maxEntries: 30,
-              purgeOnQuotaError: true,
             },
           },
         },
@@ -210,7 +216,6 @@ export default defineNuxtConfig({
             },
             expiration: {
               maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              purgeOnQuotaError: true,
             },
           },
         },
@@ -227,7 +232,6 @@ export default defineNuxtConfig({
             },
             expiration: {
               maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              purgeOnQuotaError: true,
             },
           },
         },
@@ -244,13 +248,27 @@ export default defineNuxtConfig({
             },
             expiration: {
               maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              purgeOnQuotaError: true,
+            },
+          },
+        },
+        {
+          urlPattern: /^.*\.(mp3)$/i,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'audio-cache',
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+            fetchOptions: {
+              mode: 'no-cors',
+            },
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              maxEntries: 30,
             },
           },
         },
       ],
-      skipWaiting: true,
-      clientsClaim: true,
     },
   },
 

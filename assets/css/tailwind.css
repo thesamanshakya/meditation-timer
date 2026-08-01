@@ -131,3 +131,8 @@ body,
     @apply rounded-full pointer-events-none cursor-default;
   }
 }
+@media only screen and (max-width: 380px) {
+  #wrapper {
+    zoom: 0.85;
+  }
+}

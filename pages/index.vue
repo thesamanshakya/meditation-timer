@@ -398,8 +398,6 @@
         <Settings 
           :presetsList="presetsList" 
           v-show="!isRunning"
-          @toggle-break-reminder="toggleBreakReminder"
-          @update-break-reminder-interval="updateBreakReminderInterval"
         />
         <!-- <UserDropdown
                   class="ml-6"
@@ -491,7 +489,6 @@ const intervalIds = reactive({
   timer: null,
   fbTimeout: null,
   endingBell: null,
-  breakReminder: null,
 });
 
 const { t, locale } = useI18n();
@@ -560,10 +557,6 @@ const presetsList = reactive({
   endingBell: {
     enabled: false,
     timeInMins: 7,
-  },
-  breakReminder: {
-    enabled: false,
-    intervalMinutes: 15,
   },
   guidedInstruction: {
     statusActive: false,
@@ -716,11 +709,11 @@ function stopBgQuoteChange() {
   document.body.removeAttribute('class');
 }
 
-function startTimer() {
+async function startTimer() {
   isRunning.value = true;
   isPostSession.value = false;
   stopBgQuoteChange();
-  noSleep.enable();
+  await noSleep.enable();
   let tickerInSeconds = presetsList.totalDurationInMins * 60;
   tickerInMins.value = tickerInSeconds / 60;
   const tempTicker = tickerInSeconds;
@@ -746,7 +739,6 @@ function startTimer() {
       if (presetsList.endingBell.enabled) {
         isPostSession.value = true;
         completeAction.value = false;
-        playBellSound();
       } else {
         // Allow bell sound to play before stopping timer
         setTimeout(() => {
@@ -893,16 +885,8 @@ function stopAudio() {
 
 function playBellSound() {
   try {
-    // Stop any existing bell sound first, but with a small delay to prevent race conditions
-    if (presetsList.bellSound.audio) {
-      stopBellSound();
-      // Small delay to ensure the previous audio is fully stopped
-      setTimeout(() => {
-        createAndPlayBellSound();
-      }, 10);
-    } else {
-      createAndPlayBellSound();
-    }
+    stopBellSound();
+    createAndPlayBellSound();
   } catch (error) {
     console.error('Error in playBellSound:', error);
   }
@@ -910,39 +894,31 @@ function playBellSound() {
 
 function createAndPlayBellSound() {
   try {
-    presetsList.bellSound.audio = new Audio(presetsList.bellSound.activePath);
-    
-    // Add error handling for audio loading
-    presetsList.bellSound.audio.addEventListener('error', (e) => {
+    const audio = new Audio(presetsList.bellSound.activePath);
+
+    audio.addEventListener('error', (e) => {
       console.error('Error loading bell sound:', e);
     });
 
-    // Clean up audio object after it finishes playing
-    presetsList.bellSound.audio.addEventListener('ended', () => {
-      if (presetsList.bellSound.audio) {
+    audio.addEventListener('ended', () => {
+      if (presetsList.bellSound.audio === audio) {
         presetsList.bellSound.audio = null;
       }
     });
 
-    // Play the audio with error handling
-    const playPromise = presetsList.bellSound.audio.play();
+    presetsList.bellSound.audio = audio;
+
+    const playPromise = audio.play();
 
     if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          console.log('Bell sound played successfully');
-        })
-        .catch((error) => {
-          console.error('Error playing bell sound:', error);
-          // Try to play again after a short delay
-          setTimeout(() => {
-            if (presetsList.bellSound.audio) {
-              presetsList.bellSound.audio
-                .play()
-                .catch((e) => console.error('Retry failed:', e));
-            }
-          }, 100);
-        });
+      playPromise.catch((error) => {
+        console.error('Error playing bell sound:', error);
+        setTimeout(() => {
+          if (presetsList.bellSound.audio === audio) {
+            audio.play().catch((e) => console.error('Retry failed:', e));
+          }
+        }, 500);
+      });
     }
   } catch (error) {
     console.error('Error in createAndPlayBellSound:', error);
@@ -951,19 +927,14 @@ function createAndPlayBellSound() {
 
 function stopBellSound() {
   try {
-    if (presetsList.bellSound.audio) {
-      // Check if it's a valid Audio object
-      if (presetsList.bellSound.audio instanceof Audio) {
-        presetsList.bellSound.audio.pause();
-        presetsList.bellSound.audio.currentTime = 0;
-      }
+    if (presetsList.bellSound.audio instanceof Audio) {
+      presetsList.bellSound.audio.pause();
+      presetsList.bellSound.audio.currentTime = 0;
     }
   } catch (error) {
     console.error('Error stopping bell sound:', error);
-  } finally {
-    // Always reset to null to prevent future errors
-    presetsList.bellSound.audio = null;
   }
+  presetsList.bellSound.audio = null;
 }
 
 function playGuidedAudio() {
@@ -977,13 +948,17 @@ function playGuidedAudio() {
       presetsList.guidedInstruction.audio = new Audio(
         presetsList.guidedInstruction.activePath
       );
-      presetsList.guidedInstruction.audio.play();
+      presetsList.guidedInstruction.audio.play().catch((e) => {
+        console.error('Error playing guided audio:', e);
+      });
     });
   } else {
     presetsList.guidedInstruction.audio = new Audio(
       presetsList.guidedInstruction.activePath
     );
-    presetsList.guidedInstruction.audio.play();
+    presetsList.guidedInstruction.audio.play().catch((e) => {
+      console.error('Error playing guided audio:', e);
+    });
   }
 }
 
@@ -1000,7 +975,9 @@ function playBackgroundSound() {
     presetsList.backgroundSound.activePath
   );
   presetsList.backgroundSound.audio.loop = true;
-  presetsList.backgroundSound.audio.play();
+  presetsList.backgroundSound.audio.play().catch((e) => {
+    console.error('Error playing background sound:', e);
+  });
 }
 
 function stopBackgroundSound() {
@@ -1052,134 +1029,6 @@ function loadCustomAudioFile(callback) {
     console.error('IndexedDB error:', e.target.error);
     if (callback) callback();
   };
-}
-
-// Break Reminder
-async function startBreakReminder() {
-  if (!presetsList.breakReminder.enabled) return;
-  
-  // Clear any existing interval
-  stopBreakReminder();
-  
-  // Request notification permission for background alerts
-  await requestNotificationPermission();
-  
-  const intervalMs = presetsList.breakReminder.intervalMinutes * 60 * 1000;
-  
-  intervalIds.breakReminder = setInterval(() => {
-    playBreakReminderSound();
-    showBreakReminderNotification();
-  }, intervalMs);
-}
-
-// Request notification permission
-async function requestNotificationPermission() {
-  if (!('Notification' in window)) {
-    console.log('This browser does not support notifications');
-    return false;
-  }
-  
-  if (Notification.permission === 'granted') {
-    return true;
-  }
-  
-  if (Notification.permission !== 'denied') {
-    const permission = await Notification.requestPermission();
-    return permission === 'granted';
-  }
-  
-  return false;
-}
-
-// Show notification for break reminder (works in background)
-function showBreakReminderNotification() {
-  if (!('Notification' in window) || Notification.permission !== 'granted') {
-    return;
-  }
-  
-  const options = {
-    body: t('breakReminder.notificationBody'),
-    icon: '/icon-192x192.png',
-    badge: '/icon-96x96.png',
-    tag: 'break-reminder',
-    renotify: true,
-    requireInteraction: false,
-    vibrate: [200, 100, 200],
-  };
-  
-  try {
-    const notification = new Notification(t('breakReminder.notificationTitle'), options);
-    
-    // Auto-close notification after 5 seconds
-    setTimeout(() => {
-      notification.close();
-    }, 5000);
-    
-    // When user clicks notification, focus the app
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-    };
-  } catch (error) {
-    console.error('Error showing notification:', error);
-  }
-}
-
-// Play a short bell sound for break reminder (stops after 3 seconds)
-function playBreakReminderSound() {
-  try {
-    const breakAudio = new Audio(presetsList.bellSound.activePath);
-    
-    breakAudio.addEventListener('error', (e) => {
-      console.error('Error loading break reminder sound:', e);
-    });
-
-    breakAudio.play().then(() => {
-      // Stop the sound after 3 seconds
-      setTimeout(() => {
-        if (breakAudio) {
-          breakAudio.pause();
-          breakAudio.currentTime = 0;
-        }
-      }, 20000);
-    }).catch((error) => {
-      console.error('Error playing break reminder sound:', error);
-    });
-  } catch (error) {
-    console.error('Error in playBreakReminderSound:', error);
-  }
-}
-
-function stopBreakReminder() {
-  if (intervalIds.breakReminder) {
-    clearInterval(intervalIds.breakReminder);
-    intervalIds.breakReminder = null;
-  }
-}
-
-async function toggleBreakReminder(enabled) {
-  presetsList.breakReminder.enabled = enabled;
-  
-  if (enabled) {
-    await startBreakReminder();
-  } else {
-    stopBreakReminder();
-  }
-  
-  // Save to localStorage
-  localStorage.setItem('presetsList', JSON.stringify(presetsList));
-}
-
-function updateBreakReminderInterval(minutes) {
-  presetsList.breakReminder.intervalMinutes = minutes;
-  
-  // If enabled, restart with new interval
-  if (presetsList.breakReminder.enabled) {
-    startBreakReminder();
-  }
-  
-  // Save to localStorage
-  localStorage.setItem('presetsList', JSON.stringify(presetsList));
 }
 
 // Facebook banner
@@ -1400,11 +1249,6 @@ onMounted(async () => {
   }
   setBgQuoteChange();
   showFacebookBannerWithTimeout();
-  
-  // Start break reminder if it was enabled
-  if (presetsList.breakReminder && presetsList.breakReminder.enabled) {
-    startBreakReminder();
-  }
 });
 
 // Watch for locale changes to reload quotes
@@ -1418,7 +1262,6 @@ watch(locale, async () => {
 
 onBeforeUnmount(() => {
   stopBgQuoteChange();
-  stopBreakReminder();
   if (intervalIds.fbTimeout) clearTimeout(intervalIds.fbTimeout);
   if (intervalIds.endingBell) clearTimeout(intervalIds.endingBell);
 });
