@@ -168,8 +168,6 @@ export default defineNuxtConfig({
       mode: 'GenerateSW',
       maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB limit
 
-      navigateFallback: '/',
-      navigateFallbackDenylist: [/^\/_nuxt\//, /^\/api\//],
       runtimeCaching: [
         {
           urlPattern: ({ request }) => request.destination === 'document',
