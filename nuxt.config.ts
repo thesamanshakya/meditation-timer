@@ -87,8 +87,10 @@ export default defineNuxtConfig({
       { code: 'en', name: 'English', file: 'en.json' },
       { code: 'ne', name: 'नेपाली', file: 'ne.json' },
       { code: 'hi', name: 'हिन्दी', file: 'hi.json' },
-    ],
-  },
+      ],
+      skipWaiting: true,
+      clientsClaim: true,
+    },
 
   gtag: {
     id: 'G-BQ59PQT3H5',
@@ -96,7 +98,7 @@ export default defineNuxtConfig({
 
   pwa: {
     registerType: 'autoUpdate',
-    injectRegister: 'register',
+    injectRegister: false,
     filename: 'sw.js',
     includeAssets: [
       'favicon.ico',
